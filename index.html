@@ -178,30 +178,31 @@ main.full{height:100vh}
 .mini-rows{display:flex;flex-direction:column;gap:10px;align-items:center}
 .mini-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .mini-card{
-  width:172px;height:58px;border-radius:13px;cursor:pointer;
+  width:256px;height:94px;border-radius:15px;cursor:pointer;
   background:rgba(8,19,14,.72);backdrop-filter:blur(8px);
   border:1px solid rgba(212,175,55,.38);
-  display:flex;align-items:center;gap:10px;padding:0 13px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:8px 14px;
   box-shadow:0 8px 22px -8px rgba(0,0,0,.6);
   transition:transform .15s,border-color .2s,box-shadow .2s;
   position:relative;overflow:hidden;
 }
 .mini-card::after{
   content:"";position:absolute;inset:0;opacity:0;transition:opacity .25s;
-  background:radial-gradient(120px 60px at var(--mx,50%) var(--my,50%),rgba(255,255,255,.12),transparent 70%);
+  background:radial-gradient(140px 70px at var(--mx,50%) var(--my,50%),rgba(255,255,255,.12),transparent 70%);
 }
 .mini-card:hover{transform:translateY(-2px);border-color:var(--cc)}
 .mini-card:hover::after{opacity:1}
-.mini-card .no{font-size:16px;font-weight:900;color:var(--cc);font-family:Georgia,serif}
-.mini-card .nm{font-size:13px;font-weight:800;color:var(--ink);white-space:nowrap;flex:1}
+.mini-card .line1{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;flex:1 1 auto}
+.mini-card .no{font-size:19px;font-weight:900;color:var(--cc);font-family:Georgia,serif;flex:0 0 auto}
+.mini-card .nm{font-size:14px;font-weight:800;color:var(--ink);white-space:nowrap;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis}
 .mini-card .st{
-  font-size:10px;font-weight:800;border-radius:20px;padding:3px 8px;white-space:nowrap;
+  font-size:11px;font-weight:800;border-radius:20px;padding:4px 14px;white-space:nowrap;flex:0 0 auto;
   background:rgba(113,138,119,.14);color:var(--dim);border:1px solid rgba(113,138,119,.3);
 }
 .mini-card.ready{border-color:rgba(212,175,55,.65)}
 .mini-card.ready .st{background:color-mix(in srgb,var(--cc) 20%,transparent);color:var(--cc);border-color:color-mix(in srgb,var(--cc) 55%,transparent)}
 .hero .cta{
-  margin-top:8px;display:inline-block;border:0;border-radius:40px;padding:13px 48px;
+  margin-top:36px;display:inline-block;border:0;border-radius:40px;padding:13px 48px;
   font-size:16px;font-weight:900;color:#241d05;position:relative;overflow:hidden;
   background:linear-gradient(120deg,#fdf3cf,var(--gold) 40%,var(--gold2) 75%,#fdf3cf);
   background-size:220% auto;
@@ -245,21 +246,21 @@ main.full{height:100vh}
 }
 .toast.show{transform:translateX(-50%) translateY(0)}
 
-@media(max-width:1100px){
-  .mini-card{width:150px;height:54px}
-  .mini-card .nm{font-size:12px}
+@media(max-width:1250px){
+  .mini-card{width:210px;height:86px}
+  .mini-card .nm{font-size:13px}
+  .mini-card .st{font-size:10.5px;padding:3px 12px}
 }
-@media(max-width:900px){
-  .hero{height:auto;min-height:0;flex:1}
-  .mini-card{width:130px;height:50px;padding:0 10px}
-  .mini-card .st{display:none}
-  .mini-card .nm{font-size:11.5px}
+@media(max-width:1000px){
+  .mini-card{width:188px;height:82px;padding:7px 12px}
+  .mini-card .nm{font-size:12.5px}
+  .mini-card .st{font-size:10px}
   .brand-en{display:none}
 }
-@media(max-width:560px){
-  .mini-card{width:112px;height:46px}
-  .mini-card .no{font-size:13px}
-  .mini-card .nm{font-size:10.5px}
+@media(max-width:640px){
+  .mini-card{width:148px;height:52px}
+  .mini-card .no{font-size:15px}
+  .mini-card .nm{font-size:11px}
   .hero .cta{font-size:14px;padding:11px 34px}
   .back-home{display:none}
 }
@@ -364,7 +365,8 @@ function chip(c){
 function miniCard(c){
   const ready=!!c.file;
   return `<div class="mini-card ${ready?'ready':''}" data-n="${c.n}" style="--cc:${COLORS[c.n]}">
-    <span class="no">${String(c.n).padStart(2,'0')}</span><span class="nm">${c.cn}</span><span class="st">${ready?'开始 · Start':'即将上线'}</span>
+    <div class="line1"><span class="no">${String(c.n).padStart(2,'0')}</span><span class="nm">${c.cn}</span></div>
+    <span class="st">${ready?'开始 · Start':'即将上线'}</span>
   </div>`;
 }
 function bindGlow(btn){
