@@ -3,1359 +3,372 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Factors of Production</title>
+<title>财经基础英语可视化学习集（双语）</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d1f18'/><path d='M50 22 L84 40 L50 58 L16 40 Z' fill='%23d4af37'/><path d='M26 52 v22 q24 14 48 0 v-22' fill='none' stroke='%23e8c56a' stroke-width='5' stroke-linejoin='round'/></svg>">
 <style>
 :root{
-  --bg:#F1EDE3;
-  --card:#FFFFFF;
-  --line:#E5DECD;
-  --ink:#24322C;
-  --sub:#68756E;
-  --brand:#0E6E5C;
-  --brand-deep:#0B5749;
-  --brand-soft:#E4F1EC;
-  --accent:#B96A0E;
-  --accent-soft:#F8ECD9;
-  --ok:#1E8E5A;
-  --ok-soft:#E5F3EA;
-  --bad:#C2413C;
-  --bad-soft:#F9E8E6;
-  --muted:#9AA39D;
+  --bg0:#070f0c;--bg1:#0b1712;--bg2:#101f18;
+  --gold:#d4af37;--gold2:#e8c56a;--gold3:#f8e7a8;
+  --ink:#f5eeda;--sub:#b9cbbe;--dim:#6f8876;
+  --line:rgba(212,175,55,.16);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-button{font-family:inherit;cursor:pointer}
-html{-webkit-text-size-adjust:100%}
+html,body{height:100%}
 body{
-  background:var(--bg);
+  background:radial-gradient(1200px 700px at 82% -10%,rgba(212,175,55,.14),transparent 60%),
+             radial-gradient(1000px 600px at -10% 30%,rgba(56,189,248,.08),transparent 55%),
+             linear-gradient(160deg,var(--bg0),var(--bg1) 45%,var(--bg2));
   color:var(--ink);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-  line-height:1.5;
-  -webkit-font-smoothing:antialiased;
+  font-family:"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden;
 }
-#app{
-  max-width:440px;
-  margin:0 auto;
-  min-height:100dvh;
-  background:#FBFAF5;
-  display:flex;
-  flex-direction:column;
-  position:relative;
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(1.4px 1.4px at 12% 22%,rgba(232,197,106,.5),transparent 60%),
+    radial-gradient(1px 1px at 78% 12%,rgba(232,197,106,.4),transparent 60%),
+    radial-gradient(1.6px 1.6px at 35% 68%,rgba(232,197,106,.35),transparent 60%),
+    radial-gradient(1px 1px at 92% 55%,rgba(232,197,106,.4),transparent 60%),
+    radial-gradient(1.3px 1.3px at 55% 88%,rgba(232,197,106,.3),transparent 60%);
 }
-@media (min-width:480px){
-  #app{margin:16px auto;border-radius:24px;min-height:calc(100dvh - 32px);box-shadow:0 10px 40px rgba(30,45,38,.14);overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+main,.topbar,.footer{position:relative;z-index:1}
+.topbar.hidden{display:none}
+.footer.hidden{display:none}
+#chNav2{display:none}
+
+/* ---------- 顶部导航 ---------- */
+.topbar{
+  height:62px;flex:0 0 62px;display:flex;align-items:center;gap:20px;
+  padding:0 24px;background:rgba(6,14,10,.78);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);box-shadow:0 1px 0 rgba(212,175,55,.08),0 18px 40px -22px rgba(0,0,0,.8);
 }
-/* ---------- header ---------- */
-.app-header{
-  background:var(--brand);
-  color:#fff;
-  padding:11px 12px 8px;
-  position:sticky;top:0;z-index:10;
+.brand{display:flex;flex-direction:column;white-space:nowrap;line-height:1.18;flex:0 0 auto}
+.brand-cn{
+  font-size:18px;font-weight:900;letter-spacing:1.5px;
+  background:linear-gradient(100deg,var(--gold3),var(--gold) 45%,var(--gold2) 80%,var(--gold3));
+  background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+  font-family:Georgia,"Songti SC",serif;
+  animation:shine 6s linear infinite;
 }
-.hd-row{display:flex;align-items:center;gap:6px}
-.hd-back{
-  width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.14);
-  display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border:none;color:#fff;flex:0 0 auto;
+@keyframes shine{to{background-position:200% center}}
+.brand-en{font-size:10.5px;color:var(--sub);letter-spacing:.5px}
+.ch-nav{display:flex;gap:7px;overflow-x:auto;flex:1;scrollbar-width:thin;padding:3px 2px}
+.ch-nav::-webkit-scrollbar{height:4px}
+.ch-nav::-webkit-scrollbar-thumb{background:#3a5a46;border-radius:4px}
+
+.ch-btn{
+  border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--sub);
+  padding:8px 13px;border-radius:11px;font-size:13px;white-space:nowrap;
+  position:relative;overflow:hidden;transition:transform .16s,box-shadow .2s,border-color .2s,color .2s;
+  box-shadow:0 3px 0 rgba(0,0,0,.35);
 }
-.hd-back:active{background:rgba(255,255,255,.26)}
-.hd-title{flex:1;min-width:0}
-.hd-title .t1{font-size:17px;font-weight:700;line-height:1.25}
-.hd-title .t2{font-size:12px;opacity:.85;font-weight:400}
-.hd-btn{
-  background:rgba(255,255,255,.16);color:#fff;border:none;border-radius:999px;
-  font-size:13px;padding:6px 12px;cursor:pointer;flex:0 0 auto;
+.ch-btn b{font-weight:900;margin-right:5px}
+.ch-btn::after{
+  content:"";position:absolute;inset:0;opacity:0;transition:opacity .25s;
+  background:radial-gradient(140px 60px at var(--mx,50%) var(--my,50%),rgba(255,255,255,.16),transparent 70%);
 }
-.hd-btn:active{background:rgba(255,255,255,.3)}
-.hd-progress{padding:8px 4px 0}
-.dots{display:flex;gap:4px;align-items:center}
-.dot{flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,.28)}
-.dot.done{background:#7FCFB8}
-.dot.now{background:#F2C078}
-.step-label{font-size:12px;opacity:.9;margin-top:4px}
-.step-ic{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;background:rgba(255,255,255,.18);margin-right:6px;vertical-align:-5px}
-.step-ic svg{width:14px;height:14px}
-/* ---------- content ---------- */
-.app-body{flex:1;padding:12px 14px 18px}
-.sec-title{font-size:19px;font-weight:700;margin-bottom:2px}
-.sec-sub{font-size:14px;color:var(--sub);margin-bottom:10px;line-height:1.55}
-.en-term{color:var(--accent);font-weight:600}
-.en-term.brand{color:var(--brand)}
-/* ---------- cards & options ---------- */
-.opt{
-  background:var(--card);border:1.5px solid var(--line);border-radius:14px;
-  padding:11px 13px;margin-bottom:8px;cursor:pointer;transition:border-color .15s,background .15s;
+.ch-btn:hover{transform:translateY(-2px);color:var(--ink)}
+.ch-btn:hover::after{opacity:1}
+.ch-btn:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.ch-btn.ready{border-color:rgba(212,175,55,.45)}
+.ch-btn.ready:hover{
+  border-color:var(--gold);box-shadow:0 6px 18px -6px rgba(212,175,55,.5),0 0 16px rgba(212,175,55,.18);
+  background:rgba(212,175,55,.1);
 }
-.opt:hover{border-color:#CFC6AE}
-.opt.sel{border-color:var(--brand);background:var(--brand-soft)}
-.opt .o-t{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
-.opt .o-s{font-size:13px;color:var(--sub);margin-top:2px}
-.opt .o-extra{font-size:13px;color:var(--accent);font-weight:600;margin-left:auto;white-space:nowrap}
-.opt .o-mark{width:20px;height:20px;border-radius:50%;border:1.5px solid #CFC6AE;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;font-size:11px;color:#fff}
-.opt.sel .o-mark{border-color:var(--brand);background:var(--brand)}
-.opt.dim{opacity:.55}
-/* chips */
-.chip-row{display:flex;flex-wrap:wrap;gap:7px;margin:5px 0 8px}
-.chip{
-  display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;
-  background:var(--card);border:1.5px solid var(--line);cursor:pointer;font-size:14px;user-select:none;
+.ch-btn.on{
+  background:linear-gradient(120deg,var(--gold3),var(--gold) 55%,var(--gold2));
+  color:#211a06;font-weight:800;border-color:var(--gold);
+  box-shadow:0 4px 0 #8a6f1e,0 10px 24px -8px rgba(212,175,55,.65);
+  transform:translateY(-2px);
 }
-.chip .en{color:var(--accent);font-weight:600}
-.chip.on{border-color:var(--brand);background:var(--brand-soft)}
-.chip svg{flex:0 0 auto}
-/* feedback */
-.fb{border-radius:12px;padding:9px 11px;font-size:14px;margin:6px 0;line-height:1.55;display:none}
-.fb.show{display:block;animation:fadein .2s ease}
-.fb.info{background:var(--brand-soft);color:#0B5749}
-.fb.ok{background:var(--ok-soft);color:#155E3C}
-.fb.warn{background:var(--accent-soft);color:#7C4A0B}
-.fb.bad{background:var(--bad-soft);color:#8A2C28}
-.fb b{font-weight:700}
-@keyframes fadein{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
-/* classify */
-.fcard{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:9px 11px;margin-bottom:8px}
-.fcard.ans-land{border-color:var(--brand)}
-.fcard.ans-labor{border-color:var(--accent)}
-.fcard.ans-capital{border-color:#3B6FB6}
-.fcard.ans-none{border-color:var(--muted)}
-.fcard .f-top{display:flex;align-items:center;gap:8px}
-.fcard .f-name{font-size:15px;font-weight:700}
-.fcard .f-en{font-size:12px;color:var(--accent);font-weight:600}
-.fcard .f-zh{font-size:13px;color:var(--sub);margin-left:auto}
-.fcard .f-buckets{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:7px}
-.bkt{
-  font-size:13px;padding:6px 2px;border-radius:9px;border:1.5px solid var(--line);background:#FBF9F2;
-  cursor:pointer;text-align:center;color:var(--sub);font-weight:600;
+.ch-btn.locked{opacity:.4;cursor:not-allowed}
+.ch-btn.locked:hover{transform:none;color:var(--sub);box-shadow:0 3px 0 rgba(0,0,0,.35);border-color:var(--line)}
+.back-home{
+  border:1px solid var(--gold);background:transparent;color:var(--gold2);
+  padding:7px 15px;border-radius:11px;font-size:13px;font-weight:800;white-space:nowrap;
+  box-shadow:0 3px 0 rgba(0,0,0,.35);transition:transform .15s,box-shadow .2s,background .2s;
 }
-.bkt.sel-land{border-color:var(--brand);background:var(--brand-soft);color:var(--brand-deep)}
-.bkt.sel-labor{border-color:var(--accent);background:var(--accent-soft);color:#7C4A0B}
-.bkt.sel-capital{border-color:#3B6FB6;background:#E8EFFA;color:#2C5490}
-.bkt.sel-none{border-color:var(--muted);background:#EEF0EE;color:#5B635E}
-.fcard .f-fb{font-size:13px;margin-top:6px;line-height:1.5;display:none}
-.fcard .f-fb.show{display:block}
-.fcard .f-fb.good{color:#155E3C}
-.fcard .f-fb.bad{color:#8A2C28}
-/* prices */
-.prow{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:11px;margin-bottom:8px}
-.prow .p-q{font-size:14px;font-weight:600;margin-bottom:6px}
-.prow .p-q .en{color:var(--accent)}
-.prow .p-opts{display:flex;gap:7px}
-.prow .p-opt{
-  flex:1;text-align:center;padding:8px 3px;border-radius:10px;border:1.5px solid var(--line);
-  cursor:pointer;font-size:14px;font-weight:600;color:var(--sub);background:#FBF9F2;
+.back-home:hover{background:rgba(212,175,55,.14);transform:translateY(-1px);box-shadow:0 4px 0 rgba(0,0,0,.35),0 0 14px rgba(212,175,55,.2)}
+.back-home:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+
+/* ---------- 首页 ---------- */
+main{flex:1;display:flex;flex-direction:column;min-height:0}
+#home{display:flex;flex-direction:column;flex:1}
+.hero{
+  position:relative;height:460px;flex:0 0 460px;overflow:hidden;
+  background:url(assets/hero.jpg) center/cover no-repeat;
 }
-.prow .p-opt.ok{border-color:var(--ok);background:var(--ok-soft);color:#155E3C}
-.prow .p-opt.bad{border-color:var(--bad);background:var(--bad-soft);color:#8A2C28}
-.prow .p-fb{font-size:13px;margin-top:6px;line-height:1.5;display:none}
-.prow .p-fb.show{display:block}
-.prow .p-fb.good{color:#155E3C}
-.prow .p-fb.bad{color:#8A2C28}
-/* tradeoffs */
-.tq{margin-bottom:12px}
-.tq .tq-t{font-size:15px;font-weight:700;margin-bottom:6px;display:flex;gap:8px}
-.tq .tq-t .num{background:var(--brand);color:#fff;width:20px;height:20px;border-radius:50%;font-size:11px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
-/* english */
-.etask{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
-.etask .et-q{font-size:15px;font-weight:600;margin-bottom:8px}
-.etask .et-q .q-en{color:var(--accent)}
-.et-opt{
-  display:block;width:100%;text-align:left;padding:9px 11px;border-radius:10px;border:1.5px solid var(--line);
-  background:#FBF9F2;font-size:14px;margin-bottom:7px;cursor:pointer;font-weight:600;color:var(--ink);
+.hero::after{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,rgba(7,15,12,.12) 0%,rgba(7,15,12,.22) 40%,rgba(7,15,12,.96) 100%),
+    radial-gradient(900px 320px at 50% 108%,rgba(212,175,55,.22),transparent 70%);
 }
-.et-opt.ok{border-color:var(--ok);background:var(--ok-soft);color:#155E3C}
-.et-opt.bad{border-color:var(--bad);background:var(--bad-soft);color:#8A2C28}
-.et-opt:disabled{cursor:default}
-.et-fb{font-size:13px;margin-top:3px;line-height:1.5;display:none}
-.et-fb.show{display:block}
-.et-fb.good{color:#155E3C}
-.et-fb.bad{color:#8A2C28}
-.blank{
-  display:inline-block;min-width:80px;padding:1px 8px;margin:0 3px;text-align:center;
-  border-bottom:2px dashed var(--accent);font-weight:700;color:var(--accent);cursor:pointer;border-radius:0;
-  vertical-align:baseline;
+.hero-inner{
+  position:absolute;left:0;right:0;bottom:58px;z-index:2;padding:0 5vw;text-align:center;
 }
-.blank.filled{background:var(--accent-soft);border-bottom-color:var(--accent)}
-.blank.good{background:var(--ok-soft);border-bottom:2px solid var(--ok);color:#155E3C}
-.blank.bad{background:var(--bad-soft);border-bottom:2px solid var(--bad);color:#8A2C28}
-.tpl-sentence{font-size:15px;line-height:2;margin-bottom:10px}
-.bank{display:flex;flex-wrap:wrap;gap:7px}
-.bank .chip{font-size:14px}
-.bank .chip:disabled{opacity:.45;cursor:default}
-/* summary */
-.sum-card{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:13px;margin-bottom:10px}
-.sum-row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:14px}
-.sum-row:last-child{border-bottom:none}
-.sum-row .k{color:var(--sub)}
-.sum-row .v{font-weight:600;text-align:right}
-.model-box{background:var(--brand-soft);border-radius:12px;padding:11px 13px;font-size:14px;line-height:1.75;color:#0B5749;margin-top:4px}
-.idea-box{background:var(--accent-soft);border-radius:12px;padding:11px 13px;font-size:14px;line-height:1.7;color:#7C4A0B;margin-top:8px}
-.tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.tag{background:#FBF9F2;border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--sub)}
-.tag b{color:var(--ink)}
-/* footer action */
-.app-foot{position:sticky;bottom:0;z-index:8;padding:8px 14px 12px;background:linear-gradient(180deg,rgba(251,250,245,0),rgba(251,250,245,.96) 40%)}
-.btn{
-  display:block;width:100%;padding:12px;border:none;border-radius:14px;font-size:16px;font-weight:700;
-  cursor:pointer;background:var(--brand);color:#fff;transition:opacity .15s,transform .1s;
+.hero .kicker{
+  display:inline-block;font-size:12px;letter-spacing:6px;color:var(--gold3);
+  border:1px solid rgba(212,175,55,.5);border-radius:30px;padding:6px 20px 6px 24px;
+  background:rgba(7,15,12,.45);backdrop-filter:blur(6px);margin-bottom:20px;
+  text-transform:uppercase;
 }
-.btn:active{transform:scale(.985)}
-.btn:disabled{opacity:.35;cursor:not-allowed}
-.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--sub);font-weight:600}
-.btn.ok-bg{background:var(--ok)}
-/* home */
-.hero{padding:14px 16px 2px;text-align:left}
-.hero .h1{font-size:24px;font-weight:800;line-height:1.25}
-.hero .h1 .en{display:block;font-size:13px;color:var(--accent);font-weight:700;letter-spacing:.04em;margin-top:2px}
-.hero .h2{font-size:14px;color:var(--sub);margin-top:5px;line-height:1.6}
-.sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:10px 14px 6px}
-.sc-card{
-  background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:12px 11px;cursor:pointer;
-  display:flex;flex-direction:column;gap:5px;transition:border-color .15s,transform .1s;
+.hero h1{
+  font-size:52px;font-weight:900;letter-spacing:3px;line-height:1.15;
+  font-family:Georgia,"Songti SC","SimSun",serif;
+  background:linear-gradient(180deg,#fff9e0,var(--gold2) 55%,var(--gold));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 4px 22px rgba(0,0,0,.5));
 }
-.sc-card:active{transform:scale(.98)}
-.sc-card:hover{border-color:#CFC6AE}
-.sc-card .sc-ic{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center}
-.f-ic{width:36px;height:36px;border-radius:11px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
-.f-ic svg{width:19px;height:19px}
-.ic-land{background:var(--brand-soft);color:var(--brand)}
-.ic-labor{background:var(--accent-soft);color:var(--accent)}
-.ic-capital{background:#E8ECF7;color:#4A63A6}
-.ic-material{background:#EDE9E0;color:#8A7F6A}
-.p-ic{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;margin-right:8px;vertical-align:-6px}
-.p-ic svg{width:15px;height:15px}
-.sc-card .sc-en{font-size:14px;font-weight:700;line-height:1.3}
-.sc-card .sc-zh{font-size:13px;color:var(--sub)}
-.sc-card .sc-go{font-size:12px;color:var(--accent);font-weight:700;margin-top:1px}
-.concept-hero{display:flex;align-items:flex-start;gap:7px;font-size:13px;color:var(--sub);background:var(--brand-soft);border-radius:12px;padding:7px 10px;line-height:1.55;margin-bottom:8px}
-.concept-hero svg{flex:0 0 auto;margin-top:2px;color:var(--brand)}
-.concept-hero b{color:var(--brand-deep)}
-.concept-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:10px}
-.concept-tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px 5px;border-radius:12px;background:var(--card);border:1.5px solid var(--line);color:var(--sub);font-size:12px;font-weight:700;cursor:pointer;transition:border-color .15s,background .15s}
-.concept-tab svg{width:20px;height:20px}
-.concept-tab.on{border-color:var(--brand);background:var(--brand-soft);color:var(--brand-deep)}
-.concept-main{min-height:270px;background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:15px 14px;display:flex;flex-direction:column}
-.concept-main.anim{animation:fadeIn .3s ease}
-.hd-gate{margin-top:8px}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-.cm-head{display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
-.cm-en{font-size:20px;font-weight:800;line-height:1.2}
-.cm-zh{font-size:13px;color:var(--sub)}
-.cm-en-def{font-size:14.5px;color:#2E3A34;line-height:1.7;font-weight:600;margin-top:12px}
-.cm-en-def b{color:var(--brand-deep)}
-.cm-zh-def{font-size:14px;color:var(--sub);line-height:1.7;margin-top:8px}
-.cm-tip{display:flex;align-items:flex-start;gap:6px;font-size:13px;color:var(--accent);background:var(--accent-soft);border-radius:10px;padding:7px 9px;line-height:1.55;margin-top:12px}
-.cm-tip svg{flex:0 0 auto;margin-top:2px;color:var(--accent)}
-.read-bar{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:700;border-radius:12px;padding:8px 11px}
-.read-bar svg{flex:0 0 auto}
-.read-bar.lock{color:#8A2C28;background:var(--bad-soft)}
-.home-actions{padding:8px 14px 14px;display:flex;flex-direction:column;gap:8px}
-.mini-note{text-align:center;font-size:12px;color:var(--muted);padding:0 14px 12px}
-/* glossary modal */
-.modal-mask{
-  position:fixed;inset:0;background:rgba(24,32,28,.52);z-index:60;
-  display:flex;align-items:flex-end;justify-content:center;
+.hero .en{
+  margin-top:12px;font-size:20px;letter-spacing:4px;color:var(--gold3);
+  font-family:Georgia,serif;font-style:italic;text-shadow:0 2px 14px rgba(0,0,0,.5);
 }
-@media (min-width:480px){.modal-mask{align-items:center;padding:20px}}
-.modal{
-  background:#FBFAF5;width:100%;max-width:440px;max-height:82dvh;border-radius:22px 22px 0 0;
-  display:flex;flex-direction:column;overflow:hidden;animation:slideup .22s ease;
+.hero .desc{margin-top:14px;font-size:15px;color:#dde8dd;letter-spacing:1px}
+.hero .cta{
+  margin-top:26px;display:inline-block;border:0;border-radius:40px;padding:14px 52px;
+  font-size:17px;font-weight:900;color:#241d05;position:relative;overflow:hidden;
+  background:linear-gradient(120deg,#fdf3cf,var(--gold) 40%,var(--gold2) 75%,#fdf3cf);
+  background-size:220% auto;
+  box-shadow:0 6px 0 #8a6f1e,0 18px 44px -10px rgba(212,175,55,.55);
+  animation:flow 4s linear infinite;
+  transition:transform .15s,box-shadow .2s;
 }
-@media (min-width:480px){.modal{border-radius:22px}}
-@keyframes slideup{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
-.modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 14px 8px;border-bottom:1px solid var(--line)}
-.modal-head .t{font-size:17px;font-weight:800;display:flex;align-items:center}
-.mh-ic{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;background:var(--brand-soft);color:var(--brand);margin-right:8px;flex:0 0 auto}
-.mh-ic svg{width:17px;height:17px}
-.cat-t{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:800;color:var(--accent);margin:10px 2px 6px}
-.cat-ic{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:8px;background:var(--accent-soft);color:var(--accent)}
-.cat-ic svg{width:14px;height:14px}
-.modal-close{width:30px;height:30px;border-radius:9px;border:none;background:#EEE9DC;color:var(--sub);font-size:15px;cursor:pointer;line-height:1}
-.modal-body{overflow:auto;padding:10px 14px 16px}
-.g-item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 11px;margin-bottom:7px}
-.g-item .g-en{font-size:14px;font-weight:800;color:var(--brand)}
-.g-item .g-zh{font-size:13px;color:var(--accent);font-weight:600;margin-left:6px}
-.g-item .g-def{font-size:13px;color:var(--sub);margin-top:2px;line-height:1.55}
-.shake{animation:shake .3s ease}
-@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
-/* ---------- learning diagnosis ---------- */
-.diag-top{display:flex;align-items:center;gap:14px;margin:0 0 10px}
-.ring{width:72px;height:72px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
-.ring .ring-in{width:56px;height:56px;border-radius:50%;background:#FBFAF5;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ring .ring-num{font-size:18px;font-weight:800;line-height:1.15}
-.ring .ring-cap{font-size:10px;color:var(--sub)}
-.diag-sum{font-size:14px;color:var(--sub);line-height:1.75}
-.diag-sum b{color:var(--ink)}
-.dim-item{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.dim-label{font-size:13px;flex:0 0 82px;font-weight:600;color:#3A453F}
-.dim-track{flex:1;height:11px;border-radius:8px;background:#ECE7D8;overflow:hidden}
-.dim-fill{height:100%;border-radius:8px;min-width:2px}
-.dim-num{font-size:13px;flex:0 0 82px;text-align:right;color:var(--sub);font-weight:600}
-.dim-num .e{color:var(--bad);font-weight:700}
-.advice-box{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:11px 13px;margin-top:10px}
-.advice-box .a-t{font-size:14px;font-weight:800;margin-bottom:2px}
-.advice-item{font-size:14px;line-height:1.65;color:#37413B;padding:7px 0;border-bottom:1px dashed var(--line)}
-.advice-item:last-child{border-bottom:none}
-.advice-item .a-dim{display:inline-block;font-size:11px;font-weight:700;color:#7C4A0B;background:var(--accent-soft);border-radius:6px;padding:1px 7px;margin-right:6px}
-.advice-item.weak .a-dim{color:#8A2C28;background:var(--bad-soft)}
-.advice-good{background:var(--ok-soft);border:1px solid #BFE3CF;border-radius:12px;padding:10px 12px;font-size:14px;color:#155E3C;margin-top:10px;line-height:1.7}
-.advice-good b{font-weight:800}
+@keyframes flow{to{background-position:220% center}}
+.hero .cta:hover{transform:translateY(-3px);box-shadow:0 9px 0 #8a6f1e,0 24px 54px -10px rgba(212,175,55,.7)}
+.hero .cta:active{transform:translateY(2px);box-shadow:0 2px 0 #8a6f1e}
+
+.ch-section{padding:44px 5vw 30px}
+.ch-section h2{
+  font-size:24px;font-weight:900;color:var(--gold2);letter-spacing:2px;
+  font-family:Georgia,"Songti SC",serif;margin-bottom:4px;
+}
+.ch-section .sub2{font-size:13px;color:var(--sub);margin-bottom:24px;letter-spacing:.5px}
+.ch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;perspective:1200px}
+
+.ch-card{
+  background:linear-gradient(165deg,rgba(255,255,255,.06),rgba(255,255,255,.015));
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px 22px 20px;
+  position:relative;overflow:hidden;transition:transform .18s ease,box-shadow .25s,border-color .25s;
+  transform-style:preserve-3d;will-change:transform;
+  box-shadow:0 20px 44px -22px rgba(0,0,0,.85);
+}
+.ch-card::before{
+  content:"";position:absolute;left:14px;right:14px;top:0;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,transparent,var(--cc),transparent);opacity:.85;
+}
+.ch-card::after{
+  content:"";position:absolute;inset:0;opacity:0;transition:opacity .3s;pointer-events:none;
+  background:radial-gradient(320px 180px at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--cc) 26%,transparent),transparent 70%);
+}
+.ch-card:hover::after{opacity:1}
+.ch-card.ready{cursor:pointer}
+.ch-card.ready:hover{
+  border-color:color-mix(in srgb,var(--cc) 65%,transparent);
+  box-shadow:0 26px 60px -24px rgba(0,0,0,.9),0 0 30px color-mix(in srgb,var(--cc) 26%,transparent);
+}
+.ch-card .num{
+  font-size:34px;font-weight:900;color:var(--cc);
+  font-family:Georgia,serif;line-height:1;transform:translateZ(34px);
+  text-shadow:0 0 24px color-mix(in srgb,var(--cc) 55%,transparent);
+}
+.ch-card .cn{font-size:19px;font-weight:900;margin:12px 0 4px;color:var(--ink);transform:translateZ(22px)}
+.ch-card .en2{font-size:13px;color:var(--cc);font-style:italic;font-family:Georgia,serif;min-height:18px;transform:translateZ(16px)}
+.ch-card .st{
+  display:inline-block;margin-top:14px;font-size:12px;font-weight:800;padding:5px 14px;border-radius:24px;
+  transform:translateZ(26px);
+}
+.ch-card .st.ready{background:color-mix(in srgb,var(--cc) 18%,transparent);color:var(--cc);border:1px solid color-mix(in srgb,var(--cc) 55%,transparent)}
+.ch-card .st.later{background:rgba(113,138,119,.1);color:var(--dim);border:1px solid rgba(113,138,119,.35)}
+.ch-card.locked{opacity:.5;filter:saturate(.5)}
+.ch-card.locked::before{opacity:.4}
+
+/* ---------- 章节视图 ---------- */
+#chapterView{display:none;flex:1;flex-direction:column;min-height:0}
+.ch-head{
+  height:54px;flex:0 0 54px;display:flex;align-items:center;gap:16px;
+  padding:0 24px;background:rgba(6,14,10,.82);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);box-shadow:0 18px 40px -24px rgba(0,0,0,.8);
+}
+.ch-head .t{
+  font-size:17px;font-weight:900;color:var(--gold2);white-space:nowrap;
+  font-family:Georgia,"Songti SC",serif;letter-spacing:1px;flex:0 0 auto;
+}
+.ch-head .t small{color:var(--sub);font-weight:600;margin-left:10px;font-family:sans-serif;letter-spacing:0}
+.frame-wrap{flex:1;min-height:0;background:#fff}
+#chapterFrame{width:100%;height:100%;border:0;display:block}
+
+/* ---------- 页脚 ---------- */
+.footer{
+  flex:0 0 auto;padding:16px 24px;text-align:center;font-size:12px;color:var(--dim);
+  border-top:1px solid var(--line);background:rgba(6,14,10,.7);
+  letter-spacing:.6px;
+}
+.footer b{color:var(--gold2);font-weight:800}
+
+/* ---------- 提示 ---------- */
+.toast{
+  position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(90px);
+  background:linear-gradient(120deg,var(--gold3),var(--gold) 55%,var(--gold2));color:#241d05;
+  padding:12px 30px;border-radius:40px;font-size:14px;font-weight:800;z-index:99;
+  box-shadow:0 6px 0 #8a6f1e,0 16px 40px rgba(0,0,0,.5);transition:transform .28s;pointer-events:none;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:900px){
+  .hero{height:360px}
+  .hero h1{font-size:34px}
+  .ch-grid{grid-template-columns:repeat(2,1fr)}
+  .brand-en{display:none}
+}
+@media(max-width:560px){
+  .ch-grid{grid-template-columns:1fr}
+  .hero h1{font-size:27px}
+  .hero .en{font-size:15px;letter-spacing:1px}
+  .hero .kicker{letter-spacing:3px}
+  .back-home{display:none}
+}
 </style>
 </head>
 <body>
-<div id="app"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-cn">财经基础英语可视化学习集</span>
+    <span class="brand-en">Visual Economics &amp; Business English · Bilingual</span>
+  </div>
+  <nav class="ch-nav" id="chNav" aria-label="章节导航"></nav>
+</header>
+
+<main>
+  <!-- 首页 -->
+  <section id="home">
+    <div class="hero">
+      <div class="hero-inner">
+        <span class="kicker">Unit 1 – 9 · Interactive</span>
+        <h1>财经基础英语可视化学习集</h1>
+        <p class="en">Visual Economics &amp; Business English Learning Hub</p>
+        <p class="desc">九章财经基础 · 双语互动 · 让图表自己会说话</p>
+        <button class="cta" onclick="enterFirstReady()">开始探索 · Start</button>
+      </div>
+    </div>
+    <div class="ch-section">
+      <h2>章节导航 Chapters</h2>
+      <p class="sub2">点击章节进入互动练习 · 光标悬停卡片有 3D 视效 · Click a chapter to start</p>
+      <div class="ch-grid" id="chGrid"></div>
+    </div>
+  </section>
+
+  <!-- 章节显示区 -->
+  <section id="chapterView">
+    <div class="ch-head">
+      <button class="back-home" onclick="showHome()">‹ 返回首页</button>
+      <span class="t" id="chTitle">Chapter</span>
+      <nav class="ch-nav" id="chNav2" aria-label="章节导航"></nav>
+    </div>
+    <div class="frame-wrap"><iframe id="chapterFrame" title="章节互动练习"></iframe></div>
+  </section>
+</main>
+
+<footer class="footer">
+  财经基础英语可视化学习集（双语）· <b>Visual Economics Learning Hub</b> · 章节内容持续更新中
+</footer>
+
+<div class="toast" id="toast"></div>
+
 <script>
-"use strict";
-/* ==================== ICONS ==================== */
-function ic(inner){return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+inner+'</svg>';}
-const ICONS = {
-  coffee: ic('<path d="M7 9h10v5a5 5 0 0 1-10 0z"/><path d="M17 10h1.6a2 2 0 0 1 0 4H17"/><path d="M10 6.2c0-1-1-1-1-2"/><path d="M13.5 6.2c0-1-1-1-1-2"/><path d="M6 18h12"/>'),
-  milktea: ic('<path d="M6.5 9h11l-1.4 11.2a1.6 1.6 0 0 1-1.6 1.3H9.5a1.6 1.6 0 0 1-1.6-1.3z"/><path d="M8.6 6.5h6.8"/><path d="M10 9l-.7 7"/><path d="M14 9l.7 7"/>'),
-  noodle: ic('<path d="M4.5 12.5h15a7.5 7.5 0 0 1-15 0z"/><path d="M9.5 8.5v-3"/><path d="M14.5 8.5v-3"/><path d="M8 5.5h8"/>'),
-  pet: ic('<circle cx="6" cy="12.5" r="1.7"/><circle cx="10.3" cy="8.4" r="1.7"/><circle cx="13.7" cy="8.4" r="1.7"/><circle cx="18" cy="12.5" r="1.7"/><path d="M12 13.2c-2 1.3-2.9 3-2.4 4.7.5 1.7 2.3 2.6 4.4 2.6s3.9-.9 4.4-2.6c.5-1.7-.4-3.4-2.4-4.7a6 6 0 0 0-4 0z"/>'),
-  training: ic('<path d="M3 10.5l9-4.8 9 4.8-9 4.8z"/><path d="M7 12.6V16c0 1.2 2.2 2.5 5 2.5s5-1.3 5-2.5v-3.4"/><path d="M21 10.5v4.2"/>'),
-  software: ic('<path d="M9.5 8.5L5.8 12l3.7 3.5"/><path d="M14.5 8.5l3.7 3.5-3.7 3.5"/><path d="M13.2 6l-2.4 12"/>'),
-  land: ic('<path d="M12 21s-6-5.4-6-10a6 6 0 1 1 12 0c0 4.6-6 10-6 10z"/><circle cx="12" cy="11" r="2"/>'),
-  labor: ic('<circle cx="12" cy="8.6" r="3.4"/><path d="M5.4 19.4c1.1-3 3.7-4.6 6.6-4.6s5.5 1.6 6.6 4.6"/>'),
-  capital: ic('<circle cx="12" cy="12" r="3.1"/><path d="M12 2.8v3.4"/><path d="M12 17.8v3.4"/><path d="M2.8 12h3.4"/><path d="M17.8 12h3.4"/>'),
-  home: ic('<path d="M4 11.2L12 4.6l8 6.6"/><path d="M6 9.8V19a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V9.8"/><path d="M10 20v-5h4v5"/>'),
-  money: ic('<rect x="3" y="7" width="18" height="10" rx="1.6"/><circle cx="12" cy="12" r="2.4"/><path d="M6.5 10h.01"/><path d="M17.5 14h.01"/>'),
-  percent: ic('<circle cx="6.5" cy="6.5" r="2.1"/><circle cx="17.5" cy="17.5" r="2.1"/><path d="M16.8 7.2L7.2 16.8"/>'),
-  back: ic('<path d="M14.5 5L8 12l6.5 7"/>'),
-  close: ic('<path d="M6 6l12 12"/><path d="M18 6L6 18"/>'),
-  check: ic('<path d="M4.5 12.5l4.8 4.8L19.5 7"/>'),
-  pin: ic('<path d="M12 21s-6-5.4-6-10a6 6 0 1 1 12 0c0 4.6-6 10-6 10z"/>'),
-  material: ic('<path d="M4 8l8-4 8 4v8l-8 4-8-4z"/><path d="M4 8l8 4 8-4"/><path d="M12 12v8"/>'),
-  box: ic('<path d="M3.5 7.5L12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5L12 12l8.5-4.5"/><path d="M12 12v9"/>'),
-  staff: ic('<circle cx="10" cy="7.6" r="3.1"/><path d="M4.4 18.2c.9-2.3 3-3.6 5.6-3.6s4.7 1.3 5.6 3.6"/><path d="M17.5 7.5v6"/><path d="M14.5 10.5h6"/>'),
-  grid: ic('<rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/>'),
-  tag: ic('<path d="M4.2 4.2h5.8L20 14.2a2 2 0 0 1 0 2.8l-3 3a2 2 0 0 1-2.8 0L4.2 10z"/><circle cx="8.4" cy="8.4" r="1.4"/>'),
-  scale: ic('<path d="M12 4.5v15"/><path d="M8 19.5h8"/><path d="M6 7.5h12"/><path d="M6 7.5L3.6 11.6a2.3 2.3 0 0 0 4.8 0z"/><path d="M18 7.5l2.4 4.1a2.3 2.3 0 0 1-4.8 0z"/>'),
-  chat: ic('<path d="M21 11.6a7.8 7.8 0 0 1-7.9 7.8H6.5L3.5 21v-3a7.8 7.8 0 1 1 17.5-6.4z"/><path d="M8 10.5h8"/><path d="M8 13.8h5"/>'),
-  award: ic('<circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.5l2.5 2.5 4.5-5.5"/>'),
-  store: ic('<path d="M3.5 9.5h17"/><path d="M5 9.5V20h14V9.5"/><path d="M9.5 20v-5.5h5V20"/><path d="M4.5 5h15l1.5 4.5h-18z"/>'),
-  book: ic('<path d="M4 5.8A2.8 2.8 0 0 1 6.8 3H20v15.4H6.8A2.8 2.8 0 0 0 4 21.2z"/><path d="M4 18.4A2.8 2.8 0 0 1 6.8 15.6H20"/><path d="M8.5 7h7"/>'),
-  factory: ic('<path d="M3.5 20V11.5l6 3.5v-3.5l6 3.5V8h5v12z"/><path d="M3.5 20h17"/><path d="M20 5.5V8"/>'),
-  chart: ic('<path d="M4 4v16h16"/><path d="M7 15l4-4.5 3 3 5-6.5"/>'),
-  plus: ic('<path d="M12 5v14"/><path d="M5 12h14"/>'),
-  clock: ic('<circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/>'),
-  lock: ic('<rect x="5.5" y="10.5" width="13" height="9" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/>')
+(()=>{
+const COLORS={
+ 1:'#d4af37',2:'#3ddc97',3:'#38bdf8',4:'#a78bfa',5:'#fb7185',
+ 6:'#f59e0b',7:'#60a5fa',8:'#f472b6',9:'#2dd4bf'
 };
-const SCENE_GRAD = {
-  coffee:  ["#8A5A33","#C08A55"],
-  milktea: ["#C77A9B","#E8AEC2"],
-  noodle:  ["#D97B3C","#EFB06A"],
-  pet:     ["#3F9C9E","#7EC8A9"],
-  training:["#4676BC","#7FA6DE"],
-  software:["#6E55B8","#9D86DE"]
-};
-const CAT_ICON = { factors:"factory", prices:"tag", markets:"store", demand:"chart", marginal:"plus", more:"book" };
-/* ==================== META ==================== */
-const FACTORS = [
-  {key:"land",   en:"Land",   zh:"土地", price:"rent",     priceZh:"租金"},
-  {key:"labor",  en:"Labor",  zh:"劳动", price:"wages",    priceZh:"工资"},
-  {key:"capital",en:"Capital",zh:"资本", price:"interest", priceZh:"利息"}
+const CHAPTERS=[
+ {n:1,cn:'第 1 章',en:'Chapter 1',file:null},
+ {n:2,cn:'第 2 章',en:'Chapter 2',file:null},
+ {n:3,cn:'需求与供给',en:'Demand and Supply',file:'chapters/chapter3.html'},
+ {n:4,cn:'第 4 章',en:'Chapter 4',file:null},
+ {n:5,cn:'第 5 章',en:'Chapter 5',file:null},
+ {n:6,cn:'生产要素',en:'Factors of Production',file:'chapters/chapter6.html'},
+ {n:7,cn:'GDP 与经济周期',en:'GDP and Business Cycle',file:'chapters/chapter7.html'},
+ {n:8,cn:'第 8 章',en:'Chapter 8',file:null},
+ {n:9,cn:'第 9 章',en:'Chapter 9',file:null}
 ];
-const PRICE_POOL = [
-  {key:"rent",     en:"rent",     zh:"租金", hint:"the price of Land"},
-  {key:"wages",    en:"wages",    zh:"工资", hint:"the price of Labor"},
-  {key:"interest", en:"interest", zh:"利息", hint:"the price of borrowed capital"}
-];
-const STEPS = [
-  {key:"location", label:"选址", en:"Location", icon:"pin"},
-  {key:"resources",label:"资源", en:"Resources", icon:"box"},
-  {key:"staff",    label:"员工", en:"Staff", icon:"staff"},
-  {key:"classify", label:"分类", en:"Classify", icon:"grid"},
-  {key:"prices",   label:"价格", en:"Prices", icon:"tag"},
-  {key:"tradeoffs",label:"权衡", en:"Trade-offs", icon:"scale"},
-  {key:"english",  label:"英语", en:"English", icon:"chat"},
-  {key:"summary",  label:"完成", en:"Done", icon:"award"}
-];
-const GLOSSARY = [
-  {cat:"factors", en:"Factors of Production", zh:"生产要素", def:"The resources used in the production process (also called inputs) to make goods and services. In this unit: labor, capital, and land. 生产过程中用于制造商品与服务的资源（又称投入），本单元指劳动、资本、土地。"},
-  {cat:"factors", en:"Land", zh:"土地", def:"In economics, the natural resources provided by the earth — surface, minerals, water, forests — and the physical space used in production. Land is fixed in supply and immobile, so its supply curve is vertical. 经济学中的土地包括自然资源与生产空间；供给固定、不可移动。"},
-  {cat:"factors", en:"Labor", zh:"劳动", def:"The human effort — physical and mental — that people contribute to production. Its price is wages. 生产中付出的人力（体力和脑力），价格是工资。"},
-  {cat:"factors", en:"Capital", zh:"资本", def:"Physical assets used in production: machinery, buildings, tools, and equipment (also software and patents). Money is NOT capital — firms use money to acquire capital. 用于生产的实物资产（机器、厂房、设备、软件等）；钱本身不是资本，但可以用来购买资本。"},
-  {cat:"factors", en:"Intermediate Good", zh:"中间投入品", def:"A good that is used up in producing another good, such as coffee beans or flour. It is NOT a factor of production. 在生产中被消耗掉的商品，如咖啡豆、面粉，不属于生产要素。"},
-  {cat:"prices", en:"Wages", zh:"工资", def:"The price (income) of labor: all compensation paid to workers for physical or mental work. 劳动的价格（收入），支付给工人的全部报酬。"},
-  {cat:"prices", en:"Wage Rate", zh:"工资率", def:"The amount of base wage paid per unit of time (per hour or day) or per unit of output. 单位时间（小时/天）或单位产出的工资额。"},
-  {cat:"prices", en:"Interest", zh:"利息", def:"The price of capital; the income earned by the owner of capital. 资本的价格，资本所有者的收入。"},
-  {cat:"prices", en:"Interest Rate", zh:"利率", def:"The percentage of interest to total capital over a certain period; it regulates the balance between capital supply and demand. 一定时期内利息占资本总额的百分比，调节资本供求。"},
-  {cat:"prices", en:"Rent", zh:"租金（地租）", def:"The income derived from the ownership of land (and other gifts of nature); the price of land. 土地所有者因拥有土地获得的收入，即土地的价格。"},
-  {cat:"prices", en:"Rental Price", zh:"租赁价格", def:"The cost of leasing land or physical capital for a specific period. 一定期限内租用土地或资本的代价。"},
-  {cat:"prices", en:"Return on Capital", zh:"资本回报", def:"The profit a firm expects from investing its own money in capital. 企业用自有资金投资资本所期望的回报。"},
-  {cat:"markets", en:"Firm", zh:"企业", def:"An organization that produces goods or services to sell and earn revenue. 以生产并出售商品或服务来获取收入的组织。"},
-  {cat:"markets", en:"Factor Market", zh:"要素市场", def:"Where production factors are bought and sold: firms are the buyers, and the owners of factors are the sellers. 生产要素买卖的市场（企业为买方，要素所有者为卖方）。"},
-  {cat:"markets", en:"Product Market", zh:"产品市场", def:"Where final goods and services are exchanged between producers and consumers. 最终商品与服务在生产者和消费者之间交易的市场。"},
-  {cat:"markets", en:"Perfectly Competitive Market", zh:"完全竞争市场", def:"A market with numerous buyers and sellers, where no single firm can control prices. 买卖双方众多、单个企业无法控制价格的市场。"},
-  {cat:"markets", en:"Monopoly", zh:"垄断", def:"A market in which a single firm dominates and can exert control over prices. 单一企业支配市场并能够影响价格。"},
-  {cat:"markets", en:"Monopsony", zh:"买方垄断", def:"A market with only one buyer of a factor (e.g., a single employer), which can distort wages and employment. 要素市场只有一个买方（如唯一雇主），可能扭曲工资与就业。"},
-  {cat:"markets", en:"Income Distribution", zh:"收入分配", def:"How the income from production is shared among factor owners: wages, interest, and rent. 生产收入在要素所有者之间的分配：工资、利息、地租。"},
-  {cat:"demand", en:"Derived Demand", zh:"派生需求", def:"Demand for a factor that comes from the demand for the goods and services the factor helps produce. 由要素所生产的最终商品与服务需求引致的需求。"},
-  {cat:"demand", en:"Joint Demand", zh:"联合需求", def:"Production needs more than one factor, so a firm's demand for factors is a combined demand for two or more of them. 生产需要多种要素，企业往往同时需求两种以上要素。"},
-  {cat:"demand", en:"Demand for Labor", zh:"劳动需求", def:"The quantity of labor employers are willing and able to hire at a given wage rate; it has an inverse relationship with the wage rate. 一定工资率下雇主愿意且能够雇佣的劳动量，与工资率反向变动。"},
-  {cat:"demand", en:"Supply of Labor", zh:"劳动供给", def:"The total hours workers are willing to work at a given wage rate. 一定工资率下工人愿意提供的总劳动时间。"},
-  {cat:"demand", en:"Equilibrium", zh:"均衡", def:"The state where quantity demanded equals quantity supplied; factor prices settle at this point. 需求量等于供给量的状态，要素价格在此稳定。"},
-  {cat:"demand", en:"Substitution", zh:"要素替代", def:"Using more of one factor and less of another when their relative prices change — e.g. machines instead of workers when wages rise. 要素相对价格变化时，用更多的一种要素替代另一种。"},
-  {cat:"demand", en:"Complementarity", zh:"互补性", def:"The relationship between factors that are used together in production. 生产中相互配合使用的要素之间的关系。"},
-  {cat:"demand", en:"Elasticity of Demand", zh:"需求弹性", def:"How strongly the quantity demanded responds to a change in price. 需求量对价格变化的敏感程度。"},
-  {cat:"demand", en:"Factor Intensity", zh:"要素密集度", def:"Whether production relies more on capital (capital-intensive) or on labor (labor-intensive); automation makes production more capital-intensive. 生产更依赖资本还是劳动；自动化使生产更趋资本密集。"},
-  {cat:"marginal", en:"Marginal Product", zh:"边际产品", def:"The additional output produced by employing one more unit of a factor, holding other factors constant. 保持其他要素不变，追加一单位要素带来的额外产出。"},
-  {cat:"marginal", en:"Marginal Revenue Product (MRP)", zh:"边际收益产品", def:"The additional revenue from employing one more unit of a factor; MRP = MPL × MR. Firms hire up to the point where MRP equals the factor price. 追加一单位要素带来的额外收益；企业雇佣到 MRP 等于要素价格为止。"},
-  {cat:"more", en:"Opportunity Cost", zh:"机会成本", def:"The value of the best alternative given up when making a choice; the hourly wage is the opportunity cost of leisure. 做出选择时放弃的最优替代方案的价值；小时工资就是闲暇的机会成本。"},
-  {cat:"more", en:"Leisure", zh:"闲暇", def:"Time used outside the labor market: rest, recreation, housework, and so on. 工作之外用于休息、娱乐、家务等的时间。"},
-  {cat:"more", en:"Utility", zh:"效用", def:"The satisfaction people derive from consuming goods and services; consumers demand products for utility. 人们从消费中获得的满足。"},
-  {cat:"more", en:"Revenue", zh:"收入", def:"The money a firm receives from selling its output. 企业出售产品所获得的收入。"},
-  {cat:"more", en:"Profit", zh:"利润", def:"Revenue minus total cost. 收入减去总成本。"},
-  {cat:"more", en:"Savings & Investment", zh:"储蓄与投资", def:"Households supply capital mainly through savings (bank deposits, bonds); firms demand capital to invest in equipment and expand. 家庭以储蓄提供资本，企业以投资形成资本需求。"}
-];
-const GLOSSARY_CATS = [
-  ["factors","生产要素"],["prices","要素价格"],["markets","市场"],
-  ["demand","需求与供给"],["marginal","边际分析"],["more","拓展概念"]
-];
-const CAT_EN = { factors:"Factors", prices:"Prices", markets:"Markets", demand:"Demand", marginal:"Marginal Analysis", more:"More" };
-const SCENARIOS = [
-{
-  id:"coffee", name:"Coffee Shop", nameZh:"咖啡店", icon:"coffee",
-  tagline:"Your first coffee shop near campus",
-  premise:"You and a friend plan to open a coffee shop near campus. Start with the location.",
-  locations:[
-    {label:"Campus walk street", rent:"¥8,000/mo", note:"Steady student customers"},
-    {label:"Downtown commercial street", rent:"¥20,000/mo", note:"Biggest crowds, highest rent"},
-    {label:"Community street corner", rent:"¥5,000/mo", note:"Lowest rent, fewer people"}
-  ],
-  rentTip:"A busier location means higher rent — but more customers may bring more revenue. Firms weigh cost against revenue. That is the price logic of land.",
-  resources:[
-    {id:"shop", en:"Shop space", zh:"店面", icon:"home", factor:"land", why:"The shop space is the physical space you need — it is Land, and its price is rent."},
-    {id:"barista", en:"Barista", zh:"咖啡师", icon:"labor", factor:"labor", why:"The barista's skill and effort are human work — that is Labor, paid with wages."},
-    {id:"cashier", en:"Cashier", zh:"收银员", icon:"labor", factor:"labor", why:"The cashier's work is also labor — Labor, paid with wages."},
-    {id:"machine", en:"Coffee machine", zh:"咖啡机", icon:"capital", factor:"capital", why:"The coffee machine is equipment used in production — Capital. It turns materials into products."},
-    {id:"fridge", en:"Fridge", zh:"冰箱", icon:"capital", factor:"capital", why:"The fridge is equipment used again and again — Capital."},
-    {id:"tables", en:"Tables & chairs", zh:"桌椅", icon:"capital", factor:"capital", why:"Tables and chairs are equipment used again and again — Capital. They are not used up in one sale."},
-    {id:"beans", en:"Coffee beans", zh:"咖啡豆", icon:"material", factor:null, why:"Coffee beans are used up in production — an intermediate good, not a factor of production."},
-    {id:"cups", en:"Paper cups", zh:"纸杯", icon:"material", factor:null, why:"Paper cups are used up with each product — intermediate goods, not factors."}
-  ],
-  staff:[
-    {label:"1 all-round assistant", cost:"about ¥4,500/mo", note:"Lower cost, but busy hours may be tight"},
-    {label:"2 (barista + cashier)", cost:"about ¥8,000/mo", note:"Standard setup with clear roles"},
-    {label:"3 (plus 1 part-time)", cost:"about ¥11,000/mo", note:"Strongest service, highest wage cost"}
-  ],
-  staffNote:"Your staff is your labor input. How many you hire depends on the revenue from customers and the wage cost — that is the idea of labor demand.",
-  tradeoffs:[
-    {q:"Customers queue up on weekends and service is too slow. What do you do?", options:[
-      {label:"Hire 1 more barista (¥4,000 more per month)", best:false, fb:"It helps, but wages are a monthly cost — and the bottleneck is the coffee-making step itself."},
-      {label:"Buy a faster coffee machine (one-time ¥15,000)", best:true, fb:"The queue shows the bottleneck is machine speed. Capital is a one-time input that raises output for years — firms choose the factor that adds more output and revenue."},
-      {label:"Raise coffee prices", best:false, fb:"Higher prices may drive away students, and they do not fix the slow service."}
-    ]},
-    {q:"The barista asks for a 20% wage rise. As the owner, the most sensible response is...", options:[
-      {label:"Use fewer baristas and more machines", best:true, fb:"Wages are the price of labor. When labor gets more expensive, firms substitute capital (machines) for labor — substitution."},
-      {label:"Keep everything as it is", best:false, fb:"Labor is pricier; doing nothing squeezes profit."},
-      {label:"Hire more baristas", best:false, fb:"Adding labor when labor is pricier works against profit."}
-    ]}
-  ],
-  englishTasks:[
-    {type:"choice", prompt:"A coffee shop uses its ___ to turn coffee beans into coffee.", options:[
-      {text:"machine", correct:true, explain:"The machine is capital. Coffee beans are an intermediate good — they are used up in production."},
-      {text:"coffee beans", correct:false, explain:"Coffee beans are used up in production — an intermediate good, not the factor that makes the coffee."},
-      {text:"customers", correct:false, explain:"Customers buy the coffee; they are not a factor of production."}
-    ]},
-    {type:"choice", prompt:"The price a firm pays for labor is called ___.", options:[
-      {text:"wages", correct:true, explain:"Wages are the price of labor."},
-      {text:"rent", correct:false, explain:"Rent is the price of land, not labor."},
-      {text:"interest", correct:false, explain:"Interest is the price of borrowed capital, not labor."}
-    ]},
-    {type:"template", prompt:"介绍你的咖啡店：把正确的词点进三个空里。", sentence:"I run a coffee shop. I hire ___ as my labor, buy ___ as my capital, and rent ___ as my land.", blanks:[{key:"labor"},{key:"capital"},{key:"land"}], bank:[
-      {text:"a barista", key:"labor"}, {text:"a coffee machine", key:"capital"}, {text:"the shop space", key:"land"},
-      {text:"coffee beans", key:"none"}, {text:"paper cups", key:"none"}
-    ]}
-  ],
-  model:"I run a coffee shop. I hire a barista as my labor, buy a coffee machine as my capital, and rent the shop space as my land. I pay wages for labor, rent for land, and I hope for a return on my capital."
-},
-{
-  id:"milktea", name:"Milk Tea Shop", nameZh:"奶茶店", icon:"milktea",
-  tagline:"A milk tea shop students love",
-  premise:"You want to open a milk tea shop that college students love. Start with the location.",
-  locations:[
-    {label:"Night market near campus", rent:"¥7,000/mo", note:"Busy at night, moderate rent"},
-    {label:"Mall food floor", rent:"¥15,000/mo", note:"Strongest traffic, high rent"},
-    {label:"Office building ground floor", rent:"¥9,000/mo", note:"Office workers; weak evening traffic"}
-  ],
-  rentTip:"A busier location means higher rent — but more customers may bring more revenue. Firms weigh cost against revenue. That is the price logic of land.",
-  resources:[
-    {id:"shop", en:"Shop space", zh:"店铺空间", icon:"home", factor:"land", why:"The shop space is the physical space you need — it is Land, and its price is rent."},
-    {id:"maker", en:"Tea maker", zh:"制茶师", icon:"labor", factor:"labor", why:"The tea maker's skill and work are labor — Labor, paid with wages."},
-    {id:"cashier", en:"Cashier", zh:"收银员", icon:"labor", factor:"labor", why:"The cashier's work is labor — Labor, paid with wages."},
-    {id:"sealer", en:"Sealing machine", zh:"封口机", icon:"capital", factor:"capital", why:"The sealing machine is production equipment — Capital."},
-    {id:"ice", en:"Ice machine", zh:"制冰机", icon:"capital", factor:"capital", why:"The ice machine is production equipment — Capital."},
-    {id:"fridge", en:"Cold cabinet", zh:"冷藏柜", icon:"capital", factor:"capital", why:"The cold cabinet is used again and again — Capital."},
-    {id:"milk", en:"Tea & milk powder", zh:"茶叶、奶等原料", icon:"material", factor:null, why:"Tea and milk powder are used up in production — intermediate goods, not factors of production."},
-    {id:"cups", en:"Cups & straws", zh:"塑料杯和吸管", icon:"material", factor:null, why:"Cups and straws are used up with each drink — intermediate goods, not factors."}
-  ],
-  staff:[
-    {label:"1 shop assistant", cost:"about ¥4,000/mo", note:"Lower cost, but queues at busy hours"},
-    {label:"2 (tea maker + cashier)", cost:"about ¥7,500/mo", note:"Standard setup, faster service"},
-    {label:"3 (plus 1 part-time)", cost:"about ¥10,500/mo", note:"Handles peak hours easily"}
-  ],
-  staffNote:"Your staff is your labor input. How many you hire depends on the revenue from customers and the wage cost — that is the idea of labor demand.",
-  tradeoffs:[
-    {q:"The evening queue is too long and customers start leaving. What do you do?", options:[
-      {label:"Hire 1 more assistant (¥3,500 more per month)", best:false, fb:"It helps a little, but wages are a monthly cost."},
-      {label:"Buy automatic tea-making and sealing equipment (one-time ¥18,000)", best:true, fb:"The queue shows the bottleneck is equipment. Capital is a one-time input that raises output for years — firms choose the factor that adds more output and revenue."},
-      {label:"Shorten opening hours", best:false, fb:"Shorter hours cut revenue directly — not a real fix."}
-    ]},
-    {q:"Staff wages rise 20%. The most sensible response is...", options:[
-      {label:"Use more automatic machines and fewer assistants", best:true, fb:"Wages are the price of labor. When labor gets pricier, firms substitute capital (machines) for labor — substitution."},
-      {label:"Keep everything as it is", best:false, fb:"Labor is pricier; doing nothing squeezes profit."},
-      {label:"Hire more assistants", best:false, fb:"Adding labor when labor is pricier works against profit."}
-    ]}
-  ],
-  englishTasks:[
-    {type:"choice", prompt:"The price of using shop space is called ___.", options:[
-      {text:"rent", correct:true, explain:"Rent is the price of land — what you pay for the shop space."},
-      {text:"wages", correct:false, explain:"Wages are the price of labor, not the shop space."},
-      {text:"interest", correct:false, explain:"Interest is the price of borrowed capital, not shop space."}
-    ]},
-    {type:"choice", prompt:"A sealing machine (封口机) is part of the shop's ___.", options:[
-      {text:"capital", correct:true, explain:"Machines are capital — they help produce the milk tea."},
-      {text:"labor", correct:false, explain:"Labor is people, not machines."},
-      {text:"land", correct:false, explain:"Land is the physical space, not the equipment."}
-    ]},
-    {type:"template", prompt:"介绍你的奶茶店：把正确的词点进三个空里。", sentence:"I run a milk tea shop. I hire ___ as my labor, buy ___ as my capital, and rent ___ as my land.", blanks:[{key:"labor"},{key:"capital"},{key:"land"}], bank:[
-      {text:"a tea maker", key:"labor"}, {text:"a sealing machine", key:"capital"}, {text:"the shop space", key:"land"},
-      {text:"tea leaves", key:"none"}, {text:"plastic cups", key:"none"}
-    ]}
-  ],
-  model:"I run a milk tea shop. I hire a tea maker as my labor, buy a sealing machine as my capital, and rent the shop space as my land. I pay wages for labor, rent for land, and I hope for a return on my capital."
-},
-{
-  id:"noodle", name:"Noodle House", nameZh:"面馆", icon:"noodle",
-  tagline:"A tasty, affordable noodle house",
-  premise:"You decide to open a tasty, affordable noodle house. Start with the location.",
-  locations:[
-    {label:"Residential street", rent:"¥6,000/mo", note:"Loyal neighborhood regulars"},
-    {label:"Across from the campus canteen", rent:"¥9,000/mo", note:"Big student traffic at meal times"},
-    {label:"Office district", rent:"¥14,000/mo", note:"Busy at lunch; high rent"}
-  ],
-  rentTip:"A busier location means higher rent — but more customers may bring more revenue. Firms weigh cost against revenue. That is the price logic of land.",
-  resources:[
-    {id:"shop", en:"Shop space", zh:"店面", icon:"home", factor:"land", why:"The shop space is the physical space you need — it is Land, and its price is rent."},
-    {id:"cook", en:"Cook", zh:"厨师", icon:"labor", factor:"labor", why:"The cook's skill and work are labor — Labor, paid with wages."},
-    {id:"waiter", en:"Waiter", zh:"服务员", icon:"labor", factor:"labor", why:"The waiter's work is labor — Labor, paid with wages."},
-    {id:"machine", en:"Noodle machine", zh:"面条机", icon:"capital", factor:"capital", why:"The noodle machine is production equipment — Capital."},
-    {id:"stove", en:"Stove & woks", zh:"灶台锅具", icon:"capital", factor:"capital", why:"Stoves and woks are used again and again — Capital."},
-    {id:"fridge", en:"Cold storage", zh:"冷藏保鲜柜", icon:"capital", factor:"capital", why:"Cold storage is used again and again — Capital."},
-    {id:"flour", en:"Flour", zh:"面粉", icon:"material", factor:null, why:"Flour is used up in production — an intermediate good, not a factor of production."},
-    {id:"bowls", en:"Disposable bowls", zh:"一次性碗筷", icon:"material", factor:null, why:"Disposable bowls are used up with each meal — intermediate goods, not factors."}
-  ],
-  staff:[
-    {label:"1 waiter", cost:"about ¥3,500/mo", note:"The cook doubles as kitchen help; hands are tight"},
-    {label:"2 (cook + waiter)", cost:"about ¥8,500/mo", note:"Standard setup, smooth service"},
-    {label:"3 (plus 1 kitchen helper)", cost:"about ¥12,000/mo", note:"Fast service even at peak"}
-  ],
-  staffNote:"Your staff is your labor input. How many you hire depends on the revenue from customers and the wage cost — that is the idea of labor demand.",
-  tradeoffs:[
-    {q:"Lunch-time service is too slow and customers leave. What do you do?", options:[
-      {label:"Hire 1 kitchen helper (¥3,500 more per month)", best:false, fb:"It shares the load, but wages are a monthly cost."},
-      {label:"Buy an automatic noodle maker (one-time ¥12,000)", best:true, fb:"The slow step is kneading and pulling dough. Capital is a one-time input that raises output for years — firms choose the factor that adds more output and revenue."},
-      {label:"Cut the menu to fewer noodle types", best:false, fb:"A smaller menu loses customers and revenue."}
-    ]},
-    {q:"The cook asks for a 15% wage rise. The most sensible response is...", options:[
-      {label:"Use more semi-finished goods and machines, rely less on the cook", best:true, fb:"Wages are the price of labor. When labor gets pricier, firms substitute capital and semi-finished goods for labor — substitution."},
-      {label:"Keep everything as it is", best:false, fb:"Labor is pricier; doing nothing squeezes profit."},
-      {label:"Hire more cooks", best:false, fb:"Adding labor when labor is pricier works against profit."}
-    ]}
-  ],
-  englishTasks:[
-    {type:"choice", prompt:"Flour is an ___ good; it is used up in production.", options:[
-      {text:"intermediate", correct:true, explain:"Intermediate goods are consumed in production and are NOT factors of production."},
-      {text:"final", correct:false, explain:"A final good is what customers buy, like the bowl of noodles. Flour is used up making it."},
-      {text:"capital", correct:false, explain:"Capital means equipment used again and again; flour is used up."}
-    ]},
-    {type:"choice", prompt:"The cook's monthly pay is the firm's ___.", options:[
-      {text:"wages", correct:true, explain:"Wages are the price of labor — what the cook earns."},
-      {text:"rent", correct:false, explain:"Rent is the price of land, not the cook's pay."},
-      {text:"interest", correct:false, explain:"Interest is the price of borrowed capital, not the cook's pay."}
-    ]},
-    {type:"template", prompt:"介绍你的面馆：把正确的词点进三个空里。", sentence:"I run a noodle house. I hire ___ as my labor, buy ___ as my capital, and rent ___ as my land.", blanks:[{key:"labor"},{key:"capital"},{key:"land"}], bank:[
-      {text:"a cook", key:"labor"}, {text:"a noodle machine", key:"capital"}, {text:"the shop space", key:"land"},
-      {text:"flour", key:"none"}, {text:"disposable bowls", key:"none"}
-    ]}
-  ],
-  model:"I run a noodle house. I hire a cook as my labor, buy a noodle machine as my capital, and rent the shop space as my land. I pay wages for labor, rent for land, and I hope for a return on my capital."
-},
-{
-  id:"pet", name:"Pet Shop", nameZh:"宠物店", icon:"pet",
-  tagline:"Community pet shop: grooming + supplies",
-  premise:"You want to open a community pet shop offering grooming and supplies. Start with the location.",
-  locations:[
-    {label:"Community ground floor", rent:"¥7,000/mo", note:"Many pet-owning families; moderate rent"},
-    {label:"Mall second floor", rent:"¥16,000/mo", note:"Big traffic, high rent"},
-    {label:"Next to a pet hospital", rent:"¥10,000/mo", note:"Targeted customers; mutual referrals"}
-  ],
-  rentTip:"A busier location means higher rent — but more customers may bring more revenue. Firms weigh cost against revenue. That is the price logic of land.",
-  resources:[
-    {id:"shop", en:"Shop space", zh:"店面", icon:"home", factor:"land", why:"The shop space is the physical space you need — it is Land, and its price is rent."},
-    {id:"groomer", en:"Pet groomer", zh:"宠物美容师", icon:"labor", factor:"labor", why:"The groomer's skill and work are labor — Labor, paid with wages."},
-    {id:"clerk", en:"Shop clerk", zh:"店员", icon:"labor", factor:"labor", why:"The clerk's work is labor — Labor, paid with wages."},
-    {id:"table", en:"Grooming table", zh:"美容台", icon:"capital", factor:"capital", why:"The grooming table is used again and again — Capital."},
-    {id:"dryer", en:"Pet dryer", zh:"吹水机", icon:"capital", factor:"capital", why:"The pet dryer is production equipment — Capital."},
-    {id:"cages", en:"Pet cages", zh:"宠物笼具", icon:"capital", factor:"capital", why:"Cages are used again and again — Capital."},
-    {id:"food", en:"Pet food", zh:"宠物粮", icon:"material", factor:null, why:"Pet food is a product sold to customers — it is not a factor of production."},
-    {id:"toys", en:"Pet toys", zh:"宠物玩具", icon:"material", factor:null, why:"Pet toys are goods sold in the shop — not factors of production."}
-  ],
-  staff:[
-    {label:"1 shop clerk", cost:"about ¥4,000/mo", note:"Basic sales only; limited grooming orders"},
-    {label:"2 (groomer + clerk)", cost:"about ¥9,000/mo", note:"Covers grooming and sales"},
-    {label:"3 (plus 1 assistant)", cost:"about ¥13,000/mo", note:"Handles full bookings"}
-  ],
-  staffNote:"Your staff is your labor input. How many you hire depends on the revenue from customers and the wage cost — that is the idea of labor demand.",
-  tradeoffs:[
-    {q:"Grooming is fully booked, but each order takes too long (40 minutes just to dry). What do you do?", options:[
-      {label:"Hire 1 more groomer (¥5,000 more per month)", best:false, fb:"More orders possible, but wages are a monthly cost — and groomers are hard to find."},
-      {label:"Buy an automatic dryer box (one-time ¥20,000)", best:true, fb:"The bottleneck is drying. Capital cuts the time per order in half — firms choose the factor that adds more output and revenue."},
-      {label:"Turn away new customers", best:false, fb:"Refusing customers gives up revenue."}
-    ]},
-    {q:"The groomer asks for a 20% wage rise. The most sensible response is...", options:[
-      {label:"Use more equipment to shorten each order and rely less on groomers", best:true, fb:"Wages are the price of labor. When labor gets pricier, firms substitute capital (equipment) for labor — substitution."},
-      {label:"Keep everything as it is", best:false, fb:"Labor is pricier; doing nothing squeezes profit."},
-      {label:"Hire more groomers", best:false, fb:"Adding labor when labor is pricier works against profit."}
-    ]}
-  ],
-  englishTasks:[
-    {type:"choice", prompt:"Pet food is sold to customers, so it is NOT a ___ of production.", options:[
-      {text:"factor", correct:true, explain:"Pet food is a good for resale — not a factor of production."},
-      {text:"cost", correct:false, explain:"Pet food is a cost, but the question asks about the three factors: land, labor, and capital."},
-      {text:"brand", correct:false, explain:"Brand is not an economic factor of production."}
-    ]},
-    {type:"choice", prompt:"The grooming table is used for years; it is the shop's ___.", options:[
-      {text:"capital", correct:true, explain:"Equipment used again and again is capital."},
-      {text:"land", correct:false, explain:"Land is the physical space, not the equipment."},
-      {text:"labor", correct:false, explain:"Labor is people, not equipment."}
-    ]},
-    {type:"template", prompt:"介绍你的宠物店：把正确的词点进三个空里。", sentence:"I run a pet shop. I hire ___ as my labor, buy ___ as my capital, and rent ___ as my land.", blanks:[{key:"labor"},{key:"capital"},{key:"land"}], bank:[
-      {text:"a pet groomer", key:"labor"}, {text:"a grooming table", key:"capital"}, {text:"the shop space", key:"land"},
-      {text:"pet food", key:"none"}, {text:"pet toys", key:"none"}
-    ]}
-  ],
-  model:"I run a pet shop. I hire a pet groomer as my labor, buy grooming equipment as my capital, and rent the shop space as my land. I pay wages for labor, rent for land, and I hope for a return on my capital."
-},
-{
-  id:"training", name:"Training Center", nameZh:"培训中心", icon:"training",
-  tagline:"A training center for college students",
-  premise:"You decide to open a training center for college students. Start with the location.",
-  locations:[
-    {label:"Office building near campus", rent:"¥12,000/mo", note:"Students can walk there"},
-    {label:"Community commercial street", rent:"¥8,000/mo", note:"Moderate rent; family customers"},
-    {label:"Mall education floor", rent:"¥18,000/mo", note:"Highest exposure and rent"}
-  ],
-  rentTip:"A busier location means higher rent — but more customers may bring more revenue. Firms weigh cost against revenue. That is the price logic of land.",
-  resources:[
-    {id:"room", en:"Classroom space", zh:"教学场地", icon:"home", factor:"land", why:"The classroom space is the physical space you need — it is Land, and its price is rent."},
-    {id:"teacher", en:"Teacher", zh:"授课老师", icon:"labor", factor:"labor", why:"The teacher's work is labor — Labor, paid with wages."},
-    {id:"advisor", en:"Course advisor", zh:"课程顾问", icon:"labor", factor:"labor", why:"The advisor's work is labor — Labor, paid with wages."},
-    {id:"projector", en:"Teaching screen", zh:"教学一体机", icon:"capital", factor:"capital", why:"The teaching screen is teaching equipment — Capital."},
-    {id:"desks", en:"Desks & chairs", zh:"课桌椅", icon:"capital", factor:"capital", why:"Desks and chairs are used again and again — Capital."},
-    {id:"ac", en:"Air conditioner", zh:"空调", icon:"capital", factor:"capital", why:"The air conditioner is used again and again — Capital."},
-    {id:"books", en:"Textbooks", zh:"课程教材", icon:"material", factor:null, why:"Textbooks are products sold to students — not factors of production."},
-    {id:"flyers", en:"Flyers", zh:"宣传单页", icon:"material", factor:null, why:"Flyers are used up in promotion — intermediate goods, not factors."}
-  ],
-  staff:[
-    {label:"1 full-time teacher", cost:"about ¥8,000/mo", note:"Can teach, but enrollment and admin overwhelm"},
-    {label:"2 (teacher + course advisor)", cost:"about ¥14,000/mo", note:"Clear roles for teaching and enrollment"},
-    {label:"3 (plus 1 part-time assistant)", cost:"about ¥18,000/mo", note:"Can run several classes at once"}
-  ],
-  staffNote:"Your staff is your labor input. How many you hire depends on the revenue from students and the wage cost — that is the idea of labor demand.",
-  tradeoffs:[
-    {q:"The classroom is full, but the teacher cannot fit in more classes. What do you do?", options:[
-      {label:"Hire 1 more teacher (¥8,000 more per month)", best:false, fb:"More classes possible, but wages are a monthly cost — and good teachers are rare."},
-      {label:"Record the course online; one set of content serves more students", best:true, fb:"This substitutes capital (recorded content) for labor (repeated teaching) and breaks the limit of land (the classroom) — firms choose the factor that adds more output and revenue."},
-      {label:"Raise tuition", best:false, fb:"Higher fees may lose students and do not fix capacity."}
-    ]},
-    {q:"A star teacher asks for a 30% pay rise. The most sensible response is...", options:[
-      {label:"Run fewer offline classes and add online recordings", best:true, fb:"Wages are the price of labor. When labor gets pricier, firms substitute capital (online content) for labor — substitution."},
-      {label:"Keep everything as it is", best:false, fb:"Labor is pricier; doing nothing squeezes profit."},
-      {label:"Hire more teachers", best:false, fb:"Adding labor when labor is pricier works against profit."}
-    ]}
-  ],
-  englishTasks:[
-    {type:"choice", prompt:"A teacher's salary is the price of ___.", options:[
-      {text:"labor", correct:true, explain:"A teacher's work is labor; its price is wages (salary)."},
-      {text:"land", correct:false, explain:"Land is the physical space, not the teacher."},
-      {text:"capital", correct:false, explain:"Capital is equipment like the teaching screen, not people."}
-    ]},
-    {type:"template", prompt:"补全这句话：教室空间是中心的___，它的价格是___。", sentence:"The classroom space is the center's ___, and its price is ___.", blanks:[{key:"land",label:"land（土地）"},{key:"price",label:"rent（租金）"}], bank:[
-      {text:"land", key:"land"}, {text:"rent", key:"price"}, {text:"labor", key:"labor"}, {text:"wages", key:"wages"}
-    ]},
-    {type:"template", prompt:"介绍你的培训中心：把正确的词点进三个空里。", sentence:"I run a training center. I hire ___ as my labor, buy ___ as my capital, and rent ___ as my land.", blanks:[{key:"labor"},{key:"capital"},{key:"land"}], bank:[
-      {text:"a teacher", key:"labor"}, {text:"a teaching screen", key:"capital"}, {text:"the classroom space", key:"land"},
-      {text:"textbooks", key:"none"}, {text:"flyers", key:"none"}
-    ]}
-  ],
-  model:"I run a training center. I hire teachers as my labor, buy teaching equipment as my capital, and rent the classroom space as my land. I pay wages for labor, rent for land, and I hope for a return on my capital."
-},
-{
-  id:"software", name:"Software Studio", nameZh:"软件工作室", icon:"software",
-  tagline:"A small studio taking projects with classmates",
-  premise:"You and your classmates open a small software studio that builds mini-programs and websites for firms. Start with the location.",
-  locations:[
-    {label:"Co-working space", rent:"¥3,000/seat/mo", note:"Professional image; easy teamwork"},
-    {label:"University tech-park incubator", rent:"¥1,500/seat/mo", note:"Subsidized; low rent"},
-    {label:"Work from home", rent:"¥0", note:"Zero land cost, but weaker teamwork and image"}
-  ],
-  rentTip:"A software studio needs almost no shop front — its land cost can be very low, even zero. Internet firms rely more on capital (computers, servers) and labor (programmers) than on land.",
-  resources:[
-    {id:"office", en:"Workspace", zh:"办公空间/工位", icon:"home", factor:"land", why:"The workspace is the physical space you need — it is Land. Its price is rent, which can be very low or even zero for a software studio."},
-    {id:"dev", en:"Developer", zh:"程序员", icon:"labor", factor:"labor", why:"The developer's coding work is labor — Labor, paid with wages."},
-    {id:"designer", en:"Designer", zh:"设计师", icon:"labor", factor:"labor", why:"The designer's work is labor — Labor, paid with wages."},
-    {id:"pc", en:"Computers", zh:"电脑", icon:"capital", factor:"capital", why:"Computers are production equipment — Capital."},
-    {id:"server", en:"Servers & cloud", zh:"服务器/云服务", icon:"capital", factor:"capital", why:"Servers are production equipment — Capital."},
-    {id:"tools", en:"Dev tools & licenses", zh:"开发工具软件", icon:"capital", factor:"capital", why:"Dev tools and software licenses are capital used in production."},
-    {id:"snacks", en:"Coffee & snacks", zh:"咖啡零食", icon:"material", factor:null, why:"Coffee and snacks are used up — intermediate goods, not factors."},
-    {id:"materials", en:"Promo materials", zh:"宣传物料", icon:"material", factor:null, why:"Promo materials are used up in promotion — not factors of production."}
-  ],
-  staff:[
-    {label:"2 (1 developer + 1 designer)", cost:"about ¥20,000/mo", note:"Can take small projects; slower delivery"},
-    {label:"3 (plus 1 product manager)", cost:"about ¥28,000/mo", note:"Complete roles; faster delivery"},
-    {label:"5 (plus testing and operations)", cost:"about ¥45,000/mo", note:"Full team; can take big projects"}
-  ],
-  staffNote:"Your staff is your labor input. How many you hire depends on the revenue from projects and the wage cost — that is the idea of labor demand.",
-  tradeoffs:[
-    {q:"Delivery is too slow and the client starts pushing. What do you do?", options:[
-      {label:"Hire 1 more developer (¥12,000 more per month)", best:false, fb:"Faster, but wages are a monthly cost — and new hires need training."},
-      {label:"Buy automation tools and stronger servers (one-time ¥30,000)", best:true, fb:"The slow part is repetitive work. Capital (tools and servers) raises each developer's output for years — firms choose the factor that adds more output and revenue."},
-      {label:"Ask the team to work overtime", best:false, fb:"Overtime works for a while, but it burns the team out and gets slower in the long run."}
-    ]},
-    {q:"Developer wages rise 25%. The most sensible response is...", options:[
-      {label:"Use automation and AI tools to replace part of the coding", best:true, fb:"Wages are the price of labor. When labor gets pricier, firms substitute capital (tools) for labor — substitution."},
-      {label:"Keep everything as it is", best:false, fb:"Labor is pricier; doing nothing squeezes profit."},
-      {label:"Hire more developers", best:false, fb:"Adding labor when labor is pricier works against profit."}
-    ]}
-  ],
-  englishTasks:[
-    {type:"choice", prompt:"Computers and servers are the studio's ___.", options:[
-      {text:"capital", correct:true, explain:"Computers and servers are equipment used in production — capital."},
-      {text:"labor", correct:false, explain:"Labor is the programmers' work, not the machines."},
-      {text:"land", correct:false, explain:"Land is the physical space, not the machines."}
-    ]},
-    {type:"choice", prompt:"When wages rise, the studio may use more ___ instead of some programmers.", options:[
-      {text:"automation tools", correct:true, explain:"When labor gets more expensive, firms substitute capital (tools) for labor."},
-      {text:"coffee", correct:false, explain:"Coffee is consumed in the office; it does not replace programmers."},
-      {text:"marketing", correct:false, explain:"Marketing brings customers; it does not solve the higher wage problem."}
-    ]},
-    {type:"template", prompt:"介绍你的软件工作室：把正确的词点进三个空里。", sentence:"I run a software studio. I hire ___ as my labor, use ___ as my capital, and rent ___ as my land.", blanks:[{key:"labor"},{key:"capital"},{key:"land"}], bank:[
-      {text:"a programmer", key:"labor"}, {text:"computers", key:"capital"}, {text:"a co-working space", key:"land"},
-      {text:"coffee", key:"none"}, {text:"flyers", key:"none"}
-    ]}
-  ],
-  model:"I run a software studio. I hire programmers as my labor, use computers and servers as my capital, and rent a small office as my land. I pay wages for labor, rent for land, and I hope for a return on my capital."
-},
-];
-/* ==================== STATE ==================== */
-let S = {
-  screen: "concepts",   // concepts | home | play
-  scId: null,
-  step: 0,          // 0..7
-  etask: 0,         // 英语任务子序号
-  picks: null,
-  doneCount: 0,
-  concept: "Land",      // 第一页当前选中的概念卡
-  lastConcept: null     // 上次渲染的概念，用于切换动画
-};
-const BUCKETS = [
-  {key:"land",    label:"Land"},
-  {key:"labor",   label:"Labor"},
-  {key:"capital", label:"Capital"},
-  {key:"none",    label:"None"}
-];
-function sc(){ return SCENARIOS.find(function(s){ return s.id===S.scId; }); }
-function correctBucket(r){ return r.factor===null ? "none" : r.factor; }
-function newPicks(){
-  return { loc:null, res:{}, staff:null, cls:{}, price:{land:null,labor:null,capital:null},
-           to:[null,null], eng:[null,null,null], engDone:[false,false,false],
-           stats:{ dims:{land:{t:0,ok:0},labor:{t:0,ok:0},capital:{t:0,ok:0},intermediate:{t:0,ok:0},prices:{t:0,ok:0},tradeoff:{t:0,ok:0},english:{t:0,ok:0}}, unit:{}, clsErrIds:[], saved:false } };
-}
-function shuffle(arr){
-  const a = arr.slice();
-  for(let i=a.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    const t = a[i]; a[i]=a[j]; a[j]=t;
-  }
-  return a;
-}
-function startScenario(id){
-  S.scId=id; S.step=0; S.etask=0; S.picks=newPicks();
-  S.picks.resOrder = shuffle(sc().resources.map(function(r){ return r.id; }));
-  S.screen="play"; render();
-}
+const $=s=>document.querySelector(s);
+const nav1=$('#chNav'),nav2=$('#chNav2'),grid=$('#chGrid'),frame=$('#chapterFrame');
+let current=0,toastTimer=null;
 
-/* ==================== LEARNING DIAGNOSIS ==================== */
-const DIMMETA = [
-  {key:"land", label:"Land 土地"},
-  {key:"labor", label:"Labor 劳动"},
-  {key:"capital", label:"Capital 资本"},
-  {key:"intermediate", label:"Intermediate Goods 中间投入品"},
-  {key:"prices", label:"Factor Prices 要素价格"},
-  {key:"tradeoff", label:"Trade-offs 资源权衡"},
-  {key:"english", label:"English 英语表达"}
-];
-function factorDim(r){ return r.factor===null ? "intermediate" : r.factor; }
-function blankDim(b){
-  if(b.key==="land"||b.key==="labor"||b.key==="capital") return b.key;
-  if(b.key==="price") return "prices";
-  return "english";
+function chip(c){
+  const ready=!!c.file;
+  return `<button class="ch-btn ${ready?'ready':''}${current===c.n?' on':''}" data-n="${c.n}" style="--cc:${COLORS[c.n]}"><b>${c.n}</b>${c.cn}</button>`;
 }
-function track(dim, ok, unitKey){
-  const st = S.picks.stats;
-  if(!st.dims[dim]) st.dims[dim]={t:0,ok:0};
-  st.dims[dim].t++;
-  if(ok) st.dims[dim].ok++;
-  if(unitKey!==undefined && st.unit[unitKey]===undefined) st.unit[unitKey]=ok;
+function card(c){
+  const ready=!!c.file;
+  return `<div class="ch-card ${ready?'ready':'locked'}" data-n="${c.n}" style="--cc:${COLORS[c.n]}" ${ready?'':'aria-disabled="true"'}>
+    <div class="num">${String(c.n).padStart(2,'0')}</div>
+    <div class="cn">${c.cn}</div>
+    <div class="en2">${c.en}</div>
+    <span class="st ${ready?'ready':'later'}">${ready?'立即开始 · Start':'即将上线 · Coming Soon'}</span>
+  </div>`;
 }
-function diag(){
-  const dims = DIMMETA.map(function(m){
-    const d = S.picks.stats.dims[m.key] || {t:0,ok:0};
-    return { key:m.key, label:m.label, t:d.t, ok:d.ok, err:d.t-d.ok, acc:(d.t>0?Math.round(100*d.ok/d.t):null) };
+function bindGlow(btn){
+  btn.addEventListener('mousemove',e=>{
+    const r=btn.getBoundingClientRect();
+    btn.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+    btn.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
   });
-  const unitKeys = Object.keys(S.picks.stats.unit);
-  const firstOk = unitKeys.filter(function(k){ return S.picks.stats.unit[k]; }).length;
-  const totalT = dims.reduce(function(s,d){ return s+d.t; },0);
-  const totalOk = dims.reduce(function(s,d){ return s+d.ok; },0);
-  const totalErr = dims.reduce(function(s,d){ return s+d.err; },0);
-  return { dims:dims, firstOk:firstOk, firstN:unitKeys.length, totalErr:totalErr, overallAcc:(totalT>0?Math.round(100*totalOk/totalT):null) };
 }
-const ADVICE = {
-  land:{t:"Land Recognition 土地识别", s:"Land means the physical space and natural resources used in production; its price is rent. Review the Land card and replay this shop. Land（土地）指生产所用的物理空间与自然资源，价格是 rent（租金）。建议回到概念卡复习后重玩本店。"},
-  labor:{t:"Labor Recognition 劳动识别", s:"Labor means the physical and mental effort of workers — baristas, teachers, programmers; its price is wages. Review the concept card and replay this shop. Labor（劳动）指工人付出的体力和脑力，价格是 wages（工资）。建议复习概念卡后重玩本店。"},
-  capital:{t:"Capital Recognition 资本识别", s:"Capital means the machines, equipment, tools and software used in production. Remember: money is NOT capital — it must be used to buy capital. Review the concept card. Capital（资本）指生产用的机器、设备、工具与软件。注意 money is NOT capital——钱本身不是资本。建议复习概念卡。"},
-  intermediate:{t:"Intermediate Goods 中间投入品识别", s:"Resources like coffee beans, flour or pet food are used up in production — they are intermediate goods, not Land / Labor / Capital. 咖啡豆、面粉、宠物粮等资源在生产中被消耗，是中间投入品（intermediate goods），不属于 Land / Labor / Capital 中的任何一类。"},
-  prices:{t:"Factor Prices 要素价格", s:"Factor prices: Labor → wages, Land → rent, Capital → interest; the interest rate is interest as a percentage of capital. 要素价格对应：Labor → wages（工资）、Land → rent（租金）、Capital → interest（利息）；利率（interest rate）是利息占资本的百分比。"},
-  tradeoff:{t:"Trade-offs 资源权衡", s:"Firms choose the factor that adds the most output and revenue (factor demand). When wages rise, firms substitute capital (machines) for labor — substitution. 企业按“哪种要素更能增加产出与收益”决策（factor demand）；工资上涨时，企业会用资本（机器）替代劳动——这就是要素替代（substitution）。"},
-  english:{t:"English 英语表达", s:"Review wages / rent / interest and labor / capital / land, then say your business aloud with the model sentence. 重点复习 wages / rent / interest、labor / capital / land 的用法，再用模板句把你的生意完整说一遍。"}
-};
-function buildAdvice(s,d){
-  const weak = d.dims.filter(function(x){ return x.t>0 && x.acc<60; });
-  const mid = d.dims.filter(function(x){ return x.t>0 && x.acc>=60 && x.acc<80; });
-  const items = [];
-  weak.concat(mid).forEach(function(x){
-    const a = ADVICE[x.key];
-    if(a) items.push({key:x.key, label:a.t, text:a.s, level:(x.acc<60?1:2)});
+function bindTilt(card){
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-0.5,y=(e.clientY-r.top)/r.height-0.5;
+    card.style.setProperty('--mx',(x+0.5)*100+'%');
+    card.style.setProperty('--my',(y+0.5)*100+'%');
+    if(card.classList.contains('ready')){
+      card.style.transform=`rotateY(${x*10}deg) rotateX(${-y*10}deg) translateY(-6px)`;
+    }
   });
-  const errRes = s.resources.filter(function(r){ return S.picks.stats.clsErrIds.indexOf(r.id)>-1; });
-  if(errRes.length){
-    const target = items.find(function(it){ return it.key==="intermediate" || it.key==="land" || it.key==="labor" || it.key==="capital"; });
-    if(target) target.text += " You sorted these wrongly this run: "+errRes.map(function(r){return r.en;}).join(", ")+". 你这次把“"+errRes.map(function(r){return r.zh;}).join("、")+"”归错了类。";
-  }
-  if(items.length===0){
-    return { all:true, text:"You have mastered the three factors — identification, pricing and trade-offs! Think further: when should a firm stop hiring? When MRP (marginal revenue product, MRP = MPL × MR) equals the wage rate — that is Unit 6 §6.2. 三大生产要素的识别、定价与权衡你都已经掌握！进阶思考：企业雇人应雇到 MRP（边际收益产品，MRP = MPL × MR）等于工资率（wage rate）时为止——这是教材 Unit 6 §6.2 的内容。" };
-  }
-  return { all:false, items:items };
+  card.addEventListener('mouseleave',()=>{card.style.transform=''});
 }
-function cumKey(){ return "fop_cum_v1"; }
-function loadCum(){
-  try{
-    const r = JSON.parse(localStorage.getItem(cumKey())||"null");
-    if(r && typeof r.n==="number") return r;
-  }catch(e){}
-  return {n:0, dims:{}};
+function renderNav(){
+  nav1.innerHTML=CHAPTERS.map(chip).join('');
+  nav2.innerHTML=CHAPTERS.map(chip).join('');
+  grid.innerHTML=CHAPTERS.map(card).join('');
+  nav1.querySelectorAll('.ch-btn').forEach(b=>{bindGlow(b);b.onclick=()=>openChapter(+b.dataset.n)});
+  nav2.querySelectorAll('.ch-btn').forEach(b=>{bindGlow(b);b.onclick=()=>openChapter(+b.dataset.n)});
+  grid.querySelectorAll('.ch-card').forEach(c=>{bindGlow(c);bindTilt(c);c.onclick=()=>openChapter(+c.dataset.n)});
 }
-function addCum(){
-  const st = S.picks.stats;
-  if(st.saved) return loadCum();
-  st.saved = true;
-  const c = loadCum();
-  c.n++;
-  DIMMETA.forEach(function(m){
-    const d = st.dims[m.key];
-    if(!d || !d.t) return;
-    if(!c.dims[m.key]) c.dims[m.key]={t:0,ok:0};
-    c.dims[m.key].t+=d.t; c.dims[m.key].ok+=d.ok;
-  });
-  try{ localStorage.setItem(cumKey(), JSON.stringify(c)); }catch(e){}
-  return c;
+function toast(msg){
+  const t=$('#toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
 }
-function cumAcc(c){
-  let t=0, ok=0;
-  Object.keys(c.dims).forEach(function(k){ t+=c.dims[k].t; ok+=c.dims[k].ok; });
-  return t>0 ? Math.round(100*ok/t) : null;
-}
-function dimBar(x){
-  const acc = (x.acc===null?0:x.acc);
-  const color = (x.acc===null?"#D8D2C0":(acc>=80?"var(--ok)":(acc>=60?"var(--accent)":"var(--bad)")));
-  return '<div class="dim-item"><div class="dim-label">'+x.label+'</div>'+
-    '<div class="dim-track"><div class="dim-fill" style="width:'+acc+'%;background:'+color+'"></div></div>'+
-    '<div class="dim-num">'+(x.acc===null?"—":x.acc+"%")+(x.err>0?' <span class="e">×'+x.err+'</span>':'')+'</div></div>';
-}
-function renderDiag(s){
-  const d = diag();
-  const adv = buildAdvice(s,d);
-  const ringColor = (d.overallAcc===null?"#E9E4D6":(d.overallAcc>=80?"var(--ok)":(d.overallAcc>=60?"var(--accent)":"var(--bad)")));
-  let body = '<div class="sec-title">Learning Diagnosis 学习诊断</div>'+
-    '<div class="diag-top">'+
-      '<div class="ring" style="background:conic-gradient('+ringColor+' '+(d.overallAcc||0)+'%, #ECE7D8 0)"><div class="ring-in"><div class="ring-num" style="color:'+ringColor+'">'+(d.overallAcc===null?"—":d.overallAcc+"%")+'</div><div class="ring-cap">Accuracy 正确率</div></div></div>'+
-      '<div class="diag-sum"><b>Points</b> 决策点 <b>'+d.firstN+'</b><br><b>First-try</b> 首次答对 <b>'+d.firstOk+'/'+d.firstN+'</b> · <b>Errors</b> 错误 <b>'+(d.totalErr>0?d.totalErr:'0')+'</b> 次<br>Accuracy = correct ÷ attempts 正确率 = 答对次数 ÷ 尝试次数，尝试越少越说明掌握</div>'+
-    '</div>'+
-    '<div class="dims">'+d.dims.map(dimBar).join("")+'</div>';
-  if(adv.all){
-    body += '<div class="advice-good"><b>Advice 建议：</b>'+adv.text+'</div>';
-  } else {
-    body += '<div class="advice-box"><div class="a-t">Advice 针对薄弱环节的建议</div>'+
-      adv.items.map(function(it){
-        return '<div class="advice-item '+(it.level===1?'weak':'')+'"><span class="a-dim">'+it.label+'</span>'+it.text+'</div>';
-      }).join("")+'</div>';
-  }
-  return body;
-}
-
-/* ==================== READ GATE (3 分钟概念卡阅读门禁) ==================== */
-const READ_KEY = "fop_read_v1", READ_MS = 2*60*1000;
-let readMem = null, readTimer = null;
-function readState(){
-  let s = null;
-  try{ s = JSON.parse(localStorage.getItem(READ_KEY)||"null"); }catch(e){}
-  if(s && typeof s.start==="number"){ readMem = s; return s; }
-  if(readMem) return readMem;
-  readMem = {start:Date.now(), done:false};
-  try{ localStorage.setItem(READ_KEY, JSON.stringify(readMem)); }catch(e){}
-  return readMem;
-}
-function readReady(){ const r = readState(); return r.done===true || (Date.now()-r.start)>=READ_MS; }
-function readRemain(){
-  const r = readState();
-  if(r.done) return 0;
-  const m = READ_MS-(Date.now()-r.start);
-  if(m<=0){ r.done=true; try{ localStorage.setItem(READ_KEY, JSON.stringify(r)); }catch(e){} return 0; }
-  return m;
-}
-function fmtMs(ms){
-  const s = Math.max(1, Math.ceil(ms/1000));
-  return ("0"+Math.floor(s/60)).slice(-2)+":"+("0"+(s%60)).slice(-2);
-}
-function flashRead(){
-  const el = document.querySelector(".read-bar.lock");
-  if(el){ el.classList.add("shake"); setTimeout(function(){ el.classList.remove("shake"); },350); }
-}
-function syncReadTimer(){
-  if(S.screen==="concepts" && !readReady()){
-    if(!readTimer) readTimer = setInterval(function(){ render(); }, 1000);
-  } else if(readTimer){ clearInterval(readTimer); readTimer = null; }
-}
-const CORE_CARDS = [
-  {icon:"land", en:"Land", short:"Land", zh:"土地", color:"ic-land",
-   defEn:"The natural resources and physical space used in production, such as your shop space. Its price is rent.",
-   defZh:"生产所用的自然资源与物理空间，比如你的店面。它的价格是 rent（租金）。",
-   tip:"Fixed in supply and immobile 供给固定、不可移动"},
-  {icon:"labor", en:"Labor", short:"Labor", zh:"劳动", color:"ic-labor",
-   defEn:"The human effort that workers contribute to production — baristas, teachers, developers. Its price is wages.",
-   defZh:"工人为生产付出的体力和脑力——咖啡师、老师、程序员。它的价格是 wages（工资）。",
-   tip:"Hire until MRP equals the wage rate 雇多少人，看 MRP 与工资率的比较"},
-  {icon:"capital", en:"Capital", short:"Capital", zh:"资本", color:"ic-capital",
-   defEn:"The equipment and tools used in production — coffee machines, computers, servers. Its price is interest.",
-   defZh:"用于生产的设备与工具——咖啡机、电脑、服务器。它的价格是 interest（利息）。",
-   tip:"Money is NOT capital 钱本身不是资本"},
-  {icon:"material", en:"Intermediate Good", short:"Intermed.", zh:"中间投入品", color:"ic-material",
-   defEn:"A resource that is used up in production, such as coffee beans or flour. It is NOT a factor of production. Unit 6 covers the three factor markets only; intermediate goods are inputs, not factors.",
-   defZh:"在生产中被消耗掉的资源，如咖啡豆、面粉。它不是生产要素。Unit 6 只讲三大要素市场；中间投入品是投入品（inputs），不是要素。",
-   tip:"Not Land / Labor / Capital 不属于三大要素"},
-  {icon:"factory", en:"Firms & Revenue", short:"Firms", zh:"企业为何需要要素", color:"ic-land",
-   defEn:"Firms demand factors not to own them, but to produce goods and services and earn revenue. Demand for factors comes from the demand for products (derived demand).",
-   defZh:"企业需求生产要素不是为了“拥有”，而是为了生产商品与服务、获得收入。要素需求由产品需求派生（derived demand）。",
-   tip:"Firms adjust factors by cost and expected revenue 企业按成本与预期收益调整要素使用量"}
-];
-function conceptMain(k, anim){
-  return '<div class="concept-main'+(anim?' anim':'')+'">'+
-    '<div class="cm-head"><span class="f-ic '+k.color+'">'+ICONS[k.icon]+'</span>'+
-    '<div><div class="cm-en">'+k.en+'</div><div class="cm-zh">'+k.zh+'</div></div></div>'+
-    '<div class="cm-en-def"><b>'+k.en+'</b> · '+k.defEn+'</div>'+
-    '<div class="cm-zh-def">'+k.defZh+'</div>'+
-    '<div class="cm-tip">'+ICONS.check+'<span>'+k.tip+'</span></div>'+
-  '</div>';
-}
-function conceptsHTML(){
-  const ready = readReady();
-  const cur = CORE_CARDS.find(function(k){ return k.en===S.concept; }) || CORE_CARDS[0];
-  const anim = S.lastConcept!==cur.en;
-  S.lastConcept = cur.en;
-  return '<div class="app-header">'+
-    '<div class="hd-row">'+
-      '<div class="hd-title"><div class="t1">Concept Cards</div><div class="t2">Factors of Production · Read 2 min</div></div>'+
-      '<button class="hd-btn" data-act="glossary">Full Glossary</button>'+
-    '</div>'+
-    (ready
-      ? '<div class="hd-gate"><button class="btn" data-act="goHome" style="width:100%;background:#fff;color:var(--brand-deep);box-shadow:none">✓ Reading complete · Go to Business →</button></div>'
-      : '<div class="read-bar lock hd-gate">'+ICONS.clock+' <span><b>Read '+fmtMs(readRemain())+'</b> — keep reading to unlock</span></div>')+
-    '</div>'+
-    '<div class="app-body">'+
-      '<div class="concept-hero">'+ICONS.book+' <span><b>Read the concept cards below, then choose a business.</b></span></div>'+
-      '<div class="concept-tabs">'+CORE_CARDS.map(function(k){
-        const on = k.en===cur.en;
-        return '<div class="concept-tab '+(on?'on':'')+'" data-act="concept" data-id="'+k.en+'">'+ICONS[k.icon]+'<span>'+(k.short||k.en)+'</span></div>';
-      }).join("")+'</div>'+
-      conceptMain(cur, anim)+
-    '</div>';
-}
-/* ==================== RENDER ==================== */
-function render(){
-  document.getElementById("app").innerHTML = (S.screen==="concepts") ? conceptsHTML() : (S.screen==="home") ? homeHTML() : playHTML();
+function openChapter(n){
+  const c=CHAPTERS.find(x=>x.n===n);if(!c)return;
+  if(!c.file){toast('第 '+n+' 章内容制作中 · Coming Soon');return}
+  current=n;
+  document.querySelector('.topbar').classList.add('hidden');
+  document.querySelector('.footer').classList.add('hidden');
+  $('#home').style.display='none';
+  const v=$('#chapterView');v.style.display='flex';
+  $('#chTitle').innerHTML=`第 ${n} 章 · ${c.cn}<small>${c.en}</small>`;
+  frame.src=c.file;
+  renderNav();
   window.scrollTo(0,0);
-  syncReadTimer();
 }
-function homeHTML(){
-  const c = loadCum(), ca = cumAcc(c);
-  const cards = SCENARIOS.map(function(s){
-    return '<div class="sc-card" data-act="start" data-id="'+s.id+'">'+
-      '<div class="sc-ic" style="background:linear-gradient(135deg,'+SCENE_GRAD[s.icon][0]+','+SCENE_GRAD[s.icon][1]+');color:#fff">'+ICONS[s.icon]+'</div>'+
-      '<div class="sc-en">'+s.name+'</div>'+
-      '<div class="sc-zh">'+s.nameZh+'</div>'+
-      '<div class="sc-go">Run it →</div></div>';
-  }).join("");
-  return '<div class="app-header">'+
-    '<div class="hd-row">'+
-      '<button class="hd-back" data-act="concepts" aria-label="Concept Cards">'+ICONS.back+'</button>'+
-      '<div class="hd-title"><div class="t1">Choose a Business</div><div class="t2">Page 2 · Pick a small business to run</div></div>'+
-    '</div></div>'+
-    '<div class="hero">'+
-    '<div class="h1">Factors of Production</div>'+
-    '<div class="h2">Choose a small business and discover the factors in your decisions. In running it, you will meet <b style="white-space:nowrap">Land</b>, <b style="white-space:nowrap">Labor</b> and <b style="white-space:nowrap">Capital</b>.</div>'+
-    '</div>'+
-    '<div class="sc-grid">'+cards+'</div>'+
-    '<div class="home-actions"><button class="btn ghost" data-act="glossary">Full Glossary</button></div>'+
-    '<div class="mini-note"><b>Accuracy '+(ca===null?'—':ca+'%')+'</b> · <b>Shops '+c.n+'</b> · Task-driven · Situational · Business English</div>';
+function showHome(){
+  current=0;frame.removeAttribute('src');
+  document.querySelector('.topbar').classList.remove('hidden');
+  document.querySelector('.footer').classList.remove('hidden');
+  $('#chapterView').style.display='none';
+  $('#home').style.display='flex';
+  renderNav();
 }
-function playHTML(){
-  const s = sc(), step = STEPS[S.step];
-  return '<div class="app-header">'+
-    '<div class="hd-row">'+
-      '<button class="hd-back" data-act="back" aria-label="Back">'+ICONS.back+'</button>'+
-      '<div class="hd-title"><div class="t1">'+s.name+'</div><div class="t2">'+step.en+' · Step '+(S.step+1)+'/8</div></div>'+
-      '<button class="hd-btn" data-act="glossary">Words</button>'+
-    '</div>'+
-    '<div class="hd-progress"><div class="dots">'+STEPS.map(function(st,i){
-      return '<div class="dot '+(i<S.step?'done':(i===S.step?'now':''))+'"></div>';
-    }).join("")+'</div>'+
-    '<div class="step-label"><span class="step-ic">'+ICONS[step.icon]+'</span>'+step.en+'</div></div>'+
-    '</div>'+
-    '<div class="app-body">'+stepBodies[S.step](s)+'</div>'+
-    (S.step<6 ? '<div class="app-foot">'+footHTML()+'</div>' : '');
-}
-function footHTML(){
-  return '<button class="btn" data-act="next" '+(canNext()?'':'disabled')+'>Next →</button>';
-}
-function canNext(){
-  const p = S.picks;
-  switch(S.step){
-    case 0: return p.loc!==null;
-    case 1: return Object.keys(p.res).length>=4;
-    case 2: return p.staff!==null;
-    case 3: return sc().resources.every(function(r){ return p.cls[r.id]===correctBucket(r); });
-    case 4: return FACTORS.every(function(f){ return p.price[f.key]===f.price; });
-    case 5: return sc().tradeoffs.every(function(tq,i){ return p.to[i]!==null && tq.options[p.to[i]] && tq.options[p.to[i]].best===true; });
-  }
-  return false;
-}
-/* ---------- 各步骤 ---------- */
-function renderLocation(s){
-  const p = S.picks;
-  return '<div class="sec-title">Step 1 · Location</div>'+
-    '<div class="sec-sub"><b>Pick a location.</b> '+s.premise+'<br>The price of shop space is called <span class="en-term">rent</span> — the price of <span class="en-term">Land</span>. Choose a location.</div>'+
-    s.locations.map(function(l,i){
-      return '<div class="opt '+(p.loc===i?'sel':'')+'" data-act="loc" data-i="'+i+'">'+
-        '<div class="o-t">'+ICONS.pin+'<span>'+l.label+'</span><span class="o-extra">'+l.rent+'</span></div>'+
-        '<div class="o-s">'+l.note+'</div></div>';
-    }).join("")+
-    '<div class="fb info '+(p.loc!==null?'show':'')+'">'+(p.loc!==null?s.rentTip:'')+'</div>';
-}
-function resList(s){
-  return (S.picks.resOrder||s.resources.map(function(r){ return r.id; })).map(function(id){
-    return s.resources.find(function(r){ return r.id===id; });
-  });
-}
-function renderResources(s){
-  const p = S.picks, chosen = Object.keys(p.res).length;
-  const list = resList(s);
-  const chosenRes = list.filter(function(r){ return p.res[r.id]; });
-  const dist = chosenRes.filter(function(r){ return r.factor===null; });
-  let note = "";
-  if(chosen>=4){
-    if(dist.length){
-      note = '<div class="fb warn show">You picked '+dist.map(function(r){return r.zh;}).join("、")+'. A '+s.name+' does need them — but they are intermediate goods, used up in production. In the next step you will see they are NOT Land / Labor / Capital.</div>';
-    } else {
-      note = '<div class="fb ok show">A practical list. Next, sort each resource into Land / Labor / Capital.</div>';
-    }
-  }
-  return '<div class="sec-title">Step 2 · Resources</div>'+
-    '<div class="sec-sub"><b>What resources do you need?</b> Think about what it takes to run a '+s.name+'. Choose freely — you will sort them in the next step. The list is shuffled for a challenge. (<b>'+chosen+'</b> chosen, pick at least 4)</div>'+
-    '<div class="chip-row">'+
-    list.map(function(r){
-      return '<div class="chip '+(p.res[r.id]?'on':'')+'" data-act="res" data-id="'+r.id+'">'+
-        '<span style="color:'+(p.res[r.id]?'var(--brand)':'var(--sub)')+'">'+ICONS[r.icon]+'</span>'+
-        '<span>'+r.en+'</span><span class="en">'+r.zh+'</span></div>';
-    }).join("")+'</div>'+note;
-}
-function renderStaff(s){
-  const p = S.picks;
-  return '<div class="sec-title">Step 3 · Staff</div>'+
-    '<div class="sec-sub"><b>How many workers do you need?</b> Your staff is your <span class="en-term">labor</span>, and their pay is called <span class="en-term">wages</span>.</div>'+
-    s.staff.map(function(st,i){
-      return '<div class="opt '+(p.staff===i?'sel':'')+'" data-act="staff" data-i="'+i+'">'+
-        '<div class="o-t">'+ICONS.staff+'<span>'+st.label+'</span><span class="o-extra">'+st.cost+'</span></div>'+
-        '<div class="o-s">'+st.note+'</div></div>';
-    }).join("")+
-    '<div class="fb info '+(p.staff!==null?'show':'')+'">'+(p.staff!==null?s.staffNote:'')+'</div>';
-}
-function renderClassify(s){
-  const p = S.picks, done = Object.keys(p.cls).length;
-  return '<div class="sec-title">Step 4 · Classify</div>'+
-    '<div class="sec-sub"><b>Sort each resource.</b> Put every resource into <span class="en-term">Land / Labor / Capital</span>. If it is not a factor, choose <span class="en-term">None</span> — resources used up in production (like coffee beans) are intermediate goods, not factors. <b>Correct all of them to continue.</b> (<b>'+done+'/'+s.resources.length+'</b> sorted)</div>'+
-    resList(s).map(function(r){
-      const ans = p.cls[r.id], correct = correctBucket(r);
-      const answered = ans!==undefined, good = answered && ans===correct;
-      return '<div class="fcard '+(answered?'ans-'+ans:'')+'">'+
-        '<div class="f-top"><span class="f-ic ic-'+(r.factor||"material")+'">'+ICONS[r.icon]+'</span><div><div class="f-name">'+r.en+' <span class="f-zh">'+r.zh+'</span></div></div></div>'+
-        '<div class="f-buckets">'+
-        BUCKETS.map(function(b){
-          return '<div class="bkt '+(ans===b.key?'sel-'+b.key:'')+'" data-act="cls" data-id="'+r.id+'" data-bucket="'+b.key+'">'+b.label+'</div>';
-        }).join("")+
-        '</div>'+
-        '<div class="f-fb '+(answered?'show':'')+' '+(good?'good':'bad')+'">'+(answered?(good?'<b>Correct:</b> ':'<b>Think again:</b> ')+r.why:'')+'</div>'+
-        '</div>';
-    }).join("");
-}
-function renderPrices(s){
-  const p = S.picks;
-  const goodMsg = {
-    land:    "Rent is the price of Land — what you pay for the shop space.",
-    labor:   "Wages are the price of Labor — what you pay your workers.",
-    capital: "Interest is the price of Capital. The interest rate is interest as a percentage of the capital; with your own money, you expect a return on capital."
-  };
-  return '<div class="sec-title">Step 5 · Prices</div>'+
-    '<div class="sec-sub"><b>Every factor has a price.</b> Choose the correct price for each factor.</div>'+
-    FACTORS.map(function(f){
-      const ans = p.price[f.key], good = ans===f.price;
-      return '<div class="prow">'+
-        '<div class="p-q"><span class="p-ic ic-'+f.key+'">'+ICONS[f.key]+'</span>What is the price of <span class="en">'+f.en+'</span>?</div>'+
-        '<div class="p-opts">'+
-        PRICE_POOL.map(function(pp){
-          return '<div class="p-opt '+(ans===pp.key?(good?'ok':'bad'):'')+'" data-act="price" data-factor="'+f.key+'" data-p="'+pp.key+'">'+pp.en+'<br><span style="font-size:11px;font-weight:400">'+pp.zh+'</span></div>';
-        }).join("")+
-        '</div>'+
-        '<div class="p-fb '+(ans?'show':'')+' '+(good?'good':'bad')+'">'+
-        (ans?(good?('<b>Correct:</b> '+goodMsg[f.key]):('<b>Think again:</b> '+ppBad(f,ans))):'')+'</div>'+
-        '</div>';
-    }).join("");
-}
-function ppBad(f, wrong){
-  const w = PRICE_POOL.find(function(x){ return x.key===wrong; });
-  return w.en+' is '+w.hint+', not the price of '+f.en+'.';
-}
-function renderTradeoffs(s){
-  const p = S.picks;
-  return '<div class="sec-title">Step 6 · Trade-offs</div>'+
-    '<div class="sec-sub"><b>Resources are limited.</b> As the owner, what would you do? <b>Choose the most sensible option to continue.</b> (You may change your choice.)</div>'+
-    s.tradeoffs.map(function(tq,qi){
-      return '<div class="tq"><div class="tq-t"><span class="num">'+(qi+1)+'</span><span>'+tq.q+'</span></div>'+
-        tq.options.map(function(o,oi){
-          const ans = p.to[qi];
-          return '<div class="opt '+(ans===oi?'sel':'')+(ans!==null&&ans!==oi?' dim':'')+'" data-act="to" data-qi="'+qi+'" data-oi="'+oi+'">'+
-            '<div class="o-t"><span>'+o.label+'</span></div>'+
-            (ans===oi?'<div class="fb '+(o.best?'ok':'warn')+' show">'+(o.best?'✓ ':'<b>Hint:</b> ')+o.fb+'</div>':'')+
-            '</div>';
-        }).join("")+'</div>';
-    }).join("");
-}
-function renderEnglish(s){
-  const t = s.englishTasks[S.etask];
-  const isLast = S.etask===s.englishTasks.length-1;
-  let taskHtml = (t.type==="choice") ? renderChoice(s,t) : renderTemplate(s,t);
-  return '<div class="sec-title">Step 7 · English</div>'+
-    '<div class="sec-sub"><b>Speak economics in English.</b> Task '+(S.etask+1)+'/'+s.englishTasks.length+'</div>'+
-    taskHtml+
-    '<button class="btn '+(isLast?'ok-bg':'')+'" data-act="engNext" '+(S.picks.engDone[S.etask]?'':'disabled')+'>'+(isLast?'View Summary':'Next Task')+'</button>';
-}
-function renderChoice(s,t){
-  const p = S.picks, ti = S.etask, ans = p.eng[ti];
-  return '<div class="etask"><div class="et-q"><span class="q-en">Task</span> · '+t.prompt+'</div>'+
-    t.options.map(function(o,oi){
-      const state = ans===oi?(o.correct?'ok':'bad'):'';
-      return '<button class="et-opt '+state+'" data-act="eng" data-ti="'+ti+'" data-oi="'+oi+'">'+o.text+'</button>'+
-        (ans===oi?'<div class="et-fb show '+(o.correct?'good':'bad')+'">'+(o.correct?'✓ ':'Think again: ')+o.explain+'</div>':'');
-    }).join("")+'</div>';
-}
-function bankText(t,key){
-  const b = t.bank.find(function(x){ return x.key===key; });
-  return b ? b.text : key;
-}
-function blankLabel(b){
-  if(b.label) return b.label;
-  const f = FACTORS.find(function(x){ return x.key===b.key; });
-  return f ? f.en+'（'+f.zh+'）' : b.key;
-}
-function renderTemplate(s,t){
-  const p = S.picks, ti = S.etask, fill = p.eng[ti] || {};
-  const used = Object.keys(fill).map(function(i){ return fill[i]; });
-  let bi = 0;
-  const sentenceHtml = t.sentence.replace(/___/g, function(){
-    const idx = bi++;
-    const fk = fill[idx];
-    return '<span class="blank '+(fk!==undefined?(fk===t.blanks[idx].key?'good':'bad'):'')+'" data-act="clearBlank" data-bi="'+idx+'">'+(fk!==undefined?bankText(t,fk):'___')+'</span>';
-  });
-  const allFilled = Object.keys(fill).length===t.blanks.length;
-  const allGood = allFilled && t.blanks.every(function(b,i){ return fill[i]===b.key; });
-  if(allFilled && !allGood) p.engDone[ti]=false;
-  let fb = "";
-  if(allFilled){
-    if(allGood){ fb='<div class="et-fb show good">✓ Perfect! Your sentence is correct.</div>'; }
-    else {
-      const badIdx = t.blanks.map(function(b,i){ return fill[i]===b.key?-1:i; }).filter(function(i){ return i>-1; });
-      const hints = badIdx.map(function(i){
-        const chip = t.bank.find(function(x){ return x.key===fill[i]; });
-        if(fill[i]==="none" && chip) return '"'+chip.text+'" is an intermediate good, not a factor.';
-        return 'Blank '+(i+1)+' needs '+blankLabel(t.blanks[i]);
-      });
-      fb='<div class="et-fb show bad">Almost there: '+hints.join(' ')+' Tap a filled blank to clear it.</div>';
-    }
-  }
-  return '<div class="etask">'+
-    '<div class="et-q"><span class="q-en">Task</span> · '+t.prompt+'</div>'+
-    '<div class="tpl-sentence">'+sentenceHtml+'</div>'+
-    '<div class="bank">'+
-    t.bank.map(function(b){
-      const usedNow = used.indexOf(b.key)>-1;
-      return '<div class="chip '+(usedNow?'on':'')+'" data-act="engBlank" data-key="'+b.key+'" style="'+(usedNow?'pointer-events:none;opacity:.5':'')+'">'+b.text+'</div>';
-    }).join("")+'</div>'+
-    fb+'</div>';
-}
-function renderSummary(s){
-  const p = S.picks;
-  const score = s.resources.filter(function(r){ return p.cls[r.id]===correctBucket(r); }).length;
-  const loc = s.locations[p.loc], st = s.staff[p.staff];
-  const chosenRes = s.resources.filter(function(r){ return p.res[r.id]; });
-  const selDist = chosenRes.filter(function(r){ return r.factor===null; });
-  return '<div class="sec-title">Business Report 经营报告 · '+s.nameZh+'</div>'+
-    '<div class="sum-card">'+
-    '<div class="sum-row"><span class="k">Location 选址</span><span class="v">'+loc.label+'（'+loc.rent+'）</span></div>'+
-    '<div class="sum-row"><span class="k">Staff 员工</span><span class="v">'+st.label+' · '+st.cost+'</span></div>'+
-    '<div class="sum-row"><span class="k">Resources 资源清单</span><span class="v">'+chosenRes.map(function(r){return r.en;}).join(", ")+'</span></div>'+
-    '<div class="sum-row"><span class="k">Classify Correct 分类正确</span><span class="v">'+score+'/'+s.resources.length+'</span></div>'+
-    (selDist.length?'<div class="sum-row"><span class="k">Did You Know 你知道吗</span><span class="v">'+selDist.map(function(r){return r.en;}).join(", ")+' are intermediate goods, not factors 是中间投入品，不是生产要素</span></div>':'')+
-    '</div>'+
-    '<div class="sec-sub"><b>Introduce your business in English</b> 你的生意用英语这样介绍：</div>'+
-    '<div class="model-box">'+s.model+'</div>'+
-    '<div class="idea-box"><b>Core Idea 经济学核心：</b>Firms demand factors of production — land, labor and capital — not to own them, but to produce <b>goods and services</b> and earn <b>revenue</b>. So a firm chooses how much labor, capital and land to use by comparing cost (rent, wages, interest) with expected revenue, and adjusts the mix when prices change. 企业需求生产要素不是为了“拥有”资源，而是为了生产商品与服务、获得收益；因此会按成本与预期收益决定要素用量，价格变化时调整组合。</div>'+
-    '<div class="tag-row"><span class="tag"><b>Land</b> → rent</span><span class="tag"><b>Labor</b> → wages</span><span class="tag"><b>Capital</b> → interest / return</span></div>'+
-    renderDiag(s)+
-    '<div style="height:8px"></div>'+
-    '<button class="btn" data-act="home">Home 再开一家店</button>'+
-    '<div style="height:6px"></div>'+
-    '<button class="btn ghost" data-act="glossary">Review Glossary 复习概念卡</button>'+
-    '<div style="height:4px"></div>'+
-    '<button class="btn ghost" data-act="restart">Replay 重玩本店</button>';
-}
-const stepBodies = [renderLocation, renderResources, renderStaff, renderClassify, renderPrices, renderTradeoffs, renderEnglish, renderSummary];
-
-/* ==================== HANDLERS ==================== */
-function doBack(){
-  if(S.step===0){ S.screen="home"; render(); return; }
-  if(S.step===6 && S.etask>0){ S.etask--; }
-  else { S.step--; }
-  render();
-}
-function doNext(){
-  if(S.step===6){
-    if(!S.picks.engDone[S.etask]) return;
-    if(S.etask < sc().englishTasks.length-1){ S.etask++; render(); return; }
-    S.step=7; S.doneCount++; addCum(); render(); return;
-  }
-  if(!canNext()) return;
-  S.step++; render();
-}
-function handle(act,d){
-  const p = S.picks;
-  switch(act){
-    case "concept": S.concept = d.id; render(); break;
-    case "goHome": if(readReady()){ S.screen="home"; render(); } break;
-    case "concepts": S.screen="concepts"; render(); break;
-    case "home": S.screen="home"; render(); break;
-    case "start": if(!readReady()){ flashRead(); return; } startScenario(d.id); break;
-    case "glossary": openGlossary(); break;
-    case "back": doBack(); break;
-    case "next": doNext(); break;
-    case "loc": p.loc=+d.i; render(); break;
-    case "res": p.res[d.id]=!p.res[d.id]; render(); break;
-    case "staff": p.staff=+d.i; render(); break;
-    case "cls": {
-      const r = sc().resources.find(function(x){ return x.id===d.id; });
-      const ok = (d.bucket===correctBucket(r));
-      track(factorDim(r), ok, "cls:"+d.id);
-      if(!ok && S.picks.stats.clsErrIds.indexOf(d.id)<0) S.picks.stats.clsErrIds.push(d.id);
-      p.cls[d.id]=d.bucket; render(); break;
-    }
-    case "price": {
-      const f = FACTORS.find(function(x){ return x.key===d.factor; });
-      track("prices", d.p===f.price, "price:"+d.factor);
-      p.price[d.factor]=d.p; render(); break;
-    }
-    case "to": {
-      const tq = sc().tradeoffs[+d.qi], o = tq.options[+d.oi];
-      track("tradeoff", o.best===true, "to:"+d.qi);
-      p.to[+d.qi]=+d.oi; render(); break;
-    }
-    case "eng": {
-      const t = sc().englishTasks[+d.ti], o = t.options[+d.oi];
-      track("english", o.correct===true, "engc:"+d.ti);
-      p.eng[+d.ti]=+d.oi; p.engDone[+d.ti]=(o.correct===true); render(); break;
-    }
-    case "engBlank": {
-      const ti = S.etask;
-      const t = sc().englishTasks[ti];
-      if(!p.eng[ti]) p.eng[ti] = {};
-      const fill = p.eng[ti];
-      let idx = 0;
-      while(idx<t.blanks.length && fill[idx]!==undefined) idx++;
-      if(idx<t.blanks.length){
-        fill[idx]=d.key;
-        track(blankDim(t.blanks[idx]), d.key===t.blanks[idx].key, "engb:"+ti+":"+idx);
-      }
-      p.engDone[ti] = t.blanks.every(function(b,i){ return fill[i]===b.key; });
-      render(); break;
-    }
-    case "clearBlank": if(p.eng[S.etask]) delete p.eng[S.etask][+d.bi]; p.engDone[S.etask]=false; render(); break;
-    case "engNext": doNext(); break;
-    case "restart": startScenario(S.scId); break;
-  }
-}
-
-/* ==================== GLOSSARY MODAL ==================== */
-function openGlossary(){
-  closeGlossary();
-  const m = document.createElement("div");
-  m.id = "glossaryModal";
-  m.className = "modal-mask";
-  m.innerHTML = '<div class="modal">'+
-    '<div class="modal-head"><span class="t"><span class="mh-ic">'+ICONS.book+'</span>Glossary 概念卡</span><button class="modal-close" aria-label="关闭">'+ICONS.close+'</button></div>'+
-    '<div class="modal-body">'+
-    GLOSSARY_CATS.map(function(c){
-      const items = GLOSSARY.filter(function(g){ return g.cat===c[0]; });
-      if(!items.length) return "";
-      return '<div class="cat-t"><span class="cat-ic">'+ICONS[CAT_ICON[c[0]]]+'</span>'+CAT_EN[c[0]]+' '+c[1]+'</div>'+
-        items.map(function(g){
-          return '<div class="g-item"><div><span class="g-en">'+g.en+'</span><span class="g-zh">'+g.zh+'</span></div><div class="g-def">'+g.def+'</div></div>';
-        }).join("");
-    }).join("")+
-    '</div></div>';
-  document.body.appendChild(m);
-  m.addEventListener("click", function(ev){
-    if(ev.target===m || ev.target.closest(".modal-close")) closeGlossary();
-  });
-}
-function closeGlossary(){
-  const m = document.getElementById("glossaryModal");
-  if(m) m.parentNode.removeChild(m);
-}
-
-/* ==================== INIT ==================== */
-render();
-document.addEventListener("click", function(e){
-  const el = e.target.closest("[data-act]");
-  if(!el) return;
-  handle(el.dataset.act, el.dataset);
-});
+window.openChapter=openChapter;
+window.showHome=showHome;
+window.enterFirstReady=()=>{const f=CHAPTERS.find(c=>c.file);if(f)openChapter(f.n)};
+renderNav();
+})();
 </script>
 </body>
 </html>
