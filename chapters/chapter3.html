@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>财经基础英语 · Unit 3 互动练习</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23003f50'/><polyline points='25,28 50,48 75,72' fill='none' stroke='%2308abd0' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/><line x1='20' y1='25' x2='20' y2='80' stroke='white' stroke-width='6'/><line x1='20' y1='80' x2='82' y2='80' stroke='white' stroke-width='6'/></svg>">
+<style>
+:root{--ink:#003f50;--green:#078b14;--green2:#54a500;--blue:#08abd0;--bg:#eef3f3;--paper:#fff;--grid:#cbd0d1;--soft:#e3e6e6;--orange:#f18b21;--red:#c94141}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","Segoe UI",Arial,sans-serif;min-width:320px}
+button{font:inherit} .app{display:flex;flex-direction:column}.topbar{height:48px;background:#fff;display:flex;align-items:center;padding:0 18px;border-bottom:1px solid #d9e1e2;gap:14px}.brand{font-size:16px;font-weight:800;white-space:nowrap}.brand span{font-size:12px;font-weight:600;color:#52717a;margin-left:8px}.tabs{display:flex;gap:5px;overflow-x:auto;flex:1;scrollbar-width:thin}.tab{border:0;background:transparent;color:#56717a;padding:8px 11px;border-radius:5px;font-size:13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--ink);color:#fff}.tab.locked{opacity:.48;cursor:not-allowed}.progress{font-size:12px;color:#52717a;white-space:nowrap}
+.workspace{flex:1;display:grid;grid-template-columns:minmax(330px,38%) minmax(480px,62%);gap:18px;padding:12px 3.2vw 8px}.lesson{display:flex;flex-direction:column;min-width:0}.step-title{font-size:20px;font-weight:900;margin:0 0 2px}.step-cn{font-size:13px;color:#507079;margin-bottom:6px}.instruction{font-size:15px;font-weight:700;line-height:1.5;margin-bottom:6px;color:#1565c0}.hint-btn{border:0;background:transparent;color:#397481;text-decoration:underline;font-size:13px;cursor:pointer;padding:0}.hint{font-size:13px;color:#55727a;min-height:14px;margin-top:2px}.data-table{border-collapse:collapse;width:100%;background:white;margin-top:6px;font-size:14px}.data-table th{background:var(--ink);color:#fff;padding:8px 6px;border-right:1px solid white}.data-table td{text-align:center;padding:6px;border:1px solid white;background:#dfe1e1}.data-table tr:nth-child(even) td{background:#eceeee}.wordbox{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0}.drag-label{background:#fff;border:3px solid var(--green);border-radius:14px;padding:11px 17px;font-weight:800;cursor:grab;touch-action:none;user-select:none;box-shadow:0 2px 0 rgba(0,0,0,.05)}.drag-label.dragging{opacity:.55;cursor:grabbing}.english-note{padding-top:8px}.english-note h3{font-size:14px;margin:0 0 7px}.sentence{background:#fff;border-left:5px solid var(--blue);padding:8px 10px;font-size:14px;line-height:1.5}
+.stage{position:relative;min-height:545px;background:#fff;padding:6px 10px 6px 6px;box-shadow:0 1px 2px rgba(0,0,0,.06)}.chart-title{text-align:center;font-size:20px;font-weight:900;margin:3px 0 0}.chart-wrap{height:505px;position:relative}.chart{width:100%;height:100%;display:block;touch-action:none}.dropzone{position:absolute;border:2px dashed transparent;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#729099;font-size:12px}.dropzone.ready{border-color:#9bb9bf;background:#f2f8f8}.dropzone.good{border-color:var(--green);background:#f0faef;color:var(--green);font-weight:800}.y-drop{left:15%;top:56px;width:68px;height:340px;writing-mode:vertical-rl;transform:rotate(180deg)}.x-drop{left:28%;right:5%;bottom:0;height:40px}.chart-svg{overflow:visible}.grid{stroke:var(--grid);stroke-width:1}.axis{stroke:var(--ink);stroke-width:3}.tick{fill:var(--ink);font-size:13px}.target{fill:transparent;cursor:crosshair}.point{fill:var(--green);stroke:white;stroke-width:2}.point-label{fill:var(--green);font-size:13px;font-weight:800}.curve{fill:none;stroke:var(--green);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.ghost{fill:var(--green);opacity:.1}.axis-name{fill:var(--ink);font-size:14px;font-weight:800}.formula{fill:var(--ink);font-size:17px;font-style:italic;font-weight:800}.grid,.tick,.axis,.axis-name,.point,.point-label,.curve,.ghost,.formula{pointer-events:none}
+.base-curve{fill:none;stroke:#a7babc;stroke-width:2.5;stroke-dasharray:3 9;stroke-linecap:round}
+.dash-curve{fill:none;stroke:var(--blue);stroke-width:4;stroke-dasharray:12 8;stroke-linecap:round;opacity:.85}
+.curve-hit{fill:none;stroke:transparent;stroke-width:30;cursor:grab}
+.curve-hit.dragging{cursor:grabbing}
+.drag-tip{fill:var(--blue);font-size:15px;font-weight:800}
+.drag-box{background:#eef9fb;border:1px solid #bfe3ea;border-radius:8px;padding:10px 12px;font-size:14px;line-height:1.7;color:#1f5562;margin-top:8px}.drag-box strong{color:var(--ink)}
+.ws-wide{grid-template-columns:minmax(270px,30%) minmax(540px,70%)}
+.curve-d{fill:none;stroke:var(--blue);stroke-width:3;stroke-linecap:round}.curve-s{fill:none;stroke:var(--orange);stroke-width:3;stroke-linecap:round}
+.grid-strong{stroke:#93a8ac;stroke-width:2.5}.eq-point{fill:var(--green);stroke:white;stroke-width:2.5}.eq0-point{fill:#b9c5c7;stroke:white;stroke-width:2}
+.eq-label{fill:var(--green);font-size:15px;font-weight:900}.p-line{stroke:var(--red);stroke-width:2.5;stroke-dasharray:8 6}
+.p-line-label{fill:var(--red);font-size:14px;font-weight:800}.zone-label{fill:var(--red);font-size:16px;font-weight:900}
+.curve-d,.curve-s,.grid-strong,.eq-point,.eq0-point,.eq-label,.p-line,.p-line-label,.zone-label{pointer-events:none}
+.sim-note{background:#eef9fb;border:1px solid #bfe3ea;border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.6;color:#1f5562;margin-top:8px}
+.factor-group{margin-top:12px}.factor-group h4{font-size:13px;margin:0 0 6px;color:#507079;font-weight:800}
+.factor{display:block;width:100%;text-align:left;padding:8px 10px;border:2px solid #c4d2d5;background:#fff;color:var(--ink);font-size:13px;cursor:pointer;margin-bottom:6px;border-radius:6px;line-height:1.4}
+.factor small{display:block;color:#6c858b;font-weight:600;font-size:12px}
+.factor.on{border-color:var(--blue);background:#effbfe;font-weight:800}
+.sim-actions{display:flex;gap:8px;margin-top:10px}
+.sim-summary{margin-top:8px;padding:8px 12px;background:#f7fafb;border:1px solid #dce8ea;border-radius:10px}
+.sim-summary h4{margin:0 0 6px;font-size:14px;color:var(--ink)}
+.sim-summary table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.sim-summary th,.sim-summary td{border:1px solid #d7e3e6;padding:3px 6px;text-align:center}
+.sim-summary th{background:#eef5f6}
+.sim-summary .up{color:#2e7d32;font-weight:800}
+.sim-summary .down{color:#c62828;font-weight:800}
+.eq-arrow{stroke:var(--green);stroke-width:1.6;stroke-dasharray:5 4;fill:none}
+.sim-scroll{max-height:calc(100vh - 320px);overflow-y:auto;margin-top:6px;padding-right:8px}
+.ws-wide .lesson{max-height:calc(100vh - 130px);overflow-y:auto}
+.footer{height:52px;padding:5px 3.2vw 8px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center}.feedback{justify-self:start;min-width:225px;min-height:44px;display:flex;align-items:center;gap:12px;font-size:15px;font-weight:800}.feedback.success{background:var(--green2);color:#fff;padding:0 22px}.feedback.error{background:var(--red);color:#fff;padding:0 18px}.feedback .big{font-size:22px}.actions{display:flex;gap:10px}.primary,.secondary{border:0;padding:9px 28px;font-weight:900;font-size:18px;cursor:pointer}.primary{background:var(--blue);color:#fff}.primary:disabled{background:#a9cbd3;cursor:not-allowed}.secondary{background:white;color:var(--ink);border:1px solid #b6c8cc;font-size:14px;padding:8px 14px}.status{justify-self:end;font-size:13px;color:#56717a}
+.choice-list{display:grid;gap:9px;margin-top:10px}.choice{padding:11px 13px;border:2px solid #c4d2d5;background:#fff;color:var(--ink);text-align:left;cursor:pointer}.choice.selected{border-color:var(--blue);background:#effbfe}.read-row{cursor:pointer}.read-row.active td{background:#daf3f7}
+.table-tip{font-size:13px;color:#1565c0;font-weight:700;margin:6px 0 2px;padding:6px 10px;background:#e8f1fb;border-left:4px solid #1565c0;border-radius:8px}.placeholder{display:flex;min-height:560px;align-items:center;justify-content:center;text-align:center;color:#6c858b}.placeholder strong{display:block;font-size:26px;color:var(--ink);margin-bottom:12px}
+@media(max-width:880px){.topbar{padding:0 12px}.brand span,.progress{display:none}.workspace{grid-template-columns:1fr;padding:10px 14px}.stage{min-height:500px}.chart-wrap{height:425px}.y-drop{top:130px;height:180px}.english-note{margin-top:8px}.footer{padding:6px 14px 10px}.status{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">财经基础英语 <span>UNIT 3 · DEMAND AND SUPPLY</span></div>
+    <nav class="tabs" aria-label="Unit 3练习导航">
+      <button class="tab active" data-module="demand">1 需求曲线</button>
+      <button class="tab" data-module="shift">2 移动或平移</button>
+      <button class="tab" data-module="supply">3 供给曲线</button>
+      <button class="tab" data-module="equilibrium">4 市场均衡</button>
+    </nav>
+    <div class="progress" id="progressTop">Activity 1 · 1/6</div>
+  </header>
+
+  <main class="workspace" id="workspace">
+    <section class="lesson">
+      <h1 class="step-title" id="stepTitle">Step 1. Read the demand schedule</h1>
+      <div class="step-cn" id="stepCn">第一步：读懂需求表</div>
+      <div class="instruction" id="instruction"></div>
+      <button class="hint-btn" id="hintBtn">显示中文提示 / Show hint</button>
+      <div class="hint" id="hint" aria-live="polite"></div>
+      <div id="leftContent"></div>
+      <aside class="english-note">
+        <h3>ECONOMICS ENGLISH</h3>
+        <div class="sentence" id="sentence"></div>
+      </aside>
+    </section>
+
+    <section class="stage">
+      <div class="chart-title" id="chartTitle">Demand for Chicken</div>
+      <div class="chart-wrap" id="chartWrap">
+        <div class="dropzone y-drop" id="yDrop">Vertical axis</div>
+        <div class="dropzone x-drop" id="xDrop">Horizontal axis</div>
+        <svg class="chart chart-svg" id="chart" role="img" aria-label="鸡肉需求曲线互动坐标图"></svg>
+      </div>
+      <div class="sim-summary" id="m5Summary" style="display:none">
+        <h4>Changes in Equilibrium — 均衡变化速查表</h4>
+        <table><thead><tr><th>Change</th><th>Price</th><th>Quantity</th></tr></thead><tbody>
+        <tr><td>Demand ↑</td><td class="up">↑</td><td class="up">↑</td></tr>
+        <tr><td>Demand ↓</td><td class="down">↓</td><td class="down">↓</td></tr>
+        <tr><td>Supply ↑</td><td class="down">↓</td><td class="up">↑</td></tr>
+        <tr><td>Supply ↓</td><td class="up">↑</td><td class="down">↓</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+    <div class="actions">
+      <button class="secondary" id="resetBtn">重新开始</button>
+      <button class="primary" id="nextBtn" disabled>Next</button>
+    </div>
+    <div class="status" id="status">完成当前任务后继续</div>
+  </footer>
+</div>
+
+<script>
+(()=>{
+const rows=[{p:5.4,q:20,l:'A'},{p:5.3,q:25,l:'B'},{p:5.2,q:30,l:'C'},{p:5.1,q:35,l:'D'},{p:5.0,q:40,l:'E'},{p:4.9,q:45,l:'F'},{p:4.8,q:50,l:'G'}];
+const $=s=>document.querySelector(s), svg=$('#chart'), left=$('#leftContent');
+let step=0, completed=false, placed=[], axisOK={x:false,y:false}, attempts=0;
+let mod=1, m2step=0, m2done=false, m2dir='', m2chosen=false, m2off=0, m2target=0, m2attempts=0;
+let m5step=0,m5done=false,m5axisOK={x:false,y:false},m5attempts=0,m5anim=null,m5selD={},m5selS={},m5b=290,m5c=-220;
+const steps=[
+ {t:'Step 1. Read the demand schedule',c:'第一步：读懂需求表',i:'At a price of $5.20 per pound, what is the quantity demanded?',h:'在表格中找出价格为5.20美元/磅的那一行。',s:'At a price of $5.20 per pound, the quantity demanded is 30 million pounds.'},
+ {t:'Step 2. Drag and place the axis labels',c:'第二步：拖动并放置坐标轴标签',i:'Drag each English label to the correct axis.',h:'经济学中，价格通常在纵轴，数量通常在横轴。',s:'Price is plotted on the vertical axis. Quantity demanded is plotted on the horizontal axis.'},
+ {t:'Step 3. Plot the points',c:'第三步：根据需求表描点',i:'Click the graph to plot points A–G. Follow the highlighted row.',h:'坐标按照（数量，价格）读取。允许有少量点击误差。',s:'Each point on the graph corresponds to one row in the demand schedule.'},
+ {t:'Step 4. Read the formed demand curve',c:'第四步：观察自动形成的需求曲线',i:'The demand curve has been formed from your seven points. Observe how it slopes downward from left to right.',h:'曲线由你描出的七个坐标点自动连接而成，观察它从左向右向下倾斜。',s:'The points together form a demand curve that slopes downward from left to right.'},
+ {t:'Step 5. Describe the relationship',c:'第五步：用英语描述价格和需求量的关系',i:'As the price decreases, the quantity demanded ______.',h:'沿着曲线从左向右观察：价格降低，需求量怎样变化？',s:'Price and quantity demanded are negatively related, all other things remaining constant.'},
+ {t:'Step 6. Demand or quantity demanded?',c:'第六步：区分需求和需求量',i:'The price falls from $5.30 to $5.10. What changes?',h:'商品自身价格变化导致沿同一条需求曲线移动。',s:'A change in the product’s own price causes a movement along the demand curve.'}
+];
+const steps2=[
+ {t:'Step 1. Try dragging the demand curve',c:'第一步：试着拖动需求曲线',i:'Press and hold the green curve, drag it right, then drag it back left. Dragging right means demand increases; dragging left means demand decreases. Watch the formula change.',h:'按住绿色曲线左右拖动：曲线整体水平移动，公式中的数字会随拖动实时变化。',s:'A shift in the entire demand curve occurs when there is a change in any factor other than the price that influences the quantity demanded.',dir:''},
+ {t:'Step 2. Income falls — shift left',c:'第二步：收入下降——曲线左移',i:'An economic crisis reduces people’s income. Chicken is a normal good. What happens to the demand curve for chicken? First choose the direction, then drag the curve.',h:'收入下降 → 正常品每个价格下的需求量都减少 → 整条曲线左移 → 公式截距变小。',s:'When income decreases, the demand for a normal good decreases and the demand curve shifts left.',dir:'left'},
+ {t:'Step 3. Income rises — an inferior good shifts left',c:'第三步：收入上升——劣等品曲线左移',i:'People’s income rises. Cheap fast food is an inferior good — people buy less of it when their income rises. What happens to its demand curve? First choose the direction, then drag the curve.',h:'收入上升时：正常品（如鸡肉、高档餐厅）需求增加、曲线右移；劣等品（如便宜快餐）需求减少、曲线左移。',s:'An inferior good is a good for which demand decreases when income rises, so its demand curve shifts left.',dir:'left'},
+ {t:'Step 4. A substitute becomes pricier — shift right',c:'第四步：替代品涨价——曲线右移',i:'The price of beef, a substitute for chicken, rises. What happens to the demand curve for chicken? First choose the direction, then drag the curve.',h:'牛肉涨价 → 人们改买鸡肉 → 每个价格下的需求量都增加 → 曲线右移 → 公式截距变大。',s:'If the price of a substitute rises, the demand for the good increases and the curve shifts right.',dir:'right'},
+ {t:'Step 5. Price expected to rise — shift right',c:'第五步：预期涨价——曲线右移',i:'People expect the price of chicken to rise next month. What happens to today’s demand for chicken? First choose the direction, then drag the curve.',h:'预期未来涨价 → 现在及时多买 → 需求量增加 → 曲线右移。',s:'If consumers expect prices to rise in the future, current demand increases and the curve shifts right.',dir:'right'},
+ {t:'Step 6. Preferences change — shift left',c:'第六步：偏好改变——曲线左移',i:'A medical report says eating too much chicken is unhealthy. What happens to the demand curve for chicken? First choose the direction, then drag the curve.',h:'偏好改变 → 人们减少吃鸡肉 → 需求量减少 → 曲线左移。',s:'A change in consumers’ preferences can shift the demand curve left or right.',dir:'left'},
+ {t:'Step 7. Movement or shift?',c:'第七步：沿曲线移动还是平移？',i:'The price of chicken falls from $5.40 to $4.80. What happens to the demand curve?',h:'商品自身价格变化 → 只沿曲线移动（从A移到G），曲线本身不移动，公式不变。',s:'A change in the product’s own price causes a movement along the demand curve, not a shift.',dir:'move'}
+];
+const rows4=[{p:5.4,q:50,l:'A'},{p:5.3,q:45,l:'B'},{p:5.2,q:40,l:'C'},{p:5.1,q:35,l:'D'},{p:5.0,q:30,l:'E'},{p:4.9,q:25,l:'F'},{p:4.8,q:20,l:'G'}];
+let m4step=0,m4done=false,m4placed=[],m4axisOK={x:false,y:false},m4attempts=0;
+const steps4=[
+ {t:'Step 1. Read the supply schedule',c:'第一步：读懂供给表',i:'At a price of $5.20 per pound, what is the quantity supplied?',h:'在表格中找出价格为5.20美元/磅的那一行。',s:'At a price of $5.20 per pound, the quantity supplied is 40 million pounds.'},
+ {t:'Step 2. Drag and place the axis labels',c:'第二步：拖动并放置坐标轴标签',i:'Drag each English label to the correct axis.',h:'经济学中，价格通常在纵轴，供给数量在横轴。',s:'Price is plotted on the vertical axis. Quantity supplied is plotted on the horizontal axis.'},
+ {t:'Step 3. Plot the points',c:'第三步：根据供给表描点',i:'Click the graph to plot points A–G. Follow the highlighted row.',h:'坐标按照（数量，价格）读取。允许有少量点击误差。',s:'Each point on the graph corresponds to one row in the supply schedule.'},
+ {t:'Step 4. Read the formed supply curve',c:'第四步：观察自动形成的供给曲线',i:'The supply curve has been formed from your seven points. Observe how it slopes upward from left to right — the opposite of the demand curve.',h:'曲线由你描出的七个坐标点自动连接而成，观察它从左向右向上倾斜（与需求曲线相反）。',s:'The points together form a supply curve that slopes upward from left to right.'},
+ {t:'Step 5. Describe the relationship',c:'第五步：用英语描述价格和供给量的关系',i:'As the price increases, the quantity supplied ______.',h:'沿着曲线从左向右观察：价格升高，供给量怎样变化？',s:'Price and quantity supplied are positively related, all other things remaining constant.'},
+ {t:'Step 6. Supply or quantity supplied?',c:'第六步：区分供给和供给量',i:'The price rises from $4.80 to $5.40. What changes?',h:'商品自身价格变化导致沿同一条供给曲线移动。',s:'A change in the product’s own price causes a movement along the supply curve.'}
+];
+
+const rows5=[{p:5.4,d:20,s:50,l:'A'},{p:5.3,d:25,s:45,l:'B'},{p:5.2,d:30,s:40,l:'C'},{p:5.1,d:35,s:35,l:'D'},{p:5.0,d:40,s:30,l:'E'},{p:4.9,d:45,s:25,l:'F'},{p:4.8,d:50,s:20,l:'G'}];
+const steps5=[
+ {t:'Step 1. Find the equilibrium in the table',c:'第一步：从合并表中找出均衡',i:'At which price does quantity demanded equal quantity supplied?',h:'均衡价格出现在“需求量=供给量”的那一行。',s:'The equilibrium price is $5.10, where quantity demanded equals quantity supplied (35 million pounds).'},
+ {t:'Step 2. Drag and place the axis labels',c:'第二步：拖动并放置坐标轴标签',i:'Drag each English label to the correct axis.',h:'经济学中，价格通常在纵轴，数量在横轴。',s:'Price is plotted on the vertical axis. Quantity is plotted on the horizontal axis.'},
+ {t:'Step 3. Click the equilibrium point E',c:'第三步：点击均衡点 E',i:'The demand curve (blue) and the supply curve (orange) are drawn. Click where they cross.',h:'两条曲线的交点就是均衡点：数量35，价格5.10美元。',s:'Equilibrium is formed where the demand curve intersects the supply curve.'},
+ {t:'Step 4. Above the equilibrium price — surplus',c:'第四步：价格高于均衡——过剩',i:'At $5.40, quantity supplied is 50 and quantity demanded is 20. This is a ______.',h:'价格高于均衡价 → 供给量>需求量 → 过剩（surplus）。',s:'When the price is above the equilibrium price, there is excess supply, known as a surplus.'},
+ {t:'Step 5. A surplus pulls the price down',c:'第五步：过剩使价格下降',i:'At $5.40 there is a surplus. What will happen to the price?',h:'过剩时卖者卖不动，会降价促销 → 价格回落向均衡。',s:'A surplus puts downward pressure on the price, which falls back toward equilibrium.'},
+ {t:'Step 6. Below the equilibrium price — shortage',c:'第六步：价格低于均衡——短缺',i:'At $4.80, quantity demanded is 50 and quantity supplied is 20. This is a ______.',h:'价格低于均衡价 → 需求量>供给量 → 短缺（shortage）。',s:'When the price is below the equilibrium price, there is excess demand, known as a shortage.'},
+ {t:'Step 7. A shortage pushes the price up',c:'第七步：短缺使价格上升',i:'At $4.80 there is a shortage. What will happen to the price?',h:'短缺时买者抢购，价格被抬高 → 价格回升向均衡。',s:'A shortage puts upward pressure on the price, which rises back toward equilibrium.'},
+ {t:'Equilibrium Simulator',c:'均衡模拟器',i:'Click the factor buttons to shift the demand (blue) or supply (orange) curve, and watch the new equilibrium form.',h:'灰色虚线为初始曲线，绿色点为新均衡 E₁。同侧可多选，点击“重置曲线”恢复初始。',s:'Any change in demand or supply shifts a curve and creates a new market equilibrium.'}
+];
+const facD=[
+ {id:'incUp',zh:'收入增加（正常品）',en:'Income ↑ (Normal Good)',dir:1},
+ {id:'incDn',zh:'收入减少（正常品）',en:'Income ↓ (Normal Good)',dir:-1},
+ {id:'subUp',zh:'替代品价格上升',en:'Substitute Price ↑',dir:1},
+ {id:'subDn',zh:'替代品价格下降',en:'Substitute Price ↓',dir:-1},
+ {id:'comUp',zh:'互补品价格上升',en:'Complement Price ↑',dir:-1},
+ {id:'comDn',zh:'互补品价格下降',en:'Complement Price ↓',dir:1},
+ {id:'prefUp',zh:'消费者偏好增强',en:'Consumer Preference ↑',dir:1},
+ {id:'prefDn',zh:'消费者偏好减弱',en:'Consumer Preference ↓',dir:-1},
+ {id:'buyUp',zh:'消费者数量增加',en:'Number of Buyers ↑',dir:1},
+ {id:'expUp',zh:'预期未来价格上涨',en:'Expected Future Price ↑',dir:1}
+];
+const facS=[
+ {id:'inpUp',zh:'原材料价格上升',en:'Input Price ↑',dir:-1},
+ {id:'inpDn',zh:'原材料价格下降',en:'Input Price ↓',dir:1},
+ {id:'techUp',zh:'技术革新',en:'Technological Improvement',dir:1},
+ {id:'techDn',zh:'技术退步',en:'Technological Regression',dir:-1},
+ {id:'labUp',zh:'劳动力成本上升',en:'Labor Cost ↑',dir:-1},
+ {id:'labDn',zh:'劳动力成本下降',en:'Labor Cost ↓',dir:1},
+ {id:'taxUp',zh:'税收增加',en:'Tax ↑',dir:-1},
+ {id:'taxDn',zh:'税收减少',en:'Tax ↓',dir:1},
+ {id:'subsUp',zh:'政府补贴增加',en:'Subsidy ↑',dir:1},
+ {id:'subsDn',zh:'政府补贴减少',en:'Subsidy ↓',dir:-1}
+];
+function tableTip(){return `<div class="table-tip">在表格中点击相应行作答 · Click the matching row in the table.</div>`}
+function table5(high=-1){return `<table class="data-table"><thead><tr><th>Price<br><small>($ per pound)</small></th><th>Demand<br><small>(m lbs)</small></th><th>Supply<br><small>(m lbs)</small></th><th>Point</th></tr></thead><tbody>${rows5.map((r,i)=>`<tr class="read-row ${i===high?'active':''}" data-i="${i}"><td>${r.p.toFixed(2)}</td><td>${r.d}</td><td>${r.s}</td><td>${r.l}</td></tr>`).join('')}</tbody></table>`}
+function table(high=-1){return `<table class="data-table"><thead><tr><th>Price<br><small>($ per pound)</small></th><th>Demand<br><small>(million pounds)</small></th><th>Point</th></tr></thead><tbody>${rows.map((r,i)=>`<tr class="read-row ${i===high?'active':''}" data-i="${i}"><td>${r.p.toFixed(2)}</td><td>${r.q}</td><td>${r.l}</td></tr>`).join('')}</tbody></table>`}
+function draw(){
+ const W=760,H=500,m={l:82,r:28,t:38,b:85},iw=W-m.l-m.r,ih=H-m.t-m.b;
+ svg.setAttribute('viewBox',`0 0 ${W} ${H}`); const x=q=>m.l+q/52*iw,y=p=>m.t+(5.42-p)/(5.42-4.78)*ih;
+ let h=''; for(let q=0;q<=50;q+=5){h+=`<line class="grid" x1="${x(q)}" y1="${m.t}" x2="${x(q)}" y2="${H-m.b}"/><text class="tick" x="${x(q)}" y="${H-m.b+22}" text-anchor="middle">${q}</text>`}
+ rows.forEach(r=>{const py=y(r.p);h+=`<line class="grid" x1="${m.l}" y1="${py}" x2="${W-m.r}" y2="${py}"/><text class="tick" x="${m.l-12}" y="${py+5}" text-anchor="end">${r.p.toFixed(2)}</text>`});
+ h+=`<line class="axis" x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${H-m.b}"/><line class="axis" x1="${m.l}" y1="${H-m.b}" x2="${W-m.r}" y2="${H-m.b}"/>`;
+ if(axisOK.x)h+=`<text class="axis-name" x="${m.l+iw/2}" y="${H-10}" text-anchor="middle">Quantity Demanded (million pounds)</text>`;
+ if(axisOK.y)h+=`<text class="axis-name" transform="translate(20 ${m.t+ih/2}) rotate(-90)" text-anchor="middle">Price ($ per pound)</text>`;
+ const visible=step>=3?rows:placed;
+ if(step>=3||completed&&step===2){h+=`<polyline class="curve" points="${rows.map(r=>`${x(r.q)},${y(r.p)}`).join(' ')}"/><text class="formula" x="${m.l+12}" y="${m.t+ih*0.44}">D(demand) = -50×P(price) + 290</text>`}
+ visible.forEach(r=>{h+=`<circle class="point" cx="${x(r.q)}" cy="${y(r.p)}" r="9"/><text class="point-label" x="${x(r.q)+12}" y="${y(r.p)-10}">${r.l} (${r.q}, ${r.p.toFixed(2)})</text>`});
+ h+=`<rect class="target" x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" data-hit="1"/>`; svg.innerHTML=h;
+ svg.onpointerdown=e=>{if(step!==2||completed||!e.target.dataset.hit)return;const r=svg.getBoundingClientRect(),sc=Math.min(r.width/W,r.height/H),ox=(r.width-W*sc)/2,oy=(r.height-H*sc)/2;let px=(e.clientX-r.left-ox)/sc,py=(e.clientY-r.top-oy)/sc;const hit=placed.findIndex(p=>Math.hypot(px-x(p.q),py-y(p.p))<28);if(hit>=0){const rm=placed.splice(hit,1)[0];draw();renderLeft();feedback(`Point ${rm.l} removed. Now plot point ${rows.find(r=>!placed.includes(r)).l}.`);return}const target=rows.find(r=>!placed.includes(r));if(!target)return;const tx=x(target.q),ty=y(target.p);attempts++;if(Math.hypot(px-tx,py-ty)<28){placed.push(target);renderLeft();if(placed.length===rows.length)success('All points are correct! The demand curve is formed automatically. 需求曲线已自动生成。');else feedback(`Point ${target.l} is correct. Now plot point ${rows.find(r=>!placed.includes(r)).l}.`);draw()}else error(`Try again. Read point ${target.l} as (Quantity, Price).`) };
+ }
+ function render(){if(mod===2){renderM2();return}if(mod===4){renderM4();return}if(mod===5){renderM5();return}completed=false;$('#nextBtn').disabled=true;$('#stepTitle').textContent=steps[step].t;$('#stepCn').textContent=steps[step].c;$('#instruction').textContent=steps[step].i;$('#sentence').textContent=steps[step].s;$('#hint').textContent='';$('#feedback').className='feedback';$('#feedback').textContent='';$('#progressTop').textContent=`Activity 1 · ${step+1}/6`;$('#status').textContent=`步骤 ${step+1}/6`;$('#chartTitle').textContent='Demand for Chicken';$('#workspace').classList.remove('ws-wide');renderLeft();draw()}
+ function renderLeft(){
+  if(step===0){left.innerHTML=tableTip()+table();left.querySelectorAll('tr[data-i]').forEach(tr=>tr.onclick=()=>{if(+tr.dataset.i===2)success('Correct! $5.20/lb → 30 million pounds.');else error('Try again. Look for $5.20 in the Price column.')})}
+  if(step===1){left.innerHTML=`<div class="wordbox"><div class="drag-label" data-kind="y">Price ($ per pound)</div><div class="drag-label" data-kind="x">Quantity Demanded (million pounds)</div></div>${table()}`;setupDrag()}
+  if(step===2){left.innerHTML=`<div class="instruction">Current point: <strong>${rows[placed.length]?.l||'Done'}</strong></div>${table(placed.length)}`}
+  if(step===3){left.innerHTML=`${table()}<div class="curve-note" style="margin-top:16px">需求曲线已由你的七个坐标点自动连接形成。观察它的方向：从左向右向下倾斜（downward sloping）。</div>`;success('Correct! The demand curve slopes downward. 需求曲线已自动形成。')}
+  if(step===4){left.innerHTML=`<div class="choice-list"><button class="choice" data-a="1">increases</button><button class="choice" data-a="0">decreases</button><button class="choice" data-a="0">remains unchanged</button></div>${table()}`;choices('Correct! As price decreases, quantity demanded increases.')}
+  if(step===5){left.innerHTML=`<div class="choice-list"><button class="choice" data-a="0">Demand increases</button><button class="choice" data-a="1">Quantity demanded increases</button><button class="choice" data-a="0">The demand curve shifts right</button></div>${table()}`;choices('Correct! This is a movement along the demand curve.')}
+ }
+ function choices(msg){left.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{left.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');b.dataset.a==='1'?success(msg):error('Try again. Think about what caused the change.')})}
+ const M2W=760,M2H=500,M2M={l:62,r:28,t:38,b:85};
+ function renderM2(){
+  m2done=false;m2chosen=false;m2off=0;m2target=0;
+  $('#nextBtn').disabled=true;$('#stepTitle').textContent=steps2[m2step].t;$('#stepCn').textContent=steps2[m2step].c;$('#instruction').textContent=steps2[m2step].i;$('#sentence').textContent=steps2[m2step].s;$('#hint').textContent='';$('#feedback').className='feedback';$('#feedback').textContent='';$('#progressTop').textContent=`Activity 2 · ${m2step+1}/7`;$('#status').textContent=`步骤 ${m2step+1}/7`;$('#chartTitle').textContent=m2step===2?'Demand for Cheap Fast Food (Inferior Good)':'Shifting the Demand Curve of Chicken';$('#yDrop').style.display='none';$('#xDrop').style.display='none';$('#workspace').classList.add('ws-wide');renderLeftM2();drawM2();
+ }
+ function renderLeftM2(){
+  if(m2step===0){left.innerHTML=`<div class="drag-box"><strong>操作提示：</strong><br>1. 按住图上的<strong>绿色曲线</strong>左右拖动（不能上下拖）；<br>2. 拖动时，曲线下方的<strong>公式</strong>会实时变化；<br>3. 向右拖 = 需求增加（demand increases）<br>4. 向左拖 = 需求减少（demand decreases）</div>`}
+  else if(m2step>=1&&m2step<=5){left.innerHTML=`<div class="choice-list">${[['right','Shifts right (demand increases)'],['left','Shifts left (demand decreases)'],['move','No shift — movement along the curve']].map(o=>`<button class="choice" data-d="${o[0]}">${o[1]}</button>`).join('')}</div>`;m2choices()}
+  else if(m2step===6){left.innerHTML=`<div class="choice-list">${[['move','Movement along the curve — the curve does not move'],['right','The curve shifts right'],['left','The curve shifts left']].map(o=>`<button class="choice" data-d="${o[0]}">${o[1]}</button>`).join('')}</div>`;m2choices()}
+ }
+ function m2choices(){left.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{if(m2done)return;left.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');const d=b.dataset.d,correct=steps2[m2step].dir;if(d===correct){if(d==='move'){m2done=true;success('Correct! A price change causes a movement along the curve — the curve itself does not shift. 价格变化只沿曲线移动，曲线本身不平移。');drawM2()}else{m2chosen=true;m2dir=d;drawM2();feedback(`Good! Drag the green curve onto the dashed line. 把绿色曲线拖到虚线上。`)}}else{m2attempts++;error(d==='move'?'Try again. A price change moves along the curve, not a shift. 价格变化沿曲线移动。':'Try again. This is not the price changing, so the curve shifts. 这不是价格变化，请选平移方向。')}})}
+ function renderM4(){
+  m4done=false;m4placed=[];m4axisOK={x:false,y:false};
+  $('#nextBtn').disabled=true;$('#stepTitle').textContent=steps4[m4step].t;$('#stepCn').textContent=steps4[m4step].c;$('#instruction').textContent=steps4[m4step].i;$('#sentence').textContent=steps4[m4step].s;$('#hint').textContent='';$('#feedback').className='feedback';$('#feedback').textContent='';$('#progressTop').textContent=`Activity 4 · ${m4step+1}/6`;$('#status').textContent=`步骤 ${m4step+1}/6`;$('#chartTitle').textContent='Supply Curve of Chicken';$('#workspace').classList.remove('ws-wide');$('#yDrop').style.display='';$('#xDrop').style.display='';$('#yDrop').className='dropzone y-drop';$('#xDrop').className='dropzone x-drop';renderLeft4();draw4();
+ }
+ function table4(high=-1){return `<table class="data-table"><thead><tr><th>Price<br><small>($ per pound)</small></th><th>Supply<br><small>(million pounds)</small></th><th>Point</th></tr></thead><tbody>${rows4.map((r,i)=>`<tr class="read-row ${i===high?'active':''}" data-i="${i}"><td>${r.p.toFixed(2)}</td><td>${r.q}</td><td>${r.l}</td></tr>`).join('')}</tbody></table>`}
+ function renderLeft4(){
+  if(m4step===0){left.innerHTML=tableTip()+table4();left.querySelectorAll('tr[data-i]').forEach(tr=>tr.onclick=()=>{if(+tr.dataset.i===2)success('Correct! $5.20/lb → 40 million pounds.');else error('Try again. Look for $5.20 in the Price column.')})}
+  if(m4step===1){left.innerHTML=`<div class="wordbox"><div class="drag-label" data-kind="y">Price ($ per pound)</div><div class="drag-label" data-kind="x">Quantity Supplied (million pounds)</div></div>${table4()}`;setupDrag4()}
+  if(m4step===2){left.innerHTML=`<div class="instruction">Current point: <strong>${rows4[m4placed.length]?.l||'Done'}</strong></div>${table4(m4placed.length)}`}
+  if(m4step===3){left.innerHTML=`${table4()}<div class="curve-note" style="margin-top:16px">供给曲线已由你的七个坐标点自动连接形成。观察它的方向：从左向右向上倾斜（upward sloping），与需求曲线相反。</div>`;success('Correct! The supply curve slopes upward. 供给曲线已自动形成。')}
+  if(m4step===4){left.innerHTML=`<div class="choice-list"><button class="choice" data-a="1">increases</button><button class="choice" data-a="0">decreases</button><button class="choice" data-a="0">remains unchanged</button></div>${table4()}`;choices4('Correct! As price increases, quantity supplied increases.')}
+  if(m4step===5){left.innerHTML=`<div class="choice-list"><button class="choice" data-a="0">Supply increases</button><button class="choice" data-a="1">Quantity supplied increases</button><button class="choice" data-a="0">The supply curve shifts right</button></div>${table4()}`;choices4('Correct! This is a movement along the supply curve.')}
+ }
+ function choices4(msg){left.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{left.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');b.dataset.a==='1'?success(msg):error('Try again. Think about what caused the change.')})}
+ function setupDrag4(){document.querySelectorAll('.drag-label').forEach(el=>{el.onpointerdown=e=>{el.setPointerCapture(e.pointerId);el.classList.add('dragging')};el.onpointerup=e=>{el.classList.remove('dragging');const p={x:e.clientX,y:e.clientY},yd=$('#yDrop').getBoundingClientRect(),xd=$('#xDrop').getBoundingClientRect(),inside=r=>p.x>=r.left&&p.x<=r.right&&p.y>=r.top&&p.y<=r.bottom;if((el.dataset.kind==='y'&&inside(yd))||(el.dataset.kind==='x'&&inside(xd))){m4axisOK[el.dataset.kind]=true;el.style.display='none';const dz=el.dataset.kind==='y'?$('#yDrop'):$('#xDrop');dz.style.display='none';draw4();if(m4axisOK.x&&m4axisOK.y)success('Correct! Both axis labels are in the right place.');else feedback('Good. Place the other label.')}else error('Try again. Place the label on the correct axis.')}})}
+ function draw4(){
+  const W=760,H=500,m={l:82,r:28,t:38,b:85},iw=W-m.l-m.r,ih=H-m.t-m.b;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);const x=q=>m.l+q/52*iw,y=p=>m.t+(5.42-p)/(5.42-4.78)*ih;
+  let h='';for(let q=0;q<=50;q+=5){h+=`<line class="grid" x1="${x(q)}" y1="${m.t}" x2="${x(q)}" y2="${H-m.b}"/><text class="tick" x="${x(q)}" y="${H-m.b+22}" text-anchor="middle">${q}</text>`}
+  rows4.forEach(r=>{const py=y(r.p);h+=`<line class="grid" x1="${m.l}" y1="${py}" x2="${W-m.r}" y2="${py}"/><text class="tick" x="${m.l-12}" y="${py+5}" text-anchor="end">${r.p.toFixed(2)}</text>`});
+  h+=`<line class="axis" x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${H-m.b}"/><line class="axis" x1="${m.l}" y1="${H-m.b}" x2="${W-m.r}" y2="${H-m.b}"/>`;
+  if(m4axisOK.x)h+=`<text class="axis-name" x="${m.l+iw/2}" y="${H-10}" text-anchor="middle">Quantity Supplied (million pounds)</text>`;
+  if(m4axisOK.y)h+=`<text class="axis-name" transform="translate(20 ${m.t+ih/2}) rotate(-90)" text-anchor="middle">Price ($ per pound)</text>`;
+  const visible=m4step>=3?rows4:m4placed;
+  if(m4step>=3||m4done&&m4step===2){h+=`<polyline class="curve" points="${rows4.map(r=>`${x(r.q)},${y(r.p)}`).join(' ')}"/><text class="formula" x="${m.l+12}" y="${m.t+ih*0.44}">S(supply) = 50×P(price) - 220</text>`}
+  visible.forEach(r=>{h+=`<circle class="point" cx="${x(r.q)}" cy="${y(r.p)}" r="9"/><text class="point-label" x="${x(r.q)+12}" y="${y(r.p)-10}">${r.l} (${r.q}, ${r.p.toFixed(2)})</text>`});
+  h+=`<rect class="target" x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" data-hit="1"/>`;svg.innerHTML=h;
+  svg.onpointerdown=e=>{if(m4step!==2||m4done||!e.target.dataset.hit)return;const r=svg.getBoundingClientRect(),sc=Math.min(r.width/W,r.height/H),ox=(r.width-W*sc)/2,oy=(r.height-H*sc)/2;let px=(e.clientX-r.left-ox)/sc,py=(e.clientY-r.top-oy)/sc;const hit=m4placed.findIndex(p=>Math.hypot(px-x(p.q),py-y(p.p))<28);if(hit>=0){const rm=m4placed.splice(hit,1)[0];draw4();renderLeft4();feedback(`Point ${rm.l} removed. Now plot point ${rows4.find(r=>!m4placed.includes(r)).l}.`);return}const target=rows4.find(r=>!m4placed.includes(r));if(!target)return;const tx=x(target.q),ty=y(target.p);m4attempts++;if(Math.hypot(px-tx,py-ty)<28){m4placed.push(target);renderLeft4();if(m4placed.length===rows4.length){m4done=true;success('All points are correct! The supply curve is formed automatically. 供给曲线已自动生成。');}else feedback(`Point ${target.l} is correct. Now plot point ${rows4.find(r=>!m4placed.includes(r)).l}.`);draw4()}else error(`Try again. Read point ${target.l} as (Quantity, Price).`) };
+ }
+ 
+function renderM5(){
+ if(m5step===0){m5done=false;m5axisOK={x:false,y:false};m5selD={};m5selS={};m5b=290;m5c=-220;if(m5anim)cancelAnimationFrame(m5anim)}
+ $('#nextBtn').disabled=m5step===7?false:true;
+ $('#stepTitle').textContent=steps5[m5step].t;$('#stepCn').textContent=steps5[m5step].c;$('#instruction').textContent=steps5[m5step].i;$('#sentence').textContent=steps5[m5step].s;$('#hint').textContent='';
+ $('#feedback').className='feedback';$('#feedback').textContent='';
+ $('#progressTop').textContent=m5step===7?'Activity 5 · Simulator':`Activity 5 · ${m5step+1}/7`;
+ $('#status').textContent=m5step===7?'自由探索模式':('步骤 '+(m5step+1)+'/7');
+ $('#chartTitle').textContent=m5step===7?'Equilibrium Simulator — Market for Chicken':'Market Equilibrium of Chicken';
+ const m5sm=$('#m5Summary');if(m5sm)m5sm.style.display=m5step===7?'':'none';
+ $('#workspace').classList.add('ws-wide');
+ $('#yDrop').style.display=m5step===1?'':'none';$('#xDrop').style.display=m5step===1?'':'none';
+ $('#yDrop').className='dropzone y-drop';$('#xDrop').className='dropzone x-drop';
+ renderLeft5();drawM5();
+}
+function renderLeft5(){
+ if(m5step===0){left.innerHTML=tableTip()+table5();left.querySelectorAll('tr[data-i]').forEach(tr=>tr.onclick=()=>{if(+tr.dataset.i===3)success('Correct! At $5.10, Qd = Qs = 35 million pounds — the market equilibrium. 均衡价格5.10美元、均衡数量35百万磅。');else error('Try again. Find the price where Demand equals Supply. 找需求量等于供给量的那一行。')})}
+ if(m5step===1){left.innerHTML=`<div class="wordbox"><div class="drag-label" data-kind="y">Price ($ per pound)</div><div class="drag-label" data-kind="x">Quantity (million pounds)</div></div>${table5()}`;setupDrag5()}
+ if(m5step===2){left.innerHTML=`${table5()}<div class="curve-note" style="margin-top:16px">需求曲线（蓝色）与供给曲线（橙色）已画好。它们的<strong>交点 E</strong> 就是市场均衡：需求量 = 供给量 = 35。</div>`;feedback('Click the equilibrium point E where the two curves cross. 点击两线交点 E。')}
+ if(m5step===3){left.innerHTML=`<div class="choice-list"><button class="choice" data-a="1">Surplus (excess supply)</button><button class="choice" data-a="0">Shortage (excess demand)</button><button class="choice" data-a="0">Equilibrium</button></div>${table5()}`;choices5('Correct! At $5.40, quantity supplied (50) exceeds quantity demanded (20) — a surplus. 供给大于需求，出现过剩。')}
+ if(m5step===4){left.innerHTML=`<div class="choice-list"><button class="choice" data-a="1">Price will fall</button><button class="choice" data-a="0">Price will rise</button><button class="choice" data-a="0">Price stays the same</button></div>${table5()}`;choices5Price('Correct! A surplus forces sellers to cut the price — price falls back toward $5.10. 过剩时卖者降价，价格回落向均衡。')}
+ if(m5step===5){left.innerHTML=`<div class="choice-list"><button class="choice" data-a="0">Surplus (excess supply)</button><button class="choice" data-a="1">Shortage (excess demand)</button><button class="choice" data-a="0">Equilibrium</button></div>${table5()}`;choices5('Correct! At $4.80, quantity demanded (50) exceeds quantity supplied (20) — a shortage. 需求大于供给，出现短缺。')}
+ if(m5step===6){left.innerHTML=`<div class="choice-list"><button class="choice" data-a="1">Price will rise</button><button class="choice" data-a="0">Price will fall</button><button class="choice" data-a="0">Price stays the same</button></div>${table5()}`;choices5Price('Correct! A shortage makes buyers bid the price up — price rises back toward $5.10. 短缺时买者抬价，价格回升向均衡。')}
+ if(m5step===7){left.innerHTML=simPanel();simBind()}
+}
+function choices5(msg){left.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{left.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');b.dataset.a==='1'?success(msg):error('Try again. Compare quantity demanded with quantity supplied. 比较需求量与供给量的大小。')})}
+function choices5Price(msg){left.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{left.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');b.dataset.a==='1'?success(msg):error('Try again. Think about which direction the price must move. 想一想价格会朝哪个方向变动。')})}
+function setupDrag5(){document.querySelectorAll('.drag-label').forEach(el=>{el.onpointerdown=e=>{el.setPointerCapture(e.pointerId);el.classList.add('dragging')};el.onpointerup=e=>{el.classList.remove('dragging');const p={x:e.clientX,y:e.clientY},yd=$('#yDrop').getBoundingClientRect(),xd=$('#xDrop').getBoundingClientRect(),inside=r=>p.x>=r.left&&p.x<=r.right&&p.y>=r.top&&p.y<=r.bottom;if((el.dataset.kind==='y'&&inside(yd))||(el.dataset.kind==='x'&&inside(xd))){m5axisOK[el.dataset.kind]=true;el.style.display='none';const dz=el.dataset.kind==='y'?$('#yDrop'):$('#xDrop');dz.style.display='none';drawM5();if(m5axisOK.x&&m5axisOK.y)success('Correct! Both axis labels are in the right place.');else feedback('Good. Place the other label.')}else error('Try again. Place the label on the correct axis.')}})}
+function drawM5(){
+ const W=820,H=520,m={l:70,r:20,t:36,b:80},iw=W-m.l-m.r,ih=H-m.t-m.b;
+ svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+ const x=q=>m.l+q/100*iw,y=p=>m.t+(7-p)/4*ih;
+ const b=Math.round(m5b),c=Math.round(m5c);
+ const eqQ=(b+c)/2,eqP=(b-c)/100;
+ const dQ1=Math.max(0,b-350),dQ2=Math.min(100,b-150),sQ1=Math.max(0,150+c),sQ2=Math.min(100,350+c);
+ const Dpts=`${x(dQ1)},${y((b-dQ1)/50)} ${x(dQ2)},${y((b-dQ2)/50)}`;
+ const Spts=`${x(sQ1)},${y((sQ1-c)/50)} ${x(sQ2)},${y((sQ2-c)/50)}`;
+ let h='<defs><marker id="m5arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/></marker></defs>';
+ for(let q=0;q<=100;q+=5)h+=`<line class="grid" x1="${x(q)}" y1="${m.t}" x2="${x(q)}" y2="${H-m.b}"/><text class="tick" x="${x(q)}" y="${H-m.b+20}" text-anchor="middle">${q}</text>`;
+ for(let p=3;p<=7.0001;p+=0.25){const py=y(p),strong=p>=4.8&&p<=5.4&&Math.abs(Math.round(p*100)-p*100)<1e-6&&Math.round(p*100)%10===0;h+=`<line class="${strong?'grid-strong':'grid'}" x1="${m.l}" y1="${py}" x2="${W-m.r}" y2="${py}"/><text class="tick" x="${m.l-8}" y="${py+4}" text-anchor="end">${p.toFixed(2)}</text>`}
+ h+=`<line class="axis" x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${H-m.b}"/><line class="axis" x1="${m.l}" y1="${H-m.b}" x2="${W-m.r}" y2="${H-m.b}"/>`;
+ if(m5axisOK.x)h+=`<text class="axis-name" x="${m.l+iw/2}" y="${H-10}" text-anchor="middle">Quantity (million pounds)</text>`;
+ if(m5axisOK.y)h+=`<text class="axis-name" transform="translate(16 ${m.t+ih/2}) rotate(-90)" text-anchor="middle">Price ($ per pound)</text>`;
+ if(m5step===7&&(b!==290||c!==-220)){h+=`<polyline class="base-curve" points="${x(0)},${y(5.8)} ${x(100)},${y(3.8)}"/><polyline class="base-curve" points="${x(0)},${y(4.4)} ${x(100)},${y(6.4)}"/>`;h+=`<line class="eq-arrow" x1="${x(35)}" y1="${y(5.1)}" x2="${x(eqQ)}" y2="${y(eqP)}" marker-end="url(#m5arrow)"/>`;h+=`<circle class="eq0-point" cx="${x(35)}" cy="${y(5.1)}" r="7"/><text class="point-label" x="${x(35)+10}" y="${y(5.1)-8}">E₀</text>`}
+ h+=`<polyline class="curve-d" points="${Dpts}"/><polyline class="curve-s" points="${Spts}"/>`;
+ const fmt=n=>n>=0?`+ ${n}`:`- ${Math.abs(n)}`;
+ h+=`<text class="formula" x="${m.l+12}" y="${m.t+ih*0.38}">D = -50×P ${fmt(b)}</text><text class="formula" x="${m.l+12}" y="${m.t+ih*0.38+22}">S = 50×P ${fmt(c)}</text>`;
+ h+=`<circle class="eq-point" cx="${x(eqQ)}" cy="${y(eqP)}" r="9"/><text class="eq-label" x="${x(eqQ)+12}" y="${y(eqP)-10}">E${m5step===5?'₁':' '} P=$${eqP.toFixed(2)} Q=${Math.round(eqQ)}</text>`;
+ if(m5step===3||m5step===4){const py=y(5.4);h+=`<line class="p-line" x1="${m.l}" y1="${py}" x2="${W-m.r}" y2="${py}"/><text class="p-line-label" x="${W-m.r-8}" y="${py-8}" text-anchor="end">P₁ = $5.40</text><text class="zone-label" x="${m.l+iw/2}" y="${m.t+ih*0.26}" text-anchor="middle">Surplus: Qs 50 > Qd 20</text>`}
+ if(m5step===5||m5step===6){const py=y(4.8);h+=`<line class="p-line" x1="${m.l}" y1="${py}" x2="${W-m.r}" y2="${py}"/><text class="p-line-label" x="${W-m.r-8}" y="${py-8}" text-anchor="end">P₂ = $4.80</text><text class="zone-label" x="${m.l+iw/2}" y="${m.t+ih*0.62}" text-anchor="middle">Shortage: Qd 50 > Qs 20</text>`}
+ if(m5step===2){h+=`<rect class="target" x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" data-hit="1"/>`;svg.innerHTML=h;svg.onpointerdown=m5HitE;return}
+ svg.innerHTML=h;svg.onpointerdown=null;
+}
+function m5HitE(e){if(m5done||!e.target.dataset.hit)return;const r=svg.getBoundingClientRect(),sc=Math.min(r.width/820,r.height/520),ox=(r.width-820*sc)/2,oy=(r.height-520*sc)/2;let px=(e.clientX-r.left-ox)/sc,py=(e.clientY-r.top-oy)/sc;const tx=70+35/100*(820-70-20),ty=36+(7-5.1)/4*(520-36-80);m5attempts++;if(Math.hypot(px-tx,py-ty)<36){m5done=true;success('Correct! Point E is the equilibrium: Qd = Qs = 35, P = $5.10. 均衡点：价格5.10美元、数量35百万磅。');drawM5()}else error('Try again. Click where the demand curve meets the supply curve. 点击两线交点。')}
+function simPanel(){let h=`<div class="sim-note"><strong>均衡模拟器 Equilibrium Simulator</strong><br>点击因素按钮，观察曲线移动和新均衡 E₁ 的形成（可多选；灰色虚线为初始曲线）。</div><div class="sim-scroll">`;h+=`<div class="factor-group"><h4>需求侧因素 Demand Shifters</h4>${facD.map(f=>`<button class="factor ${m5selD[f.id]?'on':''}" data-f="D:${f.id}">${f.zh}<small>${f.en}</small></button>`).join('')}</div>`;h+=`<div class="factor-group"><h4>供给侧因素 Supply Shifters</h4>${facS.map(f=>`<button class="factor ${m5selS[f.id]?'on':''}" data-f="S:${f.id}">${f.zh}<small>${f.en}</small></button>`).join('')}</div>`;h+=`<div class="sim-actions"><button class="secondary" id="simReset">重置曲线 / Reset</button></div></div>`;return h}
+function simBind(){left.querySelectorAll('.factor').forEach(b=>b.onclick=()=>{const sp=b.dataset.f.split(':');const sel=sp[0]==='D'?m5selD:m5selS;sel[sp[1]]=!sel[sp[1]];simRerender();m5Go()});const rb=left.querySelector('#simReset');if(rb)rb.onclick=()=>{m5selD={};m5selS={};simRerender();m5Go()}}
+function simRerender(){const panel=left.querySelector('.factor-group');if(panel){const html=simPanel();left.innerHTML=html;simBind()}}
+function m5Go(){
+ let db=0,dc=0;
+ Object.keys(m5selD).forEach(k=>{if(m5selD[k])db+=facD.find(f=>f.id===k).dir*60});
+ Object.keys(m5selS).forEach(k=>{if(m5selS[k])dc+=facS.find(f=>f.id===k).dir*60});
+ let q=(290+db-220+dc)/2,p=(290+db+220-dc)/100,t=1;
+ if(q<5)t=Math.min(t,(35-5)/(35-q));if(q>95)t=Math.min(t,(95-35)/(q-35));
+ if(p<3.25)t=Math.min(t,(5.10-3.25)/(5.10-p));if(p>6.75)t=Math.min(t,(6.75-5.10)/(p-5.10));
+ if(!isFinite(t)||isNaN(t))t=0;t=Math.max(0,Math.min(1,t));
+ const tb=290+db*t,tc=-220+dc*t;
+ if(m5anim)cancelAnimationFrame(m5anim);
+ const b0=m5b,c0=m5c,t0=performance.now(),dur=500;
+ function frame(now){const k=Math.min(1,(now-t0)/dur),e=k<1?1-Math.pow(1-k,3):1;m5b=b0+(tb-b0)*e;m5c=c0+(tc-c0)*e;drawM5();if(k<1)m5anim=requestAnimationFrame(frame);else{m5anim=null;m5Explain()}}
+ m5anim=requestAnimationFrame(frame);
+}
+function m5Explain(){
+ const dsel=Object.keys(m5selD).filter(k=>m5selD[k]).map(k=>facD.find(f=>f.id===k));
+ const ssel=Object.keys(m5selS).filter(k=>m5selS[k]).map(k=>facS.find(f=>f.id===k));
+ const all=dsel.concat(ssel);
+ if(!all.length){feedback('回到初始均衡。Back to the initial equilibrium.');return}
+ const q=(m5b+m5c)/2,p=(m5b-m5c)/100,dp=p-5.10,dq=q-35;
+ const pT=dp>0.03?'上升':(dp<-0.03?'下降':'不变'),qT=dq>1?'增加':(dq<-1?'减少':'不变');
+ const pE=dp>0.03?'rise':(dp<-0.03?'fall':'stay the same'),qE=dq>1?'rise':(dq<-1?'fall':'stay the same');
+ const zn=all.map(f=>f.zh).join('、'),en=all.map(f=>f.en).join(', ');
+ $('#feedback').className='feedback success';
+ $('#feedback').innerHTML=`<span class="big">✓</span><span>${zn} → 均衡价格${pT}、均衡数量${qT}（新均衡 P=$${p.toFixed(2)}、Q=${Math.round(q)}）。 / ${en}: equilibrium price ${pE}, quantity ${qE}.</span>`;
+}
+function drawM2(){
+  const W=M2W,H=M2H,m=M2M,iw=W-m.l-m.r,ih=H-m.t-m.b;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);const x=q=>m.l+q/75*iw,y=p=>m.t+(5.42-p)/(5.42-4.78)*ih;
+  const shift=15/75*iw;m2target=(m2chosen?(m2dir==='right'?shift:-shift):0);
+  const linePts=off=>[[19,5.42],[51,4.78]].map(([q,p])=>`${x(q)+off},${y(p)}`).join(' ');
+  const dq=Math.round(m2off/(iw/75)),b=290+dq;
+  let h='';for(let q=0;q<=75;q+=5){h+=`<line class="grid" x1="${x(q)}" y1="${m.t}" x2="${x(q)}" y2="${H-m.b}"/><text class="tick" x="${x(q)}" y="${H-m.b+22}" text-anchor="middle">${q}</text>`}
+  rows.forEach(r=>{const py=y(r.p);h+=`<line class="grid" x1="${m.l}" y1="${py}" x2="${W-m.r}" y2="${py}"/><text class="tick" x="${m.l-12}" y="${py+5}" text-anchor="end">${r.p.toFixed(2)}</text>`});
+  h+=`<line class="axis" x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${H-m.b}"/><line class="axis" x1="${m.l}" y1="${H-m.b}" x2="${W-m.r}" y2="${H-m.b}"/>`;
+  h+=`<text class="axis-name" x="${m.l+iw/2}" y="${H-10}" text-anchor="middle">Quantity Demanded (million pounds)</text><text class="axis-name" transform="translate(20 ${m.t+ih/2}) rotate(-90)" text-anchor="middle">Price ($ per pound)</text>`;
+  h+=`<polyline class="base-curve" points="${linePts(0)}"/>`;
+  if(m2chosen)h+=`<polyline class="dash-curve" points="${linePts(m2target)}"/>`;
+  if(m2step<6)h+=`<g class="curve-g" transform="translate(${m2off} 0)"><polyline class="curve" points="${linePts(0)}"/><polyline class="curve-hit" points="${linePts(0)}"/></g>`;
+  else h+=`<polyline class="curve" points="${linePts(0)}"/>`;
+  h+=`<text class="formula" x="${m.l+12}" y="${m.t+ih*0.44}">D(demand) = -50×P(price) + ${b}</text>`;
+  if(m2chosen&&!m2done)h+=`<text class="drag-tip" x="${m.l+iw/2}" y="${H-m.b-10}" text-anchor="middle">← drag the green curve onto the dashed line →</text>`;
+  svg.innerHTML=h;svg.onpointerdown=null;setupCurveDrag();
+ }
+ function m2Base(){return {r:svg.getBoundingClientRect(),sc:Math.min(svg.getBoundingClientRect().width/M2W,svg.getBoundingClientRect().height/M2H),ox:(svg.getBoundingClientRect().width-M2W*Math.min(svg.getBoundingClientRect().width/M2W,svg.getBoundingClientRect().height/M2H))/2}}
+ function updateFormula(){const f=svg.querySelector('text.formula');if(f){const iw=M2W-M2M.l-M2M.r;f.textContent=`D(demand) = -50×P(price) + ${290+Math.round(m2off/(iw/75))}`}}
+ function setupCurveDrag(){
+  const g=svg.querySelector('.curve-g');if(!g)return;
+  const iw=M2W-M2M.l-M2M.r,limit=30/75*iw;
+  let startX=0,startOff=0,dragged=false;
+  g.onpointerdown=e=>{e.preventDefault();g.setPointerCapture(e.pointerId);const b=m2Base();startX=(e.clientX-b.r.left-b.ox)/b.sc;startOff=m2off;dragged=false;g.classList.add('dragging')};
+  g.onpointermove=e=>{if(!g.hasPointerCapture(e.pointerId))return;const b=m2Base();const px=(e.clientX-b.r.left-b.ox)/b.sc;m2off=Math.max(-limit,Math.min(limit,startOff+px-startX));dragged=true;g.setAttribute('transform',`translate(${m2off} 0)`);updateFormula()};
+  g.onpointerup=()=>{g.classList.remove('dragging');if(!dragged)return;if(m2step===0){if(Math.abs(m2off)>10){m2off=0;g.setAttribute('transform','translate(0 0)');updateFormula();success('Good! Right = demand increases, left = decreases. 右拖需求增加，左拖需求减少。')}}else if(m2chosen&&!m2done){if(Math.abs(m2off-m2target)<16){m2off=m2target;g.setAttribute('transform',`translate(${m2off} 0)`);updateFormula();m2done=true;const nb=290+(m2dir==='right'?15:-15);const dt=svg.querySelector('.drag-tip');if(dt)dt.remove();success(`Correct! D = -50×P + ${nb} (shift ${m2dir==='right'?'right':'left'}). 新公式：D = -50×P + ${nb}。`) }else{m2attempts++;error('Almost. Release on the dashed line. 请松手在虚线上。');m2off=0;g.setAttribute('transform','translate(0 0)');updateFormula()}}};
+ }
+ function setupDrag(){document.querySelectorAll('.drag-label').forEach(el=>{el.onpointerdown=e=>{el.setPointerCapture(e.pointerId);el.classList.add('dragging')};el.onpointerup=e=>{el.classList.remove('dragging');const p={x:e.clientX,y:e.clientY},yd=$('#yDrop').getBoundingClientRect(),xd=$('#xDrop').getBoundingClientRect(),inside=r=>p.x>=r.left&&p.x<=r.right&&p.y>=r.top&&p.y<=r.bottom;if((el.dataset.kind==='y'&&inside(yd))||(el.dataset.kind==='x'&&inside(xd))){axisOK[el.dataset.kind]=true;el.style.display='none';const dz=el.dataset.kind==='y'?$('#yDrop'):$('#xDrop');dz.style.display='none';draw();if(axisOK.x&&axisOK.y)success('Correct! Both axis labels are in the right place.');else feedback('Good. Place the other label.')}else error('Try again. Place the label on the correct axis.')}})}
+ function feedback(msg){$('#feedback').className='feedback';$('#feedback').textContent=msg}
+ function success(msg){completed=true;$('#feedback').className='feedback success';$('#feedback').innerHTML=`<span class="big">✓</span><span>${msg}</span>`;$('#nextBtn').disabled=false;$('#status').textContent='可以进入下一步'}
+ function error(msg){attempts++;$('#feedback').className='feedback error';$('#feedback').innerHTML=`<span class="big">×</span><span>${msg}</span>`}
+ $('#hintBtn').onclick=()=>$('#hint').textContent=mod===5?steps5[m5step].h:(mod===4?steps4[m4step].h:(mod===2?steps2[m2step].h:steps[step].h));
+ $('#nextBtn').onclick=()=>{if(mod===4){if(m4step<5){m4step++;renderM4()}else{$('#feedback').className='feedback success';$('#feedback').innerHTML='<span class="big">✓</span><span>Activity completed! 供给曲线练习完成。</span>';$('#nextBtn').disabled=true;$('#status').textContent=`完成 · 尝试 ${m4attempts} 次`}}else if(mod===2){if(m2step<6){m2step++;renderM2()}else{$('#feedback').className='feedback success';$('#feedback').innerHTML='<span class="big">✓</span><span>Activity completed! 平移互动练习完成。</span>';$('#nextBtn').disabled=true;$('#status').textContent=`完成 · 尝试 ${m2attempts} 次`}}else if(mod===5){if(m5step<7){m5step++;renderM5()}else{$('#feedback').className='feedback success';$('#feedback').innerHTML='<span class="big">✓</span><span>Activity completed! 市场均衡练习完成。</span>';$('#nextBtn').disabled=true;$('#status').textContent='完成 · 尝试 '+m5attempts+' 次'}}else{if(step<5){step++;completed=false;render()}else{$('#feedback').className='feedback success';$('#feedback').innerHTML='<span class="big">✓</span><span>Activity completed! 需求曲线练习完成。</span>';$('#nextBtn').disabled=true;$('#status').textContent=`完成 · 尝试 ${attempts} 次`}}};
+ $('#resetBtn').onclick=()=>{if(mod===4){m4step=0;m4done=false;m4placed=[];m4axisOK={x:false,y:false};m4attempts=0;renderM4()}else if(mod===2){m2step=0;m2done=false;m2chosen=false;m2off=0;m2target=0;m2attempts=0;renderM2()}else if(mod===5){m5step=0;m5done=false;m5axisOK={x:false,y:false};m5attempts=0;m5selD={};m5selS={};m5b=290;m5c=-220;if(m5anim)cancelAnimationFrame(m5anim);renderM5()}else{step=0;completed=false;placed=[];axisOK={x:false,y:false};attempts=0;$('#yDrop').style.display='';$('#xDrop').style.display='';$('#yDrop').className='dropzone y-drop';$('#xDrop').className='dropzone x-drop';render()}};
+ document.querySelector('.tab[data-module="demand"]').onclick=()=>{if(mod===1)return;mod=1;step=0;completed=false;placed=[];axisOK={x:false,y:false};attempts=0;$('#yDrop').style.display='';$('#xDrop').style.display='';$('#yDrop').className='dropzone y-drop';$('#xDrop').className='dropzone x-drop';document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelector('.tab[data-module="demand"]').classList.add('active');render()};
+ document.querySelector('.tab[data-module="shift"]').onclick=()=>{if(mod===2)return;mod=2;m2step=0;m2done=false;m2chosen=false;m2off=0;m2target=0;m2attempts=0;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelector('.tab[data-module="shift"]').classList.add('active');renderM2()};
+ document.querySelector('.tab[data-module="supply"]').onclick=()=>{if(mod===4)return;mod=4;m4step=0;m4done=false;m4placed=[];m4axisOK={x:false,y:false};m4attempts=0;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelector('.tab[data-module="supply"]').classList.add('active');renderM4()};
+ document.querySelector('.tab[data-module="equilibrium"]').onclick=()=>{if(mod===5)return;mod=5;m5step=0;m5done=false;m5axisOK={x:false,y:false};m5attempts=0;m5selD={};m5selS={};m5b=290;m5c=-220;if(m5anim)cancelAnimationFrame(m5anim);document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelector('.tab[data-module="equilibrium"]').classList.add('active');renderM5()};
+ document.querySelectorAll('.tab.locked').forEach(b=>b.onclick=()=>{const old=$('#feedback').textContent;feedback(`${b.dataset.name}将在后续版本开发。`);setTimeout(()=>{if(!completed&&!m2done)feedback(old)},2200)});
+ render();
+})();
+</script>
+</body>
+</html>
