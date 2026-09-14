@@ -156,7 +156,8 @@ main,.topbar,.footer{position:relative;z-index:1}
 .g-step span{font-size:12.5px;color:var(--sub);line-height:1.55;display:block}
 
 /* ---------- 首页 ---------- */
-main{flex:1;display:flex;flex-direction:column;min-height:0}
+main{flex:1 0 auto;display:flex;flex-direction:column}
+main.full{height:100vh}
 #home{display:flex;flex-direction:column;flex:1}
 .hero{
   position:relative;height:460px;flex:0 0 460px;overflow:hidden;
@@ -441,6 +442,7 @@ function openChapter(n){
   current=n;
   document.querySelector('.topbar').classList.add('hidden');
   document.querySelector('.footer').classList.add('hidden');
+  document.querySelector('main').classList.add('full');
   $('#home').style.display='none';
   const v=$('#chapterView');v.style.display='flex';
   $('#chTitle').innerHTML=`第 ${n} 章 · ${c.cn}<small>${c.en}</small>`;
@@ -452,6 +454,7 @@ function showHome(){
   current=0;frame.removeAttribute('src');
   document.querySelector('.topbar').classList.remove('hidden');
   document.querySelector('.footer').classList.remove('hidden');
+  document.querySelector('main').classList.remove('full');
   $('#chapterView').style.display='none';
   $('#home').style.display='flex';
   renderNav();
