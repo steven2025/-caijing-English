@@ -1,0 +1,17 @@
+{
+  "name": "财经基础英语可视化学习集（双语）",
+  "short_name": "财经英语可视化",
+  "description": "九章财经基础英语互动可视化学习：需求与供给、生产要素、GDP 与经济周期等双语互动练习。",
+  "lang": "zh-CN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#0d1f18",
+  "background_color": "#08130e",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
