@@ -1,5 +1,5 @@
 /* 财经基础英语可视化学习集 · Service Worker */
-const CACHE = 'vfe-learn-v1';
+const CACHE = 'vfe-learn-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -11,7 +11,8 @@ const ASSETS = [
   './assets/icons/apple-touch-icon.png',
   './chapters/chapter3.html',
   './chapters/chapter6.html',
-  './chapters/chapter7.html'
+  './chapters/chapter7.html',
+  './chapters/chapter9.html'
 ];
 
 self.addEventListener('install', e => {

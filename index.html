@@ -67,6 +67,7 @@ main,.topbar,.footer{position:relative;z-index:1}
 .ch-btn{
   border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--sub);
   padding:8px 13px;border-radius:11px;font-size:13px;white-space:nowrap;
+  display:inline-flex;align-items:center;justify-content:center;
   position:relative;overflow:hidden;transition:transform .16s,box-shadow .2s,border-color .2s,color .2s;
   box-shadow:0 3px 0 rgba(0,0,0,.35);
 }
@@ -194,7 +195,7 @@ main.full{height:100vh}
 .mini-card:hover::after{opacity:1}
 .mini-card .line1{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;flex:1 1 auto}
 .mini-card .no{font-size:19px;font-weight:900;color:var(--cc);font-family:Georgia,serif;flex:0 0 auto}
-.mini-card .nm{font-size:14px;font-weight:800;color:var(--ink);white-space:nowrap;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis}
+.mini-card .nm{font-size:14px;font-weight:800;color:var(--ink);white-space:nowrap;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;text-align:center}
 .mini-card .st{
   font-size:11px;font-weight:800;border-radius:20px;padding:4px 14px;white-space:nowrap;flex:0 0 auto;
   background:rgba(113,138,119,.14);color:var(--dim);border:1px solid rgba(113,138,119,.3);
@@ -352,7 +353,7 @@ const CHAPTERS=[
  {n:6,cn:'生产要素',en:'Factors of Production',file:'chapters/chapter6.html'},
  {n:7,cn:'GDP 与经济周期',en:'GDP and Business Cycle',file:'chapters/chapter7.html'},
  {n:8,cn:'第 8 章',en:'Chapter 8',file:null},
- {n:9,cn:'第 9 章',en:'Chapter 9',file:null}
+ {n:9,cn:'宏观政策',en:'Macroeconomic Policy',file:'chapters/chapter9.html'}
 ];
 const $=s=>document.querySelector(s);
 const nav1=$('#chNav'),nav2=$('#chNav2'),frame=$('#chapterFrame');
