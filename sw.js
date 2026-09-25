@@ -1,5 +1,5 @@
 /* 财经基础英语可视化学习集 · Service Worker */
-const CACHE = 'vfe-learn-v6';
+const CACHE = 'vfe-learn-v7';
 const ASSETS = [
   './',
   './index.html',
@@ -9,7 +9,7 @@ const ASSETS = [
   './assets/icons/icon-512.png',
   './assets/icons/icon-192.png',
   './assets/icons/apple-touch-icon.png',
-  './chapters/chapter1.html',
+  './chapters/chapter2.html',
   './chapters/chapter3.html',
   './chapters/chapter6.html',
   './chapters/chapter7.html',
