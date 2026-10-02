@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>智猪博弈 The Smart Pig Game</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='55' r='40' fill='%23f06292'/%3E%3Cpath d='M16 34q-10-14 8-16 14 4 12 18z' fill='%23f06292'/%3E%3Cpath d='M84 34q10-14-8-16-14 4-12 18z' fill='%23f06292'/%3E%3Ccircle cx='38' cy='50' r='5' fill='%23333'/%3E%3Ccircle cx='62' cy='50' r='5' fill='%23333'/%3E%3Cellipse cx='50' cy='68' rx='17' ry='13' fill='%23e91e63'/%3E%3Ccircle cx='45' cy='67' r='3' fill='%23fff'/%3E%3Ccircle cx='55' cy='67' r='3' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+:root{
+  --pink:#f06292; --pink-2:#e91e63; --pink-3:#c2185b;
+  --pink-50:#fff0f5; --pink-100:#fce4ec;
+  --cream:#fff8f1; --card:#fff;
+  --ink:#3d2b2b; --muted:#9a8a8a;
+  --green:#2e7d32; --green-bg:#e8f5e9; --green-bd:#a5d6a7;
+  --red:#c62828; --red-bg:#ffebee; --red-bd:#ef9a9a;
+  --line:#f3dfe7;
+  --shadow:0 6px 16px rgba(192,24,91,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:#efe6ea;display:flex;justify-content:center;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);-webkit-tap-highlight-color:transparent}
+button{font-family:inherit;border:none;background:none;cursor:pointer}
+button:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+#app{width:100%;max-width:480px;height:100dvh;background:var(--cream);display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(0,0,0,.08)}
+
+/* ===== 1. 顶部黑色导航（常驻） ===== */
+.header{background:#17151a;color:#fff;padding:14px 18px 12px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:20}
+.header-title{font-size:24px;font-weight:900;letter-spacing:1px}
+.header-right{display:flex;align-items:center;gap:10px;font-size:16px}
+.header-brand{font-size:16px;font-weight:700;color:#fff}
+.header-credits{display:flex;flex-direction:column;gap:1px;text-align:left;font-size:10.5px;line-height:1.45;color:#cfd8ff;white-space:nowrap}
+.header-credits b{color:#fff;font-weight:700}
+.dots-btn{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.08);color:#fff;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.dots-btn:hover{background:rgba(255,255,255,.18)}
+.dots-btn svg{width:20px;height:20px;fill:currentColor}
+.lang-menu{position:absolute;top:60px;right:14px;background:#fff;color:var(--ink);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.18);overflow:hidden;z-index:30;display:none;min-width:140px}
+.lang-menu.open{display:block}
+.lang-menu button{display:flex;align-items:center;gap:8px;width:100%;padding:12px 16px;text-align:left;font-size:14px;color:var(--ink)}
+.lang-menu button:hover{background:var(--pink-50);color:var(--pink-3)}
+.lang-menu svg{width:16px;height:16px;fill:currentColor}
+
+/* ===== 2. 白色标签栏（常驻：左侧课程名 + 右侧横滑标签） ===== */
+.nav-scroll{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border-bottom:1px solid #f0e6ea}
+.course-name{flex:none;font-size:16px;font-weight:900;color:#17151a;white-space:nowrap;letter-spacing:.5px}
+.nav-pills{display:flex;gap:8px;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none;cursor:grab;user-select:none;
+  -webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);
+          mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.nav-pills.dragging{cursor:grabbing}
+.nav-pills::-webkit-scrollbar{display:none}
+.nav-tab{padding:9px 13px;min-height:42px;display:inline-flex;align-items:center;border-radius:22px;font-size:13px;font-weight:700;color:#666;background:#f6f1f3;white-space:nowrap;flex-shrink:0;transition:.25s}
+.nav-tab.active{background:linear-gradient(135deg,var(--pink),var(--pink-2));color:#fff;box-shadow:0 4px 10px rgba(240,98,146,.35)}
+
+/* ===== 内容区 ===== */
+.content{flex:1;overflow-y:auto;padding:18px 16px 36px}
+.page{display:none;animation:fadeUp .3s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.course-label{display:inline-block;font-size:14px;font-weight:700;color:var(--pink-3);background:#fff;border:1.5px solid var(--pink-100);padding:6px 14px;border-radius:16px;margin-bottom:14px}
+.page-title{font-size:28px;font-weight:900;color:var(--pink-3);text-align:center;margin:6px 0 18px}
+.rule-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow);font-size:15.5px;line-height:1.7}
+.rule-card.task{background:var(--pink-50);border-color:var(--pink-100)}
+.rule-card b{color:var(--pink-3)}
+/* 规则页小演示：用真实猪图的迷你舞台 */
+.mini-stage{position:relative;margin-top:10px;height:clamp(132px,22vh,190px);background:#fffdf5;border:1.5px dashed var(--pink-100);border-radius:12px;overflow:hidden}
+.demo-play{margin-top:10px;width:100%;padding:9px;background:#fff;color:var(--pink-3);border:2px solid var(--pink);border-radius:20px;font-size:14px;font-weight:800;min-height:44px}
+.demo-play:active{transform:scale(.97)}
+.ms-btn{position:absolute;top:10px;left:50%;width:30px;height:30px;margin-left:-15px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff9a94,#e53935 72%);transition:transform .15s;z-index:3}
+.ms-btn.pressed{transform:scale(.78)}
+.ms-trough{position:absolute;bottom:16px;left:50%;width:70px;height:18px;margin-left:-35px;border:3px solid #bcdff0;border-radius:7px;background:#fff;z-index:1}
+.ms-food{position:absolute;left:0;right:0;top:0;height:100%;border-radius:4px;background:url('https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/food.png') center/cover no-repeat;opacity:0;transform:scaleY(0);transform-origin:bottom;transition:opacity .3s,transform .3s}
+.ms-food.show{opacity:1;transform:scaleY(1)}
+.ms-pig{position:absolute;width:110px;height:110px;object-fit:contain;z-index:4;left:18px;bottom:6px;top:auto}
+.ms-pig.sm{width:88px;height:88px;left:auto;right:18px;bottom:8px;top:auto}
+.ms-bolt{position:absolute;opacity:0;transition:opacity .25s;font-size:13px;font-weight:900;background:#fff;border-radius:10px;padding:3px 9px;z-index:5;pointer-events:none;white-space:nowrap}
+.ms-bolt.show{opacity:1}
+.ms-bolt.plus{color:var(--green);border:2px solid var(--green-bd)}
+.ms-bolt.minus{color:var(--red);border:2px solid var(--red-bd)}
+.ms-drop{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:#ffa726;opacity:0;z-index:3;transition:top .7s ease-in,opacity .2s}
+.ms-lbl{position:absolute;font-size:11px;font-weight:800;color:#8a7580;background:#fff;border-radius:8px;padding:1px 7px;z-index:4;white-space:nowrap}
+.ms-lbl.btn-lbl{top:44px;left:50%;transform:translateX(-50%)}
+.ms-lbl.tr-lbl{bottom:0;left:50%;transform:translateX(-50%)}
+.ms-cap{margin-top:8px;font-size:14px;font-weight:700;color:var(--pink-3);background:var(--pink-50);border-radius:10px;padding:9px 12px;min-height:40px;text-align:center;line-height:1.4}
+.btn-pink{width:100%;padding:16px;background:linear-gradient(135deg,var(--pink),var(--pink-2));color:#fff;border-radius:30px;font-size:17px;font-weight:800;box-shadow:0 8px 18px rgba(233,30,99,.35);transition:transform .15s;margin-top:8px}
+.btn-pink:active{transform:scale(.97)}
+.btn-ghost{width:100%;padding:15px;background:#fff;color:var(--pink-3);border:2px solid var(--pink);border-radius:30px;font-size:16px;font-weight:800;transition:transform .15s}
+.btn-ghost:active{transform:scale(.97)}
+
+/* ===== 规则三步互动课堂（防跳过机制） ===== */
+.rule-grid{display:flex;flex-direction:column}
+#page-intro .rule-card{margin-bottom:10px}
+.rule-model{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 16px;margin-bottom:10px;box-shadow:var(--shadow);font-size:15px;line-height:1.65}
+.rule-model summary{cursor:pointer;font-weight:800;color:var(--pink-3);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:15.5px;min-height:42px}
+.rule-model summary::-webkit-details-marker{display:none}
+.rule-model summary::after{content:"▾";color:var(--pink);font-size:13px;flex:none;transition:transform .25s}
+.rule-model[open] summary::after{transform:rotate(180deg)}
+.rule-model .model-body{padding:8px 2px 6px;color:var(--ink);font-size:14.5px}
+.rule-tabs{display:flex;gap:8px;margin-bottom:10px}
+.rule-tab{flex:1;min-height:48px;padding:6px 4px;border-radius:14px;border:2px solid var(--pink-100);background:#fff;color:#8a7580;font-size:13.5px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;transition:.2s;line-height:1.25;text-align:center}
+.rule-tab .rt-num{font-size:11px;opacity:.7}
+.rule-tab.active{border-color:var(--pink);color:var(--pink-3);background:var(--pink-50);box-shadow:0 4px 10px rgba(240,98,146,.18)}
+.rule-tab.done{border-color:var(--green-bd);color:#2e7d32}
+.rule-tab.done .rt-num{display:none}
+.rule-tab.done::before{content:"✓";font-size:14px;font-weight:900;color:var(--green);line-height:1}
+.rule-tab.attention{animation:tabPulse 1.6s ease-in-out infinite}
+@keyframes tabPulse{0%,100%{box-shadow:0 0 0 0 rgba(240,98,146,.45)}50%{box-shadow:0 0 0 8px rgba(240,98,146,0)}}
+.rule-panel[hidden]{display:none}
+.rule-line b{color:var(--pink-3)}
+#btnStart:disabled{background:#e9e2e5;box-shadow:none;color:#a08d95;cursor:not-allowed}
+#btnStart:disabled:active{transform:none}
+#introToast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%) translateY(20px);background:rgba(61,50,56,.94);color:#fff;padding:11px 20px;border-radius:14px;font-size:14px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;z-index:99;max-width:86vw;text-align:center}
+#introToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-height:900px){
+  .page-title{font-size:22px;margin:2px 0 10px}
+  .rule-model{padding:6px 14px;margin-bottom:8px}
+  .rule-model summary{min-height:36px;font-size:14.5px}
+  .rule-model .model-body{font-size:13px;padding:6px 2px 4px}
+  #page-intro .rule-card{padding:10px 14px;font-size:14px;line-height:1.55;margin-bottom:8px}
+  .mini-stage{height:clamp(110px,18vh,150px)}
+  .ms-pig{width:96px;height:96px}
+  .ms-pig.sm{width:76px;height:76px}
+  .ms-cap{font-size:12.5px;padding:6px 10px}
+  .demo-play{padding:7px;font-size:13px;margin-top:8px;min-height:38px}
+  .rule-tabs{margin-bottom:8px}
+  .rule-tab{min-height:42px;font-size:12.5px}
+  .content{padding:12px 14px 26px}
+}
+@media (max-height:720px){
+  .page-title{font-size:19px;margin:0 0 8px}
+  .rule-model{margin-bottom:6px}
+  .rule-model summary{min-height:32px;font-size:13.5px}
+  #page-intro .rule-card{padding:8px 12px;font-size:13px;line-height:1.5;margin-bottom:6px}
+  .mini-stage{height:clamp(120px,20vh,160px)}
+  .ms-pig{width:88px;height:88px}
+  .ms-pig.sm{width:70px;height:70px}
+  .ms-cap{font-size:12px;padding:4px 8px;min-height:30px}
+  .demo-play{min-height:34px;padding:5px;font-size:12px;margin-top:6px}
+  .rule-tabs{gap:6px;margin-bottom:6px}
+  .rule-tab{min-height:36px;font-size:12px}
+  .content{padding:8px 12px 20px}
+  #btnStart{padding:11px;font-size:15px}
+}
+
+/* ===== 游戏场景 ===== */
+.game-scene{background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:16px 14px 16px;box-shadow:var(--shadow)}
+.food-dispenser{display:flex;flex-direction:column;align-items:center;margin-bottom:8px}
+.food-circle{width:58px;height:58px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff9a94,#e53935 72%);box-shadow:inset 0 -4px 8px rgba(0,0,0,.25),0 4px 12px rgba(229,57,53,.4)}
+.food-circle.pulse{animation:pulse .7s}
+@keyframes pulse{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+.food-label{font-size:14px;font-weight:800;color:var(--pink-3);background:#fff;border:1.5px solid var(--pink-100);padding:4px 12px;border-radius:12px;margin-top:8px}
+.stage{display:flex;align-items:flex-end;justify-content:center;gap:6px;margin-top:6px}
+.pig-side{width:42%;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:10px}
+.pig-side .pig-img{order:0}
+.pig-side .bubbles{order:1}
+.pig-side .pig-tag{order:2}
+.pig-side.small .bubbles{order:0}
+.pig-side.small .pig-img{order:1}
+.pig-side.small .pig-tag{order:2}
+.bubbles{display:flex;flex-direction:column;gap:8px;align-items:center}
+.bubble{display:flex;align-items:center;gap:7px;min-height:44px;background:#fff;border:2px solid var(--pink);border-radius:16px;padding:8px 14px;font-size:14px;font-weight:800;color:var(--ink);position:relative;transition:.2s}
+.bubble svg{width:18px;height:18px;flex:none}
+.bubble::after{content:"";position:absolute;top:50%;transform:translateY(-50%);border:8px solid transparent;border-left:0;border-right-color:var(--pink);left:-8px}
+.pig-side.small .bubble::after{border-right:0;border-left-color:var(--pink);left:auto;right:-8px}
+.bubble.selected{background:linear-gradient(135deg,var(--pink),var(--pink-2));color:#fff;border-color:var(--pink-2)}
+.bubble.selected::after{border-right-color:var(--pink-2)}
+.pig-side.small .bubble.selected::after{border-left-color:var(--pink-2)}
+.bubble:active{transform:scale(.95)}
+.pig-img{width:128px;height:128px;object-fit:contain;display:block}
+.pig-side.small .pig-img{width:100px;height:100px}
+.pig-tag{font-size:14px;font-weight:800;color:var(--pink-3);margin-top:2px}
+.pig-side.small .pig-tag{color:#4a7ba6}
+.trough{width:90px;height:40px;background:#fff;border:3px solid #bcdff0;border-radius:8px;align-self:flex-end;margin-bottom:18px;position:relative;overflow:hidden}
+/* trough inner overlay removed so food image fills it */
+.hint{text-align:center;font-size:15px;font-weight:700;color:#8d6e63;margin:16px 0 14px}
+
+/* ===== 游戏动画 ===== */
+.game-scene{position:relative;overflow:hidden}
+.game-scene .bubbles{transition:opacity .25s}
+.game-scene.play .bubbles{opacity:0;pointer-events:none}
+.bolt{position:absolute;z-index:20;display:flex;align-items:center;gap:3px;padding:3px 9px;border-radius:14px;font-size:15px;font-weight:900;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.18);opacity:0;transform:translate(-50%,-100%) scale(.5);transition:opacity .3s,transform .3s;pointer-events:none}
+.bolt.show{opacity:1;transform:translate(-50%,-110%) scale(1)}
+.bolt.minus{color:#c62828;border:2px solid #ef9a9a}
+.bolt.minus svg{fill:#e53935}
+.bolt.plus{color:#2e7d32;border:2px solid #a5d6a7}
+.bolt.plus svg{fill:#43a047}
+.food-pile{position:absolute;left:0;right:0;top:0;height:100%;border-radius:5px;background:url('https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/food.png') center/cover no-repeat;opacity:0;transform:scaleY(0);transform-origin:bottom;transition:opacity .3s,transform .3s;pointer-events:none}
+.food-pile.show{opacity:1;transform:scaleY(1)}
+.food-circle{transition:transform .18s ease}
+
+/* 饱腹值条 */
+.satiety{margin-top:-4px;margin-bottom:12px}
+.sat-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sat-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.1);flex:none}
+.sat-track{flex:1;height:26px;background:#fff;border:2px solid #f3c6d6;border-radius:14px;position:relative;overflow:hidden}
+.sat-fill{height:100%;width:0;background:linear-gradient(90deg,#ffd54f,var(--pink));border-radius:12px;transition:width .7s ease}
+.sat-num{flex:none;min-width:58px;text-align:right;font-size:16px;font-weight:900;color:var(--pink-3)}
+.sat-num.neg{color:var(--red)}
+
+/* ===== 理论页 ===== */
+.theory-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow)}
+.theory-card h2{font-size:17px;color:var(--pink-3);margin-bottom:10px}
+.theory-card p{font-size:15px;line-height:1.75;color:#4d3b3b}
+.matrix{width:100%;border-collapse:collapse;table-layout:fixed;font-size:14px;margin-top:6px}
+.matrix th,.matrix td{border:1.5px solid #f0ccd9;padding:10px 6px;text-align:center;border-radius:8px}
+.matrix thead th{background:var(--pink-50);color:var(--pink-3);font-size:13px}
+.matrix tbody th{background:#faf3f6;color:#7a4a5c;font-size:13px;font-weight:800}
+.matrix td{font-weight:800;color:#5b3a3a;background:#fff}
+.matrix td.hl{background:var(--pink-100);color:var(--pink-3)}
+.vocab{list-style:none}
+.vocab li{font-size:14.5px;line-height:1.7;padding:6px 0;border-bottom:1px dashed #f0d8e0}
+.vocab li:last-child{border-bottom:0}
+.vocab b{color:var(--pink-3)}
+
+/* ===== 测验页 ===== */
+.quiz-q{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.quiz-q .q-stem{font-size:15.5px;font-weight:800;line-height:1.6;margin-bottom:10px}
+.quiz-opt{display:block;width:100%;text-align:left;background:#faf3f6;border:2px solid transparent;border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:14.5px;color:var(--ink);transition:.2s}
+.quiz-opt .opt-letter{display:inline-flex;width:22px;height:22px;border-radius:50%;background:#fff;align-items:center;justify-content:center;font-weight:800;margin-right:8px;font-size:12px;color:var(--pink-3)}
+.quiz-opt.selected{border-color:var(--pink);background:var(--pink-50)}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-bg);color:var(--green)}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-bg);color:var(--red)}
+.quiz-opt:disabled{cursor:default}
+.result-banner{display:none;text-align:center;background:var(--pink-50);border:2px solid var(--pink-100);border-radius:16px;padding:16px;margin-bottom:14px}
+.result-banner.show{display:block}
+.result-banner .score-big{font-size:26px;font-weight:900;color:var(--pink-3)}
+.result-banner .score-sub{font-size:13.5px;color:var(--muted);margin-top:4px}
+
+/* ===== 结算弹窗 ===== */
+.modal-mask{position:absolute;inset:0;background:rgba(30,10,20,.5);display:flex;align-items:center;justify-content:center;z-index:50;padding:22px}
+.modal-mask[hidden]{display:none}
+.modal-card{background:#fff;border-radius:22px;padding:24px 22px;width:100%;max-width:340px;text-align:center;animation:pop .3s ease;box-shadow:0 16px 40px rgba(0,0,0,.25)}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-card h2{font-size:19px;color:var(--pink-3);margin-bottom:10px}
+.modal-nums{display:flex;justify-content:center;gap:14px;margin:6px 0 10px}
+.modal-num{background:var(--pink-50);border:1.5px solid var(--pink-100);border-radius:14px;padding:8px 16px}
+.modal-num .n{font-size:24px;font-weight:900;color:var(--pink-3)}
+.modal-num .l{font-size:13px;color:var(--muted)}
+.modal-card p.body{font-size:14.5px;line-height:1.7;color:#4d3b3b;text-align:left}
+.modal-card .tip-line{font-size:13px;color:var(--muted);margin-top:8px}
+.modal-btns{display:flex;gap:10px;margin-top:16px}
+.btn-again{flex:1;padding:13px;background:#fff;color:var(--pink-3);border:2px solid var(--pink);border-radius:24px;font-size:15px;font-weight:800}
+.btn-end{flex:1.3;padding:13px;background:linear-gradient(135deg,var(--pink),var(--pink-2));color:#fff;border-radius:24px;font-size:15px;font-weight:800}
+/* ===== 横版/桌面宽屏 ===== */
+@media (min-width:720px){
+  #app{max-width:1040px;box-shadow:0 0 60px rgba(0,0,0,.12)}
+  .content{padding:28px 36px 48px}
+  .page-title{font-size:34px}
+  .theory-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .theory-card{margin-bottom:0}
+  #page-intro .rule-card.task{grid-column:auto}
+  #btnStart{max-width:480px;margin:18px auto 0;display:block}
+  .game-wrap{max-width:860px;margin:0 auto}
+  .game-scene .pig-img{width:132px;height:132px}
+  .game-scene .pig-side.small .pig-img{width:104px;height:104px}
+  .game-scene .trough{width:110px;height:48px}
+  .food-circle{width:72px;height:72px}
+  .sat-row{max-width:860px;margin-left:auto;margin-right:auto}
+  #btnComplete{max-width:520px;display:block;margin:10px auto 0}
+  .quiz-q{max-width:760px;margin-left:auto;margin-right:auto}
+  .result-banner{max-width:760px;margin-left:auto;margin-right:auto}
+  .matrix{font-size:15px}
+}
+/* 强制竖版（用户在菜单选择） */
+html.narrow #app{max-width:480px !important;box-shadow:0 0 40px rgba(0,0,0,.08)}
+html.narrow .content{padding:18px 16px 36px !important}
+html.narrow .page-title{font-size:28px !important}
+html.narrow .header-brand{display:none !important}
+html.narrow .header-credits{font-size:9px !important}
+html.narrow .rule-grid,html.narrow .theory-grid{grid-template-columns:1fr !important}
+html.narrow .rule-card,html.narrow .theory-card{margin-bottom:12px !important}
+html.narrow #btnStart,html.narrow #btnComplete{max-width:none !important;display:block !important;margin-top:8px !important}
+html.narrow .game-scene .pig-img{width:128px !important;height:128px !important}
+html.narrow .game-scene .pig-side.small .pig-img{width:100px !important;height:100px !important}
+html.narrow .game-scene .trough{width:90px !important;height:40px !important}
+html.narrow .food-circle{width:58px !important;height:58px !important}
+html.narrow .sat-row,html.narrow .quiz-q,html.narrow .result-banner{max-width:none !important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+
+.role-badge{display:inline-block;background:#fce4ec;color:#c2185b;padding:4px 14px;border-radius:20px;font-size:13px;font-weight:bold}
+.ch-params{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.ch-param{background:#fff;border:1.5px solid #fce4ec;border-radius:12px;padding:12px;text-align:center}
+.ch-lbl{font-size:12px;color:#999}
+.ch-val{font-size:24px;font-weight:bold;color:#e91e63;margin-top:2px}
+.ch-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.ch-choice{padding:16px 10px;border-radius:14px;border:2px solid #ddd;background:#fff;cursor:pointer;text-align:center;transition:all .2s}
+.ch-choice-icon{font-size:18px;font-weight:bold;color:#333}
+.ch-choice-sub{font-size:12px;color:#888;margin-top:4px}
+.ch-choice.press{border-color:#ef5350}
+.ch-choice.press:hover{background:#ffebee;border-color:#e53935}
+.ch-choice.wait{border-color:#42a5f5}
+.ch-choice.wait:hover{background:#e3f2fd;border-color:#1e88e5}
+.ch-choice:disabled{opacity:.5;cursor:not-allowed}
+.ch-banner{background:#fff;border:1.5px solid #f06292;border-radius:12px;padding:12px;text-align:center;font-size:14px;margin:12px 0}
+.ch-payout{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.ch-cell{background:#fff;border:1px solid #fce4ec;border-radius:10px;padding:10px;text-align:center;font-size:13px}
+.ch-who{font-size:11px;color:#999}
+.ch-pts{font-size:18px;font-weight:bold;color:#c2185b;margin-top:2px}
+.ch-final-score{font-size:48px;font-weight:bold;color:#e91e63;text-align:center;margin:14px 0}
+.ch-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.ch-table th,.ch-table td{border:1px solid #fce4ec;padding:6px;text-align:center}
+.ch-table th{background:#fce4ec;color:#c2185b}
+.btn-start{width:100%;padding:22px;background:linear-gradient(135deg,#e91e63,#f06292);color:#fff;border:none;border-radius:36px;font-size:22px;font-weight:900;letter-spacing:1px;box-shadow:0 10px 24px rgba(233,30,99,.45);cursor:pointer;margin-top:16px;transition:transform .15s,box-shadow .15s}
+.btn-start:hover{box-shadow:0 14px 30px rgba(233,30,99,.55);transform:translateY(-2px)}
+.btn-start:active{transform:scale(.97)}
+</style>
+</head>
+<body>
+<div id="app">
+  <audio id="bgmAudio" loop preload="auto"></audio>
+  <!-- ===== 黑色顶部栏 ===== -->
+  <header class="header">
+    <div class="header-title">智猪博弈</div>
+    <div class="header-right">
+      <span class="header-brand">The Smart Pig Game</span>
+      <div class="header-credits">
+        <div>课程设计：<b>罗敏</b> 重庆工商大学</div>
+        <div>程序开发：<b>李思惠</b> 重庆工商大学24人资</div>
+      </div>
+      <button class="dots-btn" id="soundBtn" style="margin-right:6px" aria-label="sound">♪</button>
+      <button class="dots-btn" id="dotsBtn" aria-label="menu">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="12" cy="19" r="2.2"/></svg>
+      </button>
+    </div>
+    <div class="lang-menu" id="langMenu">
+      <button class="lang-opt" data-lang="en">English</button>
+      <button class="lang-opt" data-lang="both">中英对照</button>
+      <div style="border-top:1px solid #f0f0f0;margin:4px 0"></div>
+      <button class="layout-opt" data-layout="wide">横版（宽屏）</button>
+      <button class="layout-opt" data-layout="narrow">竖版（手机）</button>
+      <div style="border-top:1px solid #f0f0f0;margin:4px 0"></div>
+      <button class="music-opt" data-music="spring">♪ Spring Bells</button>
+      <button class="music-opt" data-music="carnival">♪ Carnival March</button>
+      <button class="music-opt" data-music="waltz">♪ Tea Waltz</button>
+    </div>
+  </header>
+
+  <!-- ===== 白色标签栏 ===== -->
+  <nav class="nav-scroll">
+    <div class="course-name">财经基础英语</div>
+    <div class="nav-pills" id="navTabs"></div>
+  </nav>
+
+  <!-- ===== 内容 ===== -->
+  <main class="content">
+    <!-- 1. Game Intro -->
+    <section class="page active" id="page-intro">
+      <h1 class="page-title" id="rulesTitle"></h1>
+      <details class="rule-model" id="modelBox"><summary><b id="modelb"></b></summary><div class="model-body"><span id="modelt"></span></div></details>
+      <div class="rule-tabs" id="ruleTabs">
+        <button class="rule-tab active" id="rtab1" data-rule-tab="1"><span class="rt-num">STEP 1</span><span id="rlab1"></span></button>
+        <button class="rule-tab" id="rtab2" data-rule-tab="2"><span class="rt-num">STEP 2</span><span id="rlab2"></span></button>
+        <button class="rule-tab" id="rtab3" data-rule-tab="3"><span class="rt-num">STEP 3</span><span id="rlab3"></span></button>
+      </div>
+      <div class="rule-grid">
+      <div class="rule-card rule-panel" data-rule-panel="1"><div class="rule-line"><b id="r1b"></b> <span id="r1t"></span></div>
+        <div class="mini-stage" id="ms1">
+          <div class="ms-btn"></div>
+          <div class="ms-lbl btn-lbl" id="lbl1btn"></div>
+          <div class="ms-trough"><div class="ms-food"></div></div>
+          <div class="ms-lbl tr-lbl" id="lbl1tr"></div>
+          <img class="ms-pig" src="https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/pig-big.png" alt="">
+          <img class="ms-pig sm" src="https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/pig-small.png" alt="">
+        </div>
+        <div class="ms-cap" id="cap1"></div>
+        <button class="demo-play" id="play1"></button>
+      </div>
+      <div class="rule-card rule-panel" data-rule-panel="2" hidden><div class="rule-line"><b id="r2b"></b> <span id="r2t"></span></div>
+        <div class="mini-stage" id="ms2">
+          <div class="ms-btn"></div>
+          <div class="ms-lbl btn-lbl" id="lbl2btn"></div>
+          <div class="ms-trough"><div class="ms-food"></div></div>
+          <div class="ms-lbl tr-lbl" id="lbl2tr"></div>
+          <img class="ms-pig" src="https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/pig-big.png" alt="">
+          <img class="ms-pig sm" src="https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/pig-small.png" alt="">
+        </div>
+        <div class="ms-cap" id="cap2"></div>
+        <button class="demo-play" id="play2"></button>
+      </div>
+      <div class="rule-card rule-panel" data-rule-panel="3" hidden><div class="rule-line"><b id="r3b"></b> <span id="r3t"></span></div>
+        <div class="mini-stage" id="ms3">
+          <div class="ms-btn"></div>
+          <div class="ms-lbl btn-lbl" id="lbl3btn"></div>
+          <div class="ms-trough"><div class="ms-food"></div></div>
+          <div class="ms-lbl tr-lbl" id="lbl3tr"></div>
+          <img class="ms-pig" src="https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/pig-big.png" alt="">
+          <img class="ms-pig sm" src="https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/pig-small.png" alt="">
+        </div>
+        <div class="ms-cap" id="cap3"></div>
+        <button class="demo-play" id="play3"></button>
+      </div>
+      <div class="rule-card task"><b id="taskb"></b> <span id="taskt"></span></div>
+      </div><button class="btn-pink" id="btnStart" disabled></button>
+      <div id="introToast" role="status" aria-live="polite"></div>
+    </section>
+
+    <!-- 2. Fun Game -->
+    <section class="page" id="page-game">
+      <div class="game-wrap">
+      <div class="game-scene">
+        <div class="food-dispenser">
+          <div class="food-circle" id="foodCircle"></div>
+          <div class="food-label" id="foodLabel"></div>
+        </div>
+        <div class="stage">
+          <div class="pig-side" id="sideBig">
+            <div class="bubbles">
+              <button class="bubble" id="bBigPress">
+                <svg viewBox="0 0 24 24" fill="none"><rect x="7" y="9" width="10" height="6" rx="3" fill="#e53935"/></svg>
+                <span class="bl"></span>
+              </button>
+              <button class="bubble" id="bBigStay">
+                <svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="8" ry="7" fill="#ffd9a0"/><circle cx="9.5" cy="11" r="1.2" fill="#5b3a1e"/><circle cx="14.5" cy="11" r="1.2" fill="#5b3a1e"/></svg>
+                <span class="bl"></span>
+              </button>
+            </div>
+            <img class="pig-img" src="https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/pig-big.png" alt="Big Pig">
+            <div class="pig-tag" id="bigName"></div>
+          </div>
+          <div class="trough"><div class="food-pile"></div></div>
+          <div class="pig-side small" id="sideSmall">
+            <div class="bubbles">
+              <button class="bubble" id="bSmPress">
+                <svg viewBox="0 0 24 24" fill="none"><rect x="7" y="9" width="10" height="6" rx="3" fill="#e53935"/></svg>
+                <span class="bl"></span>
+              </button>
+              <button class="bubble" id="bSmStay">
+                <svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="8" ry="7" fill="#ffd9a0"/><circle cx="9.5" cy="11" r="1.2" fill="#5b3a1e"/><circle cx="14.5" cy="11" r="1.2" fill="#5b3a1e"/></svg>
+                <span class="bl"></span>
+              </button>
+            </div>
+            <img class="pig-img" src="https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/pig-small.png" alt="Small Pig">
+            <div class="pig-tag" id="smallName"></div>
+          </div>
+        </div>
+      </div>
+      <p class="hint" id="gameHint"></p>
+      <div class="satiety">
+        <div class="sat-row">
+          <img class="sat-avatar" src="https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/pig-big.png" alt="">
+          <div class="sat-track"><div class="sat-fill" id="fillBig"></div></div>
+          <span class="sat-num" id="numBig">0/10</span>
+        </div>
+        <div class="sat-row">
+          <img class="sat-avatar" src="https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/pig-small.png" alt="">
+          <div class="sat-track"><div class="sat-fill" id="fillSmall"></div></div>
+          <span class="sat-num" id="numSmall">0/10</span>
+        </div>
+      </div>
+      <button class="btn-pink" id="btnComplete"></button>
+      </div>
+    </section>
+
+    <!-- 3. Explainer -->
+    <section class="page" id="page-theory">
+      <h1 class="page-title" id="theoryTitle"></h1>
+      <div class="theory-grid"><div class="theory-card"><h2 id="tSetupH"></h2><p id="tSetupB"></p></div>
+      <div class="theory-card">
+        <h2 id="tMatrixH"></h2>
+        <table class="matrix">
+          <colgroup><col style="width:28%"><col style="width:36%"><col style="width:36%"></colgroup>
+          <thead><tr><th></th><th id="thSmPress"></th><th id="thSmStay"></th></tr></thead>
+          <tbody>
+            <tr><th id="thBigPress"></th><td>(5, 1)</td><td class="hl">(4, 4)</td></tr>
+            <tr><th id="thBigStay"></th><td>(9, −1)</td><td>(0, 0)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="theory-card"><h2 id="tReadH"></h2><p id="tReadB"></p></div>
+      <div class="theory-card"><h2 id="tOutH"></h2><p id="tOutB"></p></div>
+      <div class="theory-card"><h2 id="tBizH"></h2><p id="tBizB"></p></div>
+      <div class="theory-card"><h2 id="tVocH"></h2><ul class="vocab" id="vocabList"></ul></div>
+      </div><button class="btn-pink" id="btnUnderstood"></button>
+    </section>
+
+    <!-- 4. Knowledge Quiz -->
+    <section class="page" id="page-quiz">
+      <h1 class="page-title" id="quizTitle"></h1>
+      <p class="hint" id="quizSub"></p>
+      <div class="result-banner" id="resultBanner">
+        <div class="score-big" id="scoreBig"></div>
+        <div class="score-sub" id="scoreSub"></div>
+      </div>
+      <div id="quizList"></div>
+      <button class="btn-pink" id="btnSubmit"></button>
+      <button class="btn-start" id="btnToSim" style="display:none">Start Market Simulation</button>
+    </section>
+    <!-- ===== 5 Market Challenge ===== -->
+    <section class="page" id="page-challenge">
+      <h1 class="title" id="chTitle">Pig Market Challenge</h1>
+      <div class="rule-card" id="chIntro1"></div>
+      <div class="rule-card yellow-bg" id="chIntro2"></div>
+      <div class="rule-card" id="chIntro3" style="background:#e3f2fd;border-color:#90caf9"></div>
+      <button class="btn-start" id="chStart">Start Challenge</button>
+
+      <div id="chGame" style="display:none">
+        <p class="hint" id="chRoundPill"></p>
+        <div style="text-align:center;margin:10px 0"><span class="role-badge" id="chRoleBadge"></span></div>
+        <div class="rule-card" id="chScenario"></div>
+        <div class="ch-params">
+          <div class="ch-param"><div class="ch-lbl" id="chLblCost">Press cost</div><div class="ch-val" id="chCostVal"></div></div>
+          <div class="ch-param"><div class="ch-lbl" id="chLblFood">Market size</div><div class="ch-val" id="chFoodVal"></div></div>
+        </div>
+        <div class="ch-choices">
+          <button class="ch-choice press" id="chBtnPress">
+            <div class="ch-choice-icon">Press</div>
+            <div class="ch-choice-sub" id="chTxtPress">Invest (R&amp;D / Marketing)</div>
+          </button>
+          <button class="ch-choice wait" id="chBtnWait">
+            <div class="ch-choice-icon">Wait</div>
+            <div class="ch-choice-sub" id="chTxtWait">Free-ride &amp; eat</div>
+          </button>
+        </div>
+        <div class="sat-row"><div class="sat-info"><span class="sat-label" id="chLblYou">You (Big Pig)</span><span class="sat-num" id="chScoreYou">0</span></div></div>
+        <div class="sat-row"><div class="sat-info"><span class="sat-label" id="chLblOpp">Rival (Small Pig)</span><span class="sat-num" id="chScoreOpp">0</span></div></div>
+        <div class="ch-banner" id="chBanner"><span id="chResultText"></span></div>
+        <div id="chPayout" style="display:none">
+          <div class="ch-payout">
+            <div class="ch-cell"><div class="ch-who" id="chPLblYou">You</div><div class="ch-pts" id="chPVYou">0</div></div>
+            <div class="ch-cell"><div class="ch-who" id="chPLblOpp">Rival</div><div class="ch-pts" id="chPVOpp">0</div></div>
+          </div>
+          <div class="rule-card" id="chEq"></div>
+        </div>
+        <button class="btn-start" id="chNext" style="display:none">Next Market</button>
+        <table class="ch-table">
+          <thead><tr><th>#</th><th>Cost</th><th>Food</th><th>You</th><th>Rival</th><th>Eq.</th></tr></thead>
+          <tbody id="chHistoryBody"></tbody>
+        </table>
+      </div>
+
+      <div id="chFinal" style="display:none">
+        <div class="ch-final-score" id="chFinalScore">0</div>
+        <div class="rule-card" id="chFinalVerdict"></div>
+        <button class="btn-start" id="chReplay">Play Again</button>
+      </div>
+    </section>
+  </main>
+  <!-- 预载跑步姿势帧（隐藏，同时保证发布链路能识别这些资源） -->
+  <div style="display:none">
+    <img src="https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/run-a.png" alt=""><img src="https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/run-b.png" alt="">
+    <img src="https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/run-c.png" alt=""><img src="https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/run-d.png" alt="">
+  </div>
+
+  <!-- 结算弹窗 -->
+  <div class="modal-mask" id="resultModal" hidden>
+    <div class="modal-card">
+      <h2 id="modalTitle"></h2>
+      <div class="modal-nums">
+        <div class="modal-num"><div class="n" id="mBig">0</div><div class="l" id="mBigL"></div></div>
+        <div class="modal-num"><div class="n" id="mSmall">0</div><div class="l" id="mSmallL"></div></div>
+      </div>
+      <p class="body" id="modalBody"></p>
+      <p class="tip-line" id="modalTip"></p>
+      <div class="modal-btns">
+        <button class="btn-again" id="btnAgain"></button>
+        <button class="btn-end" id="btnEnd"></button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+var $ = function(id){ return document.getElementById(id); };
+var LANG = 'en';
+var currentPage = 'intro';
+var TABS = [
+  { id:'intro',   en:'1 Game Intro',     zh:'1 Game Intro' },
+  { id:'game',    en:'2 Fun Game',       zh:'2 Fun Game' },
+  { id:'theory',  en:'3 Explainer',      zh:'3 Explainer' },
+  { id:'quiz',    en:'4 Knowledge Quiz', zh:'4 Knowledge Quiz' },
+  { id:'challenge', en:'5 Market Challenge', zh:'5 Market Challenge' }
+];
+
+/* ============ 文案（默认英文，可切中文；顶部黑/白栏不翻译） ============ */
+var I18N = {
+  en: {
+    course:'Business English for Finance',
+    rulesTitle:'Game Rules',
+    modelb:'The Big Pig, Small Pig Problem',
+    modelt:'Think of a market with one giant company and one start-up. The button is an expensive investment — R&D, advertising, building a new market. The trough is the reward. Who pays for the button? If the start-up pays, the giant eats most of the market. If the giant pays, the start-up can sit back and enjoy the result. This game lets you live that decision — in pig form.',
+    r1b:'Rule 1', r1t:'Two pigs share one pen: a big company and a start-up. At one end is the button (an investment); at the other is the trough (the reward).',
+    r2b:'Rule 2', r2t:'Pressing the button costs 2 units of energy, but it releases 10 portions of food for everyone to share.',
+    r3b:'Rule 3', r3t:'Whoever presses runs back late. The one who waits starts eating first.',
+    taskb:'Your Task', taskt:'Decide whether each pig presses the button or stays, then see who ends up fuller.',
+    tryIt:'Try it', waitLbl:'Wait', pressLbl:'Press',
+    lblBtn:'Button', lblTrough:'Trough',
+    cap1idle:'Press the button — food drops into the trough!',
+    cap2idle:'Watch what happens when the button is pressed.',
+    cap3idle:'Who gets the most food? Press Play to find out.',
+    c2a:'Small Pig runs to press the button…',
+    c2b:'Pressed! −2 energy',
+    c2c:'10 portions of food drop!',
+    c2d:'Small Pig eats: +1',
+    c3a:'Big Pig waits at the trough — it eats first!',
+    c3b:'Small Pig runs to press: −2 energy',
+    c3c:'Big Pig eats most: +9',
+    c3d:'Small Pig arrives late: +1',
+    startBtn:'Start the Game',
+    lockBtnFmt:'Finish Step {n} to start ({done}/3)',
+    toastLocked:'Please finish the 3 rule steps first ({done}/3)',
+    stepLbl1:'The Pen', stepLbl2:'Cost & Food', stepLbl3:'Who Eats First',
+    stepDoneFmt:'Nice! {d}/3 done — now tap STEP {n}',
+    allDoneToast:'All 3 steps done — you can start the game!',
+    foodLabel:'Drop Food',
+    gameHint:'Please click a bubble to make your choice',
+    bigName:'Big Pig', smallName:'Small Pig',
+    press:'Press', stay:'Stay',
+    completeBtn:'Complete Selection',
+    again:'Play Again', endGame:'End Game',
+    modalTip:'Compare the results. When does the small pig do best?',
+    mBigL:'Big Pig', mSmallL:'Small Pig',
+    bothPressTitle:'Both Press',
+    bothPressBody:'Both pigs run to the trough together. The big pig grabs 7 portions, the small pig gets 3, and each spends 2 units of energy. Result: Big Pig 5, Small Pig 1.',
+    bigPressTitle:'Big Pig Presses, Small Pig Stays',
+    bigPressBody:'The small pig waits at the trough and eats first, getting 4 portions. The big pig runs over, eats 6 portions and spends 2 units of energy. Result: Big Pig 4, Small Pig 4.',
+    smallPressTitle:'Big Pig Stays, Small Pig Presses',
+    smallPressBody:'The big pig waits and eats 9 of the 10 portions. The late small pig gets only 1 portion, but still pays 2 units of energy. Result: Big Pig 9, Small Pig −1.',
+    bothStayTitle:'Both Stay',
+    bothStayBody:'Nobody presses the button, so no food is dispensed. Result: Big Pig 0, Small Pig 0.',
+    theoryTitle:'The Boxed Pigs Game',
+    tSetupH:'1. The Setup', tSetupB:'A big pig and a small pig live in the same sty. At one end is a trough; at the other is a button. Pressing the button releases 10 portions of food into the trough — but the pig that presses must run to the trough, costing 2 units of energy. Whoever reaches the trough first eats first.',
+    tMatrixH:'2. The Payoff Matrix', thSmPress:'Small Pig: Presses', thSmStay:'Small Pig: Stays', thBigPress:'Big Pig: Presses', thBigStay:'Big Pig: Stays',
+    tReadH:'3. How to Read It', tReadB:'Look from the small pig\u2019s side. If it presses: it gets 1 when the big pig also presses, and −1 when the big pig waits. If it stays: it gets 4 when the big pig presses, and 0 when both wait. Staying is always at least as good — often better. So the small pig has a dominant strategy: stay.',
+    tOutH:'4. The Outcome', tOutB:'Once the small pig decides to stay, the big pig chooses between waiting (0) and pressing (4). It presses. The game ends at (Big Pig presses, Small Pig stays), with payoff (4, 4). The small pig free-rides on the big pig\u2019s effort.',
+    tBizH:'5. Business Insight', tBizB:'This is the free-rider problem. In markets, a small player may rationally wait for a large player to invest in R&D, brand-building or market education, and then share the benefit at almost no cost. Think of start-ups copying a leader\u2019s proven product, minority shareholders free-riding on institutional research, or tenants enjoying a landlord\u2019s renovation. Lesson for managers: if you are the \u201cbig pig\u201d, choose projects whose own gains justify the investment.',
+    tVocH:'6. Key Vocabulary',
+    vocab:[['strategy','a player\u2019s chosen action'],['payoff','the reward a player receives'],['dominant strategy','a strategy best no matter what others do'],['Nash equilibrium','a stable outcome where no one wants to change alone'],['free rider','someone who benefits without paying the cost'],['rational choice','the option that maximizes one\u2019s own payoff']],
+    understoodBtn:'I Understand',
+    quizTitle:'Knowledge Quiz',
+    quizSub:'Five questions on game theory and business. Pick one answer each, then submit.',
+    startSim:'Start Market Simulation',
+    submitBtn:'Submit Answers',
+    resultBig:'You scored {score} of {total}',
+    resultSub:'{pct}% correct — {rightList}',
+    reviewNote:'Green = correct answer, red = your wrong pick.',
+    correctMark:'Correct!', wrongMark:'Your pick'
+  },
+  zh: {
+    course:'财经基础英语',
+    rulesTitle:'游戏规则',
+    modelb:'大猪小猪的商业难题',
+    modelt:'想象一个市场里有一家巨头公司和一家初创公司。按钮就是昂贵的投入——研发、广告、开拓新市场；食槽就是回报。谁来为按钮买单？如果初创公司出钱，巨头就吃掉大部分市场；如果巨头出钱，初创公司就能坐享其成。这个游戏让你用猪来演一遍这个决定。',
+    r1b:'规则一', r1t:'两只猪共享一个猪圈：一家大公司和一家初创公司。一端是按钮（投入），另一端是食槽（回报）。',
+    r2b:'规则二', r2t:'按按钮花 2 点体力，但会放出 10 份食物给大家分。',
+    r3b:'规则三', r3t:'按按钮的人要跑回来，晚到一步；等着的人先吃。',
+    taskb:'你的任务', taskt:'决定每只猪是按按钮还是等待，看看最后谁吃得更饱。',
+    tryIt:'点我试试', waitLbl:'等待', pressLbl:'按按钮',
+    lblBtn:'按钮', lblTrough:'食槽',
+    cap1idle:'按一下按钮，食物就掉到食槽里！',
+    cap2idle:'看看按按钮会发生什么。',
+    cap3idle:'谁吃到的食物最多？点 Play 看看。',
+    c2a:'小猪跑上去按按钮……',
+    c2b:'按下！−2 体力',
+    c2c:'掉下 10 份食物！',
+    c2d:'小猪吃到：+1',
+    c3a:'大猪在食槽边等——先吃！',
+    c3b:'小猪跑去按按钮：−2 体力',
+    c3c:'大猪吃得多：+9',
+    c3d:'小猪晚到：+1',
+    startBtn:'开始游戏',
+    lockBtnFmt:'完成第 {n} 步才能开始（{done}/3）',
+    toastLocked:'请先完成 3 步规则体验（已完成 {done}/3）',
+    stepLbl1:'猪圈布局', stepLbl2:'成本与食物', stepLbl3:'谁先吃到',
+    stepDoneFmt:'很好！已完成 {d}/3，接下来点 STEP {n}',
+    allDoneToast:'三步全部完成，可以开始游戏了！',
+    foodLabel:'掉落食物',
+    gameHint:'点击气泡做出你的选择',
+    bigName:'大猪', smallName:'小猪',
+    press:'按按钮', stay:'等待',
+    completeBtn:'完成选择',
+    again:'再来一次', endGame:'结束游戏',
+    modalTip:'对比几次结果，想一想小猪怎么做最划算？',
+    mBigL:'大猪', mSmallL:'小猪',
+    bothPressTitle:'都按按钮',
+    bothPressBody:'两只猪一起跑到食槽。大猪抢到 7 份，小猪只吃到 3 份，各自消耗 2 点体力。结果：大猪 5，小猪 1。',
+    bigPressTitle:'大猪按按钮，小猪等待',
+    bigPressBody:'小猪在食槽边等着，先吃了 4 份。大猪跑过来吃到 6 份，消耗 2 点体力。结果：大猪 4，小猪 4。',
+    smallPressTitle:'大猪等待，小猪按按钮',
+    smallPressBody:'大猪等着，吃掉了 10 份里的 9 份。晚到的小猪只吃到 1 份，却付出了 2 点体力。结果：大猪 9，小猪 −1。',
+    bothStayTitle:'都等待',
+    bothStayBody:'谁也不按按钮，没有食物掉落。结果：大猪 0，小猪 0。',
+    theoryTitle:'智猪博弈',
+    tSetupH:'一、场景设定', tSetupB:'大猪和小猪同住一个猪圈。一端是食槽，另一端是按钮。按一下按钮，食槽里掉下 10 份食物——但按按钮的猪必须跑向食槽，消耗 2 点体力。谁先到食槽谁先吃。',
+    tMatrixH:'二、收益矩阵', thSmPress:'小猪：按按钮', thSmStay:'小猪：等待', thBigPress:'大猪：按按钮', thBigStay:'大猪：等待',
+    tReadH:'三、如何分析', tReadB:'从小猪的角度看：如果它按按钮，大猪也按，它得 1；大猪不按，它得 −1。如果它等待：大猪按，它得 4；都等待，它得 0。等待总是不差、甚至更好——所以小猪有一个占优策略：等待。',
+    tOutH:'四、均衡结果', tOutB:'小猪决定等待后，大猪在等待（得 0）和按按钮（得 4）之间选择按按钮。博弈结局是：大猪按按钮、小猪等待，收益为 (4, 4)。小猪搭了大猪的便车。',
+    tBizH:'五、商业启示', tBizB:'这就是搭便车问题：市场中的小厂商会理性地等待大厂商投入研发、做品牌、教育市场，然后以几乎零成本分享成果。例如初创公司模仿龙头已验证的产品、小股东搭机构研究的便车、房客享受房东装修的好处。对管理者的启示：如果你是“大猪”，只做自身收益足以覆盖投入的项目。',
+    tVocH:'六、重点词汇',
+    vocab:[['strategy 策略','参与者选定的行动'],['payoff 收益','参与者得到的回报'],['dominant strategy 占优策略','无论对方如何选择都最优的策略'],['Nash equilibrium 纳什均衡','任何一方单独改变都不会更好的稳定结果'],['free rider 搭便车者','享受好处却不付出成本的人'],['rational choice 理性选择','使自身收益最大化的选择']],
+    understoodBtn:'我已了解',
+    quizTitle:'知识问答',
+    quizSub:'5 道博弈论与商业应用题，每题选一个答案后提交。',
+    startSim:'进入市场模拟',
+    submitBtn:'提交答案',
+    resultBig:'你答对了 {score} / {total} 题',
+    resultSub:'正确率 {pct}%',
+    reviewNote:'绿色为正确答案，红色为你的错误选择。',
+    correctMark:'正确！', wrongMark:'你的选择'
+  }
+};
+
+/* ============ 题库（每题双语） ============ */
+var QUESTION_POOL = [
+  { q:{en:'The Nash equilibrium of the boxed pigs game is:', zh:'智猪博弈的纳什均衡是：'},
+    opts:{en:['Big pig presses, small pig waits','Both press','Both wait','Small pig presses, big pig waits'], zh:['大猪按按钮，小猪等待','两只都按','两只都等','小猪按按钮，大猪等待']}, a:0 },
+  { q:{en:'Why is waiting a dominant strategy for the small pig?', zh:'为什么"等待"是小猪的占优策略？'},
+    opts:{en:['Waiting is never worse than pressing, whatever the big pig does','It is too weak to reach the button','Waiting costs less energy','The big pig will never press'], zh:['无论大猪怎么做，等待都不差于按按钮','它太弱够不到按钮','等待更省体力','大猪永远不会按']}, a:0 },
+  { q:{en:'When the big pig waits and the small pig presses, the payoff is:', zh:'大猪等待、小猪按按钮时，收益是：'},
+    opts:{en:['Big 9, Small −1','Big 4, Small 4','Big 5, Small 1','Big 0, Small 0'], zh:['大猪 9，小猪 −1','大猪 4，小猪 4','大猪 5，小猪 1','大猪 0，小猪 0']}, a:0 },
+  { q:{en:'In business terms, the small pig is acting as a:', zh:'用商业语言说，小猪扮演的是：'},
+    opts:{en:['Free rider','Market leader','Risk taker','Price setter'], zh:['搭便车者','市场领导者','风险承担者','定价者']}, a:0 },
+  { q:{en:'The "big pig" in this model most closely represents:', zh:'模型里的"大猪"最接近现实中的：'},
+    opts:{en:['A large firm that must invest in R&D or market education','A consumer who only buys on sale','A government regulator','A start-up with no resources'], zh:['必须投入研发或教育市场的大公司','只买打折货的消费者','政府监管者','没有资源的初创公司']}, a:0 },
+  { q:{en:'Which real case best matches the boxed pigs outcome?', zh:'下面哪个现实案例最贴合智猪博弈的结果？'},
+    opts:{en:['A leader spends heavily on R&D; rivals copy the product at low cost','Two firms merge into a monopoly','All firms advertise equally','Consumers boycott a brand'], zh:['龙头重金投入研发，对手低成本模仿其产品','两家公司合并成垄断企业','所有公司投同样多的广告','消费者抵制某品牌']}, a:0 },
+  { q:{en:'This game theory model assumes both pigs are:', zh:'这个博弈模型假设两只猪都是：'},
+    opts:{en:['Rational and self-interested','Altruistic','Risk-averse','Equal in size'], zh:['理性且自利的','利他的','厌恶风险的','体型相同的']}, a:0 },
+  { q:{en:'If pressing the button cost the small pig nothing, then:', zh:'如果按按钮对小猪不花任何成本，那么：'},
+    opts:{en:['Its dominant strategy could change — it might press','Nothing would change','The big pig would stop pressing','No food would be dispensed'], zh:['它的占优策略可能改变——也许会按按钮','什么都不会变','大猪会停止按按钮','食物不会再掉出来']}, a:0 }
+];
+
+/* ============ 状态 ============ */
+var state = {
+  bigAction:'stay', smallAction:'stay', animating:false,
+  quiz: [], picked: [], submitted: false
+};
+
+function t(k){
+  if(LANG==='both'){
+    var e=I18N.en[k], z=I18N.zh[k];
+    if(Array.isArray(e)) return e;
+    if(e==null) return '';
+    return e+' / '+z;
+  }
+  return I18N[LANG][k];
+}
+function fmt(s,m){ return s.replace(/\{(\w+)\}/g, function(x,k){ return m[k]!=null?m[k]:x; }); }
+function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var x=a[i]; a[i]=a[j]; a[j]=x; } return a; }
+
+/* ============ 动画时间线 ============ */
+var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var FRAMES = {
+  big:   ['https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/pig-big.png','https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/run-a.png','https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/run-b.png'],
+  small: ['https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/pig-small.png','https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/run-c.png','https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/run-d.png']
+};
+(function(){ Object.keys(FRAMES).forEach(function(k){ FRAMES[k].forEach(function(u){ var im=new Image(); im.src=u; }); }); })();
+
+/* ============ 5. Market Challenge ============ */
+var CH_ROUNDS=[{c:2,f:10},{c:1,f:10},{c:3,f:10},{c:2,f:14},{c:4,f:10},{c:2,f:7}];
+function chPay(you,opp,c,f){
+  var big,small;
+  if(you==='press'&&opp==='press'){big=f*0.7-c;small=f*0.3-c;}
+  else if(you==='press'&&opp==='wait'){big=f*0.4-c;small=f*0.4;}
+  else if(you==='wait'&&opp==='press'){big=f*0.9;small=f*0.1-c;}
+  else{big=0;small=0;}
+  return {big:Math.round(big*10)/10,small:Math.round(small*10)/10};
+}
+function chSmallRational(big,c,f){
+  var p=(big==='press')?f*0.3-c:f*0.1-c;
+  var w=(big==='press')?f*0.4:0;
+  return (w>=p)?'wait':'press';
+}
+function chNash(c,f){
+  var pairs=[['press','press'],['press','wait'],['wait','press'],['wait','wait']],out=[];
+  pairs.forEach(function(p){
+    var pay=chPay(p[0],p[1],c,f);
+    var bs=(p[0]==='press')?chPay('wait',p[1],c,f).big:chPay('press',p[1],c,f).big;
+    var ss=(p[1]==='press')?chPay(p[0],'wait',c,f).small:chPay(p[0],'press',c,f).small;
+    if(bs<=pay.big&&ss<=pay.small) out.push({you:p[0],opp:p[1]});
+  });
+  return out;
+}
+var CH_I18N={
+  en:{
+    title:'Pig Market Challenge',
+    intro1:'<b>You are the Big Pig (market leader).</b> A rival startup (Small Pig) shares your market. Each round a new market opens: pressing the button means investing in R&D / marketing — it costs you but releases food (market size).',
+    intro2:'<b>Rules:</b> Choose to <b>Press</b> (invest) or <b>Wait</b> (free-ride). The Small Pig responds rationally. Fractions: both press → 70%/30%; you press, it waits → 40%/40%; you wait, it presses → 90%/10%; both wait → 0.',
+    intro3:'<b>Key:</b> The cost and food change every round. Think carefully — when is pressing worth it?',
+    startBtn:'Start Challenge',
+    roundPill:function(i){return 'Market '+i+' / 6';},
+    roleBadge:'You: Big Pig (leader)',
+    scenario:function(c,f){return 'New market. <b>Invest cost: '+c+'</b> · <b>Market size: '+f+'</b>. Press the button, or wait and let the startup pay?';},
+    lblCost:'Press cost',lblFood:'Market size',
+    txtPress:'Press the button',txtSubPress:'Invest (R&D / Marketing)',
+    txtWait:'Wait & free-ride',txtSubWait:'Free-ride & eat',
+    lblYou:'You (Big Pig)',lblOpp:'Rival (Small Pig)',
+    chooseHint:'Choose your move.',
+    youPressed:'You pressed.',youWaited:'You waited.',
+    oppPressed:'Small Pig also pressed.',oppWaited:'Small Pig waited.',
+    eqTitle:'Nash equilibrium: ',
+    eqPW:'You press, Small Pig waits (classic Boxed Pigs).',
+    eqWW:'Both wait — market dies.',
+    eqPP:'Both press — arms race.',
+    eqWP:'You wait, Small Pig presses (only when food is huge).',
+    nextBtn:'Next Market',
+    verdictGood:'You played the Nash equilibrium in most rounds. You truly understand the Boxed Pigs model!',
+    verdictMid:'Some rounds right, some missed. Re-read the payoff logic.',
+    verdictBad:'Most rounds missed. Key question: when the Small Pig waits, is pressing still worth it for you?',
+    yourTotal:'Your total: '
+  },
+  zh:{
+    title:'智猪市场挑战赛',
+    intro1:'<b>你是大猪（行业巨头）。</b>市场上还有一只小猪（初创公司）。每回合新市场打开：按按钮=投入研发/营销，要花钱但释放食物（市场规模）。',
+    intro2:'<b>规则：</b>选<b>按按钮</b>（投入）还是<b>等</b>（搭便车）。小猪理性回应。分食：都按→7:3；你按它等→4:4；你等它按→9:1；都等→0。',
+    intro3:'<b>关键：</b>每回合成本和市场规模都在变。仔细想——这回合按按钮值不值？',
+    startBtn:'开始挑战',
+    roundPill:function(i){return '第 '+i+' / 6 个市场';},
+    roleBadge:'你：大猪（巨头）',
+    scenario:function(c,f){return '新市场。<b>投入成本：'+c+'</b> · <b>市场规模：'+f+'</b>。你按按钮，还是等让初创公司花钱？';},
+    lblCost:'投入成本',lblFood:'市场规模',
+    txtPress:'按按钮（投入）',txtSubPress:'研发 / 营销投入',
+    txtWait:'等（搭便车）',txtSubWait:'坐等收益',
+    lblYou:'你（大猪）',lblOpp:'对手（小猪）',
+    chooseHint:'做出选择。',
+    youPressed:'你按了。',youWaited:'你等了。',
+    oppPressed:'小猪也按了。',oppWaited:'小猪等了。',
+    eqTitle:'纳什均衡：',
+    eqPW:'你按、小猪等（经典智猪）。',
+    eqWW:'都等——市场死掉。',
+    eqPP:'都按——军备竞赛。',
+    eqWP:'你等、小猪按（市场巨大时才出现）。',
+    nextBtn:'下一个市场',
+    verdictGood:'你在大多数市场都打对了纳什均衡。你真正理解智猪模型了！',
+    verdictMid:'对了几个但关键回合没抓住。再看看收益逻辑。',
+    verdictBad:'大部分回合没打到均衡。关键：小猪等待时，你按按钮还值不值？',
+    yourTotal:'你的总分：'
+  }
+};
+function ct(k){
+  var e=CH_I18N.en[k],z=CH_I18N.zh[k];
+  if(typeof e==='function'){
+    if(LANG==='both') return function(a){return e(a)+' / '+z(a);};
+    return (LANG==='zh')?z:e;
+  }
+  if(LANG==='both') return e+' / '+z;
+  return (LANG==='zh')?z:e;
+}
+var chRound=0,chYou=0,chOpp=0;
+function chInit(){chRound=0;chYou=0;chOpp=0;$('chHistoryBody').innerHTML='';}
+function chRenderStatic(){
+  // Always reset to intro view when entering the page
+  $('chIntro1').style.display='block';
+  $('chIntro2').style.display='block';
+  $('chIntro3').style.display='block';
+  $('chStart').style.display='block';
+  $('chGame').style.display='none';
+  $('chFinal').style.display='none';
+  chInit();
+  $('chTitle').textContent=ct('title');
+  $('chIntro1').innerHTML=ct('intro1');
+  $('chIntro2').innerHTML=ct('intro2');
+  $('chIntro3').innerHTML=ct('intro3');
+  $('chStart').textContent=ct('startBtn');
+  $('chReplay').textContent=ct('startBtn');
+  $('chNext').textContent=ct('nextBtn');
+  $('chLblCost').textContent=ct('lblCost');
+  $('chLblFood').textContent=ct('lblFood');
+  $('chTxtPress').textContent=ct('txtSubPress');
+  $('chTxtWait').textContent=ct('txtSubWait');
+  $('chLblYou').textContent=ct('lblYou');
+  $('chLblOpp').textContent=ct('lblOpp');
+  $('chPLblYou').textContent=ct('lblYou');
+  $('chPLblOpp').textContent=ct('lblOpp');
+}
+function chLoad(){
+  var r=CH_ROUNDS[chRound];
+  $('chRoundPill').textContent=ct('roundPill')(chRound+1);
+  $('chRoleBadge').textContent=ct('roleBadge');
+  $('chScenario').innerHTML=ct('scenario')(r.c,r.f);
+  $('chCostVal').textContent=r.c;
+  $('chFoodVal').textContent=r.f;
+  $('chScoreYou').textContent=chYou;
+  $('chScoreOpp').textContent=chOpp;
+  $('chBanner').className='ch-banner';
+  $('chResultText').textContent=ct('chooseHint');
+  $('chPayout').style.display='none';
+  $('chNext').style.display='none';
+  chEnable(true);
+}
+function chEnable(on){
+  $('chBtnPress').disabled=!on;
+  $('chBtnWait').disabled=!on;
+  $('chBtnPress').style.opacity=on?1:.5;
+  $('chBtnWait').style.opacity=on?1:.5;
+}
+function chPlay(you){
+  chEnable(false);
+  var r=CH_ROUNDS[chRound];
+  var opp=chSmallRational(you,r.c,r.f);
+  var pay=chPay(you,opp,r.c,r.f);
+  chYou+=pay.big;chOpp+=pay.small;
+  var msg=(you==='press'?ct('youPressed'):ct('youWaited'))+' '+(opp==='press'?ct('oppPressed'):ct('oppWaited'));
+  $('chResultText').textContent=msg;
+  $('chScoreYou').textContent=Math.round(chYou*10)/10;
+  $('chScoreOpp').textContent=Math.round(chOpp*10)/10;
+  $('chPVYou').textContent=Math.round(pay.big*10)/10;
+  $('chPVOpp').textContent=Math.round(pay.small*10)/10;
+  var eq=chNash(r.c,r.f),eqText='';
+  if(eq.length===0) eqText=LANG==='zh'?'无纯策略均衡.':'No pure equilibrium.';
+  else{
+    var e=eq[0];
+    if(e.you==='press'&&e.opp==='wait') eqText=ct('eqPW');
+    else if(e.you==='wait'&&e.opp==='wait') eqText=ct('eqWW');
+    else if(e.you==='press'&&e.opp==='press') eqText=ct('eqPP');
+    else eqText=ct('eqWP');
+  }
+  $('chEq').innerHTML='<b>'+ct('eqTitle')+'</b>'+eqText;
+  $('chPayout').style.display='block';
+  var eqShort=eq.length?((eq[0].you==='press'?'P':'W')+'/'+(eq[0].opp==='press'?'P':'W')):'-';
+  var tr=document.createElement('tr');
+  tr.innerHTML='<td>'+(chRound+1)+'</td><td>'+r.c+'</td><td>'+r.f+'</td><td>'+(you==='press'?'P':'W')+'</td><td>'+(opp==='press'?'P':'W')+'</td><td>'+eqShort+'</td>';
+  $('chHistoryBody').appendChild(tr);
+  if(chRound>=CH_ROUNDS.length-1) setTimeout(chShowFinal,1200);
+  else { $('chNext').style.display='block'; setTimeout(function(){ $('chNext').scrollIntoView({behavior:'smooth',block:'center'}); },200); }
+}
+function chShowFinal(){
+  $('chGame').style.display='none';
+  $('chFinal').style.display='block';
+  $('chFinalScore').textContent=Math.round(chYou*10)/10;
+  var v=chYou>=35?ct('verdictGood'):(chYou>=25?ct('verdictMid'):ct('verdictBad'));
+  $('chFinalVerdict').innerHTML=v+'<br><br><b>'+ct('yourTotal')+Math.round(chYou*10)/10+'</b>';
+}
+$('chStart').addEventListener('click',function(){
+  $('chIntro1').style.display='none';
+  $('chIntro2').style.display='none';
+  $('chIntro3').style.display='none';
+  $('chStart').style.display='none';
+  $('chGame').style.display='block';
+  $('chFinal').style.display='none';
+  chInit();chLoad();
+});
+$('chBtnPress').addEventListener('click',function(){chPlay('press');});
+$('chBtnWait').addEventListener('click',function(){chPlay('wait');});
+$('chNext').addEventListener('click',function(){chRound++;chLoad();});
+$('chReplay').addEventListener('click',function(){
+  $('chFinal').style.display='none';
+  $('chGame').style.display='block';
+  chInit();chLoad();
+});
+
+function sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
+
+function sceneCenter(el){
+  var s = document.querySelector('.game-scene').getBoundingClientRect();
+  var r = el.getBoundingClientRect();
+  return { cx: r.left - s.left + r.width/2, cy: r.top - s.top + r.height/2, w: r.width, h: r.height };
+}
+
+function anchorPig(side){
+  var img = side.querySelector('.pig-img');
+  var c = sceneCenter(img);
+  img.style.position = 'absolute';
+  img.style.zIndex = 10;
+  img.style.pointerEvents = 'none';
+  img.style.width = c.w + 'px';
+  img.style.height = c.h + 'px';
+  img.style.left = (c.cx - c.w/2) + 'px';
+  img.style.top  = (c.cy - c.h/2) + 'px';
+  return img;
+}
+function movePig(side, to, dur, running){
+  return new Promise(function(resolve){
+    var img = side.querySelector('.pig-img');
+    img.style.transition = 'left ' + dur + 'ms ease-in-out, top ' + dur + 'ms ease-in-out';
+    img.style.left = (to.cx - img.offsetWidth/2) + 'px';
+    img.style.top  = (to.cy - img.offsetHeight/2) + 'px';
+    var frames = side.classList.contains('small') ? FRAMES.small : FRAMES.big;
+    var iv = null;
+    if(running && !reduceMotion){
+      var fi = 0, bob = 0;
+      iv = setInterval(function(){
+        fi = 1 - fi;
+        img.src = frames[fi+1];
+        img.style.transform = 'translateY(' + (bob ? -5 : 0) + 'px)';
+        bob = 1 - bob;
+      }, 140);
+    }
+    setTimeout(function(){
+      if(iv) clearInterval(iv);
+      img.src = frames[0];
+      img.style.transform = '';
+      resolve();
+    }, dur);
+  });
+}
+function pressButton(){
+  return new Promise(function(resolve){
+    var food = $('foodCircle');
+    food.style.transform = 'scale(.8)';
+    sfxPress();
+    setTimeout(function(){
+      food.style.transform = '';
+      setTimeout(resolve, 220);
+    }, 380);
+  });
+}
+function showBolt(side, text, kind){
+  var scene = document.querySelector('.game-scene');
+  var img = side.querySelector('.pig-img');
+  var c = sceneCenter(img);
+  var b = document.createElement('div');
+  b.className = 'bolt ' + kind;
+  b.innerHTML = '<svg width="12" height="14" viewBox="0 0 24 24"><path d="M13 2L4 14h6l-2 8 9-12h-6l2-8z"/></svg><span>'+text+'</span>';
+  b.style.left = c.cx + 'px';
+  var sceneH = scene.offsetHeight; b.style.top = (c.cy > sceneH*0.5 ? (c.cy - img.offsetHeight/2 - 22) : (c.cy + img.offsetHeight/2 + 6)) + 'px';
+  scene.appendChild(b);
+  requestAnimationFrame(function(){ b.classList.add('show'); });
+  setTimeout(function(){ b.classList.remove('show'); setTimeout(function(){ b.remove(); }, 350); }, 1100);
+}
+function showFood(){ sfxFood(); var fp = document.querySelector('.food-pile'); if(fp) fp.classList.add('show'); }
+function clearFood(){ var fp = document.querySelector('.food-pile'); if(fp) fp.classList.remove('show'); }
+
+async function playSequence(big, small){
+  var scene = document.querySelector('.game-scene');
+  scene.style.minHeight = scene.offsetHeight + 'px';
+  scene.classList.add('play');
+  var sideBig = $('sideBig'), sideSmall = $('sideSmall');
+  anchorPig(sideBig); anchorPig(sideSmall);
+  var btn = sceneCenter($('foodCircle'));
+  var tr  = sceneCenter(document.querySelector('.trough'));
+  var trBig   = { cx: tr.cx - 30, cy: tr.cy - 48 };
+  var trSmall = { cx: tr.cx + 30, cy: tr.cy - 48 };
+  await sleep(280);
+
+  if(big==='press' && small==='press'){
+    await Promise.all([ movePig(sideBig, {cx:btn.cx-18, cy:btn.cy}, 900, true), movePig(sideSmall, {cx:btn.cx+18, cy:btn.cy}, 900, true) ]);
+    await pressButton();
+    showBolt(sideBig, '−2', 'minus'); showBolt(sideSmall, '−2', 'minus');
+    await sleep(800);
+    showFood();
+    await sleep(250);
+    await Promise.all([ movePig(sideBig, trBig, 850, true), movePig(sideSmall, trSmall, 850, true) ]);
+    showBolt(sideBig, '+7', 'plus'); showBolt(sideSmall, '+3', 'plus');
+    await sleep(1100);
+  } else if(big==='press' && small==='stay'){
+    await movePig(sideBig, btn, 900, true);
+    await pressButton();
+    showBolt(sideBig, '−2', 'minus');
+    await sleep(800);
+    showFood();
+    await sleep(200);
+    await movePig(sideSmall, trSmall, 800, true);
+    showBolt(sideSmall, '+4', 'plus');
+    var bigRun = movePig(sideBig, trBig, 950, true);
+    await sleep(500);
+    await bigRun;
+    showBolt(sideBig, '+6', 'plus');
+    await sleep(1000);
+  } else { /* big stays, small presses */
+    await movePig(sideSmall, btn, 900, true);
+    await pressButton();
+    showBolt(sideSmall, '−2', 'minus');
+    await sleep(800);
+    showFood();
+    await sleep(200);
+    await movePig(sideBig, trBig, 800, true);
+    showBolt(sideBig, '+9', 'plus');
+    var smallRun = movePig(sideSmall, trSmall, 950, true);
+    await sleep(500);
+    await smallRun;
+    showBolt(sideSmall, '+1', 'plus');
+    await sleep(1000);
+  }
+}
+
+function resetAnimation(){
+  var scene = document.querySelector('.game-scene');
+  scene.classList.remove('play');
+  ['sideBig','sideSmall'].forEach(function(id){
+    var side = $(id);
+    var img = side.querySelector('.pig-img');
+    img.style.transition = '';
+    img.style.position = ''; img.style.zIndex = ''; img.style.pointerEvents = '';
+    img.style.width = ''; img.style.height = '';
+    img.style.left = ''; img.style.top = '';
+    img.style.transform = ''; img.style.marginTop = '';
+    img.src = side.classList.contains('small') ? 'https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/pig-small.png' : 'https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/pig-big.png';
+  });
+  var bolts = document.querySelectorAll('.bolt');
+  for(var i=0;i<bolts.length;i++) bolts[i].remove();
+  clearFood();
+  var food = $('foodCircle'); food.style.transform='';
+}
+
+/* ============ 规则页小演示（真实猪图迷你舞台） ============ */
+function msCenter(stage, el){
+  var s=stage.getBoundingClientRect(), r=el.getBoundingClientRect();
+  return { x:r.left-s.left+r.width/2, y:r.top-s.top+r.height/2 };
+}
+function msReset(stage){
+  var w=stage.clientWidth;
+  var big=stage.querySelector('.ms-pig:not(.sm)'), sm=stage.querySelector('.ms-pig.sm');
+  stage.querySelectorAll('.ms-bolt,.ms-drop').forEach(function(e){e.remove();});
+  stage.querySelector('.ms-food').classList.remove('show');
+  stage.querySelector('.ms-btn').classList.remove('pressed');
+  [big,sm].forEach(function(p){ p.style.transition='none'; });
+  var hh=stage.clientHeight;
+  // Pigs stand on the floor (bottom-aligned), head stays clear of the top
+  big.style.left='18px'; big.style.top=(hh-big.offsetHeight-6)+'px';
+  sm.style.left=(w-18-sm.offsetWidth)+'px'; sm.style.top=(hh-sm.offsetHeight-8)+'px';
+  void stage.offsetWidth;
+}
+function msCap(id,text){ $(id).textContent=text; }
+function msMove(stage, pig, tx, ty, dur){
+  return new Promise(function(res){
+    pig.style.transition='left '+dur+'ms ease-in-out, top '+dur+'ms ease-in-out';
+    pig.style.left=(tx-pig.offsetWidth/2)+'px';
+    pig.style.top=(ty-pig.offsetHeight/2)+'px';
+    setTimeout(res, dur);
+  });
+}
+function msBolt(stage, pig, text, kind){
+  var c=msCenter(stage, pig);
+  var b=document.createElement('div');
+  b.className='ms-bolt show '+kind; b.textContent=text;
+  b.style.left=(c.x-16)+'px';
+  b.style.top=(c.y+pig.offsetHeight/2+6)+'px';
+  stage.appendChild(b);
+  setTimeout(function(){ b.classList.remove('show'); setTimeout(function(){b.remove();},300); },1100);
+}
+function msPress(stage){
+  var btn=stage.querySelector('.ms-btn');
+  btn.classList.add('pressed');
+  return sleep(350).then(function(){ btn.classList.remove('pressed'); });
+}
+function msFood(stage){ stage.querySelector('.ms-food').classList.add('show'); }
+
+/* 规则一：按钮在一头，食槽在另一头 —— 食物从按钮掉到食槽 */
+async function demo1(){
+  var stage=$('ms1'); msReset(stage);
+  var btn=stage.querySelector('.ms-btn'), tr=stage.querySelector('.ms-trough');
+  var bc=msCenter(stage,btn), tc=msCenter(stage,tr);
+  await sleep(400);
+  btn.classList.add('pressed');
+  sfxPress();
+  await sleep(600);
+  btn.classList.remove('pressed');
+  sfxFood();
+  msFood(stage);
+  msCap('cap1', t('cap1idle'));
+  await sleep(1000);
+}
+/* 规则二：按一次掉 10 份食物，耗 2 点体力 —— 小猪去按 */
+async function demo2(){
+  var stage=$('ms2'); msReset(stage);
+  var btn=stage.querySelector('.ms-btn');
+  var sm=stage.querySelector('.ms-pig.sm');
+  var bc=msCenter(stage,btn), tc=msCenter(stage,stage.querySelector('.ms-trough'));
+  await sleep(400);
+  msCap('cap2', t('c2a'));
+  await msMove(stage, sm, bc.x, bc.y+18, 650);
+  await msPress(stage);
+  sfxPress();
+  msCap('cap2', t('c2b'));
+  msBolt(stage, sm, '−2', 'minus');
+  await sleep(700);
+  msFood(stage);
+  sfxFood();
+  msCap('cap2', t('c2c'));
+  await sleep(400);
+  await msMove(stage, sm, tc.x+16, tc.y-6, 600);
+  msCap('cap2', t('c2d'));
+  sfxEat();
+  msBolt(stage, sm, '+1', 'plus');
+  await sleep(1000);
+}
+/* 规则三：按的晚到，等的先吃 —— 大猪等，小猪按 */
+async function demo3(){
+  var stage=$('ms3'); msReset(stage);
+  var btn=stage.querySelector('.ms-btn'), tr=stage.querySelector('.ms-trough');
+  var big=stage.querySelector('.ms-pig:not(.sm)'), sm=stage.querySelector('.ms-pig.sm');
+  var bc=msCenter(stage,btn), tc=msCenter(stage,tr);
+  await sleep(400);
+  msCap('cap3', t('c3a'));
+  var bigRun=msMove(stage, big, tc.x-22, tc.y-6, 650);
+  await msMove(stage, sm, bc.x, bc.y+18, 800);
+  msCap('cap3', t('c3b'));
+  await msPress(stage);
+  sfxPress();
+  msBolt(stage, sm, '−2', 'minus');
+  await sleep(500);
+  msFood(stage);
+  sfxFood();
+  await bigRun;
+  msCap('cap3', t('c3c'));
+  msBolt(stage, big, '+9', 'plus');
+  await sleep(500);
+  await msMove(stage, sm, tc.x+22, tc.y-6, 800);
+  msCap('cap3', t('c3d'));
+  msBolt(stage, sm, '+1', 'plus');
+  await sleep(1000);
+}
+
+/* ============ 规则三步互动课堂（防跳过门锁） ============ */
+var ruleSteps=[false,false,false];
+var demoBusy=false;
+function rulesDone(){ return ruleSteps[0]&&ruleSteps[1]&&ruleSteps[2]; }
+function rulesDoneCount(){ return (ruleSteps[0]?1:0)+(ruleSteps[1]?1:0)+(ruleSteps[2]?1:0); }
+function firstIncompleteRule(){ for(var i=0;i<3;i++){ if(!ruleSteps[i]) return i+1; } return 0; }
+function showRule(n){
+  var tabs=document.querySelectorAll('#ruleTabs .rule-tab');
+  for(var i=0;i<tabs.length;i++){ tabs[i].classList.toggle('active', (i+1)===n); }
+  var panels=document.querySelectorAll('.rule-panel');
+  for(var j=0;j<panels.length;j++){ panels[j].hidden=(+panels[j].getAttribute('data-rule-panel')!==n); }
+  if(n===2) msReset($('ms2'));
+  if(n===3) msReset($('ms3'));
+}
+function updateRuleProgress(){
+  var done=rulesDoneCount(), nxt=firstIncompleteRule();
+  var tabs=document.querySelectorAll('#ruleTabs .rule-tab');
+  for(var i=0;i<tabs.length;i++){
+    tabs[i].classList.toggle('done', ruleSteps[i]);
+    tabs[i].classList.toggle('attention', !ruleSteps[i] && (i+1)===nxt);
+  }
+  var btn=$('btnStart');
+  if(rulesDone()){
+    btn.disabled=false;
+    btn.textContent=t('startBtn');
+  }else{
+    btn.disabled=true;
+    btn.textContent=t('lockBtnFmt').replace('{n}', nxt).replace('{done}', done);
+  }
+}
+function completeRuleStep(n){
+  if(ruleSteps[n-1]) return;
+  ruleSteps[n-1]=true;
+  updateRuleProgress();
+  if(n<3){
+    showRule(n+1);
+    introToast(t('stepDoneFmt').replace('{d}', rulesDoneCount()).replace('{n}', n+1));
+  }else{
+    introToast(t('allDoneToast'));
+  }
+}
+/* 包装 demo：动画播完才算完成该步；播放中忽略重复点击 */
+function runDemo(n, fn){
+  return function(){
+    if(demoBusy) return;
+    demoBusy=true;
+    Promise.resolve(fn()).then(function(){
+      demoBusy=false;
+      completeRuleStep(n);
+    });
+  };
+}
+var introToastTimer=null;
+function introToast(msg){
+  var el=$('introToast');
+  el.textContent=msg;
+  el.classList.add('show');
+  if(introToastTimer) clearTimeout(introToastTimer);
+  introToastTimer=setTimeout(function(){ el.classList.remove('show'); }, 2800);
+}
+
+/* ============ 渲染：静态文案 ============ */
+function renderStatic(){
+  document.documentElement.lang = LANG;
+  $('navTabs').innerHTML = TABS.map(function(tab){
+    var lbl = (LANG==='both') ? tab.en : tab[LANG];
+    return '<button class="nav-tab'+(currentPage===tab.id?' active':'')+'" data-page="'+tab.id+'">'+lbl+'</button>';
+  }).join('');
+  /* 自动把当前标签滚到可见位置 */
+  var box = $('navTabs');
+  var act = box.querySelector('.nav-tab.active');
+  if(act){
+    var target = act.offsetLeft - box.clientWidth/2 + act.clientWidth/2;
+    box.scrollLeft = Math.max(0, target);
+  }
+  $('rulesTitle').textContent = t('rulesTitle');
+  $('modelb').textContent = t('modelb'); $('modelt').textContent = t('modelt');
+  $('r1b').textContent = t('r1b'); $('r1t').textContent = t('r1t');
+  $('r2b').textContent = t('r2b'); $('r2t').textContent = t('r2t');
+  $('r3b').textContent = t('r3b'); $('r3t').textContent = t('r3t');
+  $('taskb').textContent = t('taskb'); $('taskt').textContent = t('taskt');
+  $('play1').textContent = t('tryIt'); $('play2').textContent = t('tryIt'); $('play3').textContent = t('tryIt');
+  ['1','2','3'].forEach(function(n){
+    $('lbl'+n+'btn').textContent = t('lblBtn');
+    $('lbl'+n+'tr').textContent = t('lblTrough');
+  });
+  $('cap1').textContent = t('cap1idle');
+  $('cap2').textContent = t('cap2idle');
+  $('cap3').textContent = t('cap3idle');
+  $('btnStart').textContent = t('startBtn');
+  $('rlab1').textContent = t('stepLbl1');
+  $('rlab2').textContent = t('stepLbl2');
+  $('rlab3').textContent = t('stepLbl3');
+  updateRuleProgress();
+  $('foodLabel').textContent = t('foodLabel');
+  $('gameHint').textContent = t('gameHint');
+  $('bigName').textContent = t('bigName');
+  $('smallName').textContent = t('smallName');
+  $('bBigPress').querySelector('.bl').textContent = t('press');
+  $('bBigStay').querySelector('.bl').textContent = t('stay');
+  $('bSmPress').querySelector('.bl').textContent = t('press');
+  $('bSmStay').querySelector('.bl').textContent = t('stay');
+  $('btnComplete').textContent = t('completeBtn');
+  $('mBigL').textContent = t('mBigL'); $('mSmallL').textContent = t('mSmallL');
+  $('btnAgain').textContent = t('again');
+  $('btnEnd').textContent = t('endGame');
+  $('modalTip').textContent = t('modalTip');
+  $('theoryTitle').textContent = t('theoryTitle');
+  $('tSetupH').textContent = t('tSetupH'); $('tSetupB').textContent = t('tSetupB');
+  $('tMatrixH').textContent = t('tMatrixH');
+  $('thSmPress').textContent = t('thSmPress'); $('thSmStay').textContent = t('thSmStay');
+  $('thBigPress').textContent = t('thBigPress'); $('thBigStay').textContent = t('thBigStay');
+  $('tReadH').textContent = t('tReadH'); $('tReadB').textContent = t('tReadB');
+  $('tOutH').textContent = t('tOutH'); $('tOutB').textContent = t('tOutB');
+  $('tBizH').textContent = t('tBizH'); $('tBizB').textContent = t('tBizB');
+  $('tVocH').textContent = t('tVocH');
+  var vEn=I18N.en.vocab, vZh=I18N.zh.vocab;
+  $('vocabList').innerHTML = vEn.map(function(v,i){
+    var enW=v[0], enD=v[1], zhW=vZh[i][0], zhD=vZh[i][1];
+    if(LANG==='both') return '<li><b>'+enW+' / '+zhW.split(' ').pop()+'</b> — '+enD+' / '+zhD+'</li>';
+    if(LANG==='zh') return '<li><b>'+zhW+'</b> — '+zhD+'</li>';
+    return '<li><b>'+enW+'</b> — '+enD+'</li>';
+  }).join('');
+  $('btnUnderstood').textContent = t('understoodBtn');
+  $('quizTitle').textContent = t('quizTitle');
+  $('quizSub').textContent = t('quizSub');
+  $('btnSubmit').textContent = t('submitBtn');
+  $('btnToSim').textContent = t('startSim');
+  renderChoices();
+}
+
+/* ============ 游戏：选择与结算 ============ */
+function renderChoices(){
+  $('bBigPress').classList.toggle('selected', state.bigAction==='press');
+  $('bBigStay').classList.toggle('selected', state.bigAction==='stay');
+  $('bSmPress').classList.toggle('selected', state.smallAction==='press');
+  $('bSmStay').classList.toggle('selected', state.smallAction==='stay');
+}
+function resetBars(){
+  state.bigAction='stay'; state.smallAction='stay';
+  $('fillBig').style.width='0%'; $('fillSmall').style.width='0%';
+  $('numBig').textContent='0/10'; $('numSmall').textContent='0/10';
+  $('numBig').classList.remove('neg'); $('numSmall').classList.remove('neg');
+  resetAnimation();
+  renderChoices();
+}
+function setBar(el, numEl, val){
+  numEl.textContent = val + '/10';
+  numEl.classList.toggle('neg', val<0);
+  el.style.width = Math.max(0, val)/10*100 + '%';
+}
+function payoff(big, small){
+  if(big==='press' && small==='press') return {big:5, small:1, key:'bothPress'};
+  if(big==='press' && small==='stay')  return {big:4, small:4, key:'bigPress'};
+  if(big==='stay' && small==='press')  return {big:9, small:-1, key:'smallPress'};
+  return {big:0, small:0, key:'bothStay'};
+}
+async function completeSelection(){
+  if(state.animating) return;
+  state.animating = true;
+  /* 手机端：点击提交后自动滚回游戏场景顶部，保证动画全程可见 */
+  var cont = document.querySelector('.content');
+  var gs = document.querySelector('.game-scene');
+  if(cont && gs){
+    var gr = gs.getBoundingClientRect();
+    var cr = cont.getBoundingClientRect();
+    if(gr.top < cr.top - 4 || gr.bottom > cr.bottom + 4){
+      var absTop = gr.top - cr.top + cont.scrollTop;
+      cont.scrollTo({top: Math.max(0, absTop - 12), behavior:'smooth'});
+      await sleep(600);
+    }
+  }
+  var r = payoff(state.bigAction, state.smallAction);
+  if(!reduceMotion && !(state.bigAction==='stay' && state.smallAction==='stay')){
+    await playSequence(state.bigAction, state.smallAction);
+  }
+  setBar($('fillBig'), $('numBig'), r.big);
+  setBar($('fillSmall'), $('numSmall'), r.small);
+  var c = $('foodCircle');
+  c.classList.remove('pulse'); void c.offsetWidth; c.classList.add('pulse');
+  $('modalTitle').textContent = t(r.key+'Title');
+  $('modalBody').textContent = t(r.key+'Body');
+  $('mBig').textContent = r.big;
+  $('mSmall').textContent = r.small;
+  $('resultModal').hidden = false;
+  sfxWin();
+  state.animating = false;
+}
+
+/* ============ 测验 ============ */
+function startQuiz(){
+  state.quiz = shuffle(QUESTION_POOL).slice(0,5);
+  state.picked = [-1,-1,-1,-1,-1];
+  state.submitted = false;
+  $('resultBanner').classList.remove('show');
+  $('btnSubmit').hidden = false;
+  $('btnToSim').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  var letters = ['A','B','C','D'];
+  function qtext(q){ return (LANG==='both') ? q.en+' / '+q.zh : q[LANG]; }
+  $('quizList').innerHTML = state.quiz.map(function(q, qi){
+    var opts = (LANG==='both') ? q.opts.en.map(function(e,i){ return e+' / '+q.opts.zh[i]; }) : q.opts[LANG];
+    var rows = opts.map(function(o, oi){
+      var cls = 'quiz-opt';
+      if(state.submitted){
+        cls += ' disabled';
+        if(oi===q.a) cls += ' correct';
+        else if(oi===state.picked[qi]) cls += ' wrong';
+      } else if(oi===state.picked[qi]) cls += ' selected';
+      return '<button class="'+cls+'" data-q="'+qi+'" data-o="'+oi+'"'+(state.submitted?' disabled':'')+'><span class="opt-letter">'+letters[oi]+'</span>'+o+'</button>';
+    }).join('');
+    return '<div class="quiz-q"><div class="q-stem">Q'+(qi+1)+'. '+qtext(q.q)+'</div>'+rows+'</div>';
+  }).join('');
+}
+function submitQuiz(){
+  if(state.submitted) return;
+  state.submitted = true;
+  var score = 0;
+  state.quiz.forEach(function(q, i){ if(state.picked[i]===q.a) score++; });
+  var total = state.quiz.length;
+  var pct = Math.round(score/total*100);
+  $('scoreBig').textContent = fmt(t('resultBig'), {score:score, total:total});
+  $('scoreSub').textContent = fmt(t('resultSub'), {pct:pct}) + ' · ' + t('reviewNote');
+  $('resultBanner').classList.add('show');
+  $('btnSubmit').hidden = true;
+  $('btnToSim').style.display='block';
+  renderQuiz();
+  $('resultBanner').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+/* ============ 页面切换 ============ */
+function goPage(p){
+  /* 防跳过门禁：三步规则未完成时，禁止离开规则页 */
+  if(p!=='intro' && !rulesDone()){
+    introToast(t('toastLocked').replace('{done}', rulesDoneCount()));
+    return;
+  }
+  currentPage = p;
+  ['intro','game','theory','quiz','challenge'].forEach(function(pg){
+    var el = $('page-'+pg);
+    if(el) el.classList.toggle('active', pg===p);
+  });
+  if(p==='quiz') startQuiz();
+  if(p==='challenge' && typeof chRenderStatic==='function') chRenderStatic();
+  renderStatic();
+  var cEl=document.querySelector('.content');
+  if(cEl) cEl.scrollTop=0;
+}
+
+/* ============ 事件绑定 ============ */
+function bind(){
+  $('navTabs').addEventListener('click', function(e){
+    var b = e.target.closest('.nav-tab');
+    if(b) goPage(b.getAttribute('data-page'));
+  });
+  /* 鼠标按住左右拖动也能滑（桌面端横向滚动条不可见） */
+  (function(){
+    var box = $('navTabs'), down=false, sx=0, sl=0, moved=false;
+    box.addEventListener('pointerdown', function(e){
+      down=true; moved=false; sx=e.clientX; sl=box.scrollLeft;
+      box.classList.add('dragging');
+    });
+    window.addEventListener('pointermove', function(e){
+      if(!down) return;
+      var dx = e.clientX - sx;
+      if(Math.abs(dx)>4) moved=true;
+      box.scrollLeft = sl - dx;
+    });
+    window.addEventListener('pointerup', function(){ down=false; box.classList.remove('dragging'); });
+    box.addEventListener('click', function(e){
+      if(moved){ e.preventDefault(); e.stopPropagation(); moved=false; }
+    }, true);
+  })();
+  /* 规则步骤 tab：点击切换 + 左右滑动切换（仅规则页内） */
+  $('ruleTabs').addEventListener('click', function(e){
+    var b = e.target.closest('.rule-tab');
+    if(b) showRule(+b.getAttribute('data-rule-tab'));
+  });
+  (function(){
+    var box=$('page-intro'), sx=0, sy=0;
+    box.addEventListener('touchstart', function(e){ sx=e.touches[0].clientX; sy=e.touches[0].clientY; }, {passive:true});
+    box.addEventListener('touchend', function(e){
+      var dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+      if(Math.abs(dx)>48 && Math.abs(dx)>Math.abs(dy)){
+        var cur=+(document.querySelector('#ruleTabs .rule-tab.active').getAttribute('data-rule-tab')||'1');
+        var nx=cur+(dx<0?1:-1);
+        if(nx>=1 && nx<=3) showRule(nx);
+      }
+    }, {passive:true});
+  })();
+  $('btnStart').addEventListener('click', function(){ if(!$('btnStart').disabled) goPage('game'); });
+  $('play1').addEventListener('click', runDemo(1, demo1));
+  $('play2').addEventListener('click', runDemo(2, demo2));
+  $('play3').addEventListener('click', runDemo(3, demo3));
+  $('bBigPress').addEventListener('click', function(){ state.bigAction='press'; renderChoices(); });
+  $('bBigStay').addEventListener('click', function(){ state.bigAction='stay'; renderChoices(); });
+  $('bSmPress').addEventListener('click', function(){ state.smallAction='press'; renderChoices(); });
+  $('bSmStay').addEventListener('click', function(){ state.smallAction='stay'; renderChoices(); });
+  $('btnComplete').addEventListener('click', completeSelection);
+  $('btnAgain').addEventListener('click', function(){ $('resultModal').hidden=true; resetBars(); });
+  $('btnEnd').addEventListener('click', function(){ $('resultModal').hidden=true; goPage('theory'); });
+  $('btnUnderstood').addEventListener('click', function(){ goPage('quiz'); });
+  $('btnToSim').addEventListener('click', function(){ goPage('challenge'); });
+  $('btnSubmit').addEventListener('click', submitQuiz);
+  $('quizList').addEventListener('click', function(e){
+    var b = e.target.closest('.quiz-opt');
+    if(!b || state.submitted) return;
+    var qi = +b.getAttribute('data-q'), oi = +b.getAttribute('data-o');
+    state.picked[qi] = oi;
+    renderQuiz();
+  });
+  var sb = document.getElementById('soundBtn');
+  if(sb) sb.onclick = function(e){
+    e.stopPropagation();
+    toggleSound();
+  };
+  $('dotsBtn').onclick = function(e){
+    e.stopPropagation();
+    var m = $('langMenu');
+    if(m.classList.contains('open')){ m.classList.remove('open'); }
+    else { m.classList.add('open'); }
+  };
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('.lang-menu') && e.target.id !== 'dotsBtn' && !e.target.closest('#dotsBtn')){
+      $('langMenu').classList.remove('open');
+    }
+  });
+  var opts = document.querySelectorAll('.lang-opt');
+  for(var i=0;i<opts.length;i++){
+    (function(b){
+      b.onclick = function(e){
+        e.stopPropagation();
+        LANG = b.getAttribute('data-lang');
+        $('langMenu').classList.remove('open');
+        renderStatic();
+        if(currentPage==='quiz') renderQuiz();
+        if(currentPage==='challenge') chRenderStatic();
+      };
+    })(opts[i]);
+  }
+  var mopts = document.querySelectorAll('.music-opt');
+  for(var mi=0;mi<mopts.length;mi++){
+    (function(b){
+      b.onclick = function(e){
+        e.stopPropagation();
+        switchBGM(b.getAttribute('data-music'));
+        $('langMenu').classList.remove('open');
+      };
+    })(mopts[mi]);
+  }
+  var lopts = document.querySelectorAll('.layout-opt');
+  for(var i=0;i<lopts.length;i++){
+    (function(b){
+      b.onclick = function(e){
+        e.stopPropagation();
+        var mode = b.getAttribute('data-layout');
+        if(mode==='narrow') document.documentElement.classList.add('narrow');
+        else document.documentElement.classList.remove('narrow');
+        $('langMenu').classList.remove('open');
+      };
+    })(lopts[i]);
+  }
+  $('resultModal').addEventListener('click', function(e){
+    if(e.target === $('resultModal')) $('resultModal').hidden = true;
+  });
+}
+
+
+/* ============ 音效系统（音乐盒风格） ============ */
+var AC = window.AudioContext || window.webkitAudioContext;
+var audioCtx = null;
+var soundOn = true;
+var bgmTimer = null;
+var bgmStep = 0;
+function ac(){ if(!audioCtx && AC) audioCtx = new AC(); if(soundOn && audioCtx && audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; }
+function pluck(freq, dur, vol, when){
+  var ctx=ac(); if(!ctx||!soundOn) return;
+  var t=ctx.currentTime+(when||0);
+  var o=ctx.createOscillator(), g=ctx.createGain();
+  o.type='sine'; o.frequency.value=freq;
+  var o2=ctx.createOscillator(), g2=ctx.createGain();
+  o2.type='sine'; o2.frequency.value=freq*2;
+  g.gain.setValueAtTime(0,t);
+  g.gain.linearRampToValueAtTime(vol||0.1,t+0.01);
+  g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+  g2.gain.setValueAtTime(0,t);
+  g2.gain.linearRampToValueAtTime((vol||0.1)*0.3,t+0.01);
+  g2.gain.exponentialRampToValueAtTime(0.001,t+dur*0.6);
+  o.connect(g); g.connect(ctx.destination);
+  o2.connect(g2); g2.connect(ctx.destination);
+  o.start(t); o.stop(t+dur+0.05);
+  o2.start(t); o2.stop(t+dur+0.05);
+}
+function sfxPress(){ pluck(880,0.2,0.12); pluck(1174,0.25,0.1,0.08); }
+function sfxFood(){ [1047,1319,1568,2093].forEach(function(f,i){ pluck(f,0.18,0.1,i*0.06); }); }
+function sfxEat(){ pluck(659,0.08,0.08); pluck(880,0.1,0.08,0.1); }
+function sfxWin(){ [523,659,784].forEach(function(f,i){ pluck(f,0.6,0.08,i*0.15); }); pluck(1047,0.9,0.07,0.45); }
+function sfxClick(){ pluck(1568,0.08,0.06); }
+var BGM_FILES = {
+  spring: 'https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/bgm-spring.wav',
+  carnival: 'https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/bgm-carnival.wav',
+  waltz: 'https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/pigs/bgm-waltz.wav'
+};
+var bgmAudio = document.getElementById('bgmAudio');
+if(bgmAudio){ bgmAudio.loop = true; bgmAudio.volume = 0.5; }
+var bgmStyle = 'spring';
+function startBGM(){
+  if(!bgmAudio) return;
+  bgmAudio.src = BGM_FILES[bgmStyle];
+  if(soundOn){ bgmAudio.play().catch(function(){}); }
+}
+function switchBGM(style){
+  bgmStyle = style;
+  if(!bgmAudio) return;
+  bgmAudio.src = BGM_FILES[style];
+  if(soundOn){ bgmAudio.play().catch(function(){}); }
+}
+function toggleSound(){
+  soundOn=!soundOn;
+  var b=document.getElementById('soundBtn');
+  if(b) b.textContent = soundOn ? '♪' : '✕';
+  if(bgmAudio){ bgmAudio.muted = !soundOn; if(soundOn) bgmAudio.play().catch(function(){}); }
+  if(soundOn){
+    if(audioCtx && audioCtx.state==='suspended') audioCtx.resume();
+  } else {
+    if(audioCtx && audioCtx.state==='running') audioCtx.suspend();
+  }
+  try{ introToast(soundOn ? 'Sound On' : 'Sound Off'); }catch(e){}
+}
+
+/* ============ 启动 ============ */
+renderStatic();
+bind();
+document.body.addEventListener('pointerdown', function once(){ startBGM(); document.body.removeEventListener('pointerdown', once); }, {once:true});
+setTimeout(function(){ if(currentPage==='intro') demo1(); }, 900);
+})();
+
+</script>
+</body>
+</html>
