@@ -486,9 +486,9 @@ function typeStart(ctl){
       /* 时间轴模式：音频播到百分之几，字就出到百分之几——声音停（词间停顿）字也停 */
       const t=(v.a.currentTime||0)*1000 - v.lead;
       if(t>0) started=true;
-      if(!started && now()-t0>1500) stalled=true;      /* 音频压根没跑起来 → 退回定速，不至于卡住 */
+      if(!started && now()-t0>4500) stalled=true;      /* 音频 4.5s 仍没跑起来（网络缓冲慢）→ 退回定速，不至于卡住 */
       if(!stalled){
-        if(t<0) d=40;                                  /* 还在前导静音里，先等声音出来 */
+        if(t<0) d=40;                                  /* 还在前导静音 / 缓冲未就绪里，先等声音出来 */
         else{
           const target=Math.min(cover, Math.round(Math.min(1, t/v.span)*cover));
           if(target>i){ put(target-i); d=16; }         /* 追平进度 */
@@ -737,9 +737,10 @@ function playLine(id, text, who){
   let i=1, played=0;
   const step=()=>{
     if(!alive()) return;
-    while(i<=n && getAudio('https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/voice/'+(n>1 ? id+'_'+i : id)+'.mp3')===false) i++;
+    let src='https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/voice/'+(n>1 ? id+'_'+i : id)+'.mp3';
+    while(i<=n && getAudio(src)===false) i++;
     if(i>n){ if(played===0) tts(text,who); return; }
-    const a = getAudio('https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/voice/'+(n>1 ? id+'_'+i : id)+'.mp3');
+    const a = getAudio(src);
     /* 当前段播完后到下一段之间的停顿：gaps[i-1]（i 为当前段序号，1 起） */
     const gap = gaps[i-1]||300;
     let advanced=false, wd=null;
@@ -759,11 +760,25 @@ function playLine(id, text, who){
       curVoice = d ? {a:a, lead:d[0], span:d[1], cover:VOICE_COVER[id]||0} : null;
     }
     try{
-      a.currentTime=0; a.onended=onEnd;
-      voicePlaying=true;
       bindVoice();                            /* 同步绑定：紧接着的 typeStart 就能读到 */
-      const p=a.play();
-      if(p&&p.then) p.catch(()=>{ curVoice=null; onEnd(); });   /* 播放失败按结束处理，跳下一段 */
+      /* 网络缓冲就绪再开播：避免 COS 首拉较慢时文字先跑、声音滞后 */
+      const ensure=cb=>{
+        if(audioCache[src]===false){ cb(); return; }
+        if(a.readyState>=3){ cb(); return; }
+        let done=false;
+        const to=setTimeout(()=>{ if(!done){done=true; cb();} }, 4000);
+        a.addEventListener('canplaythrough', function h(){
+          if(!done){ done=true; clearTimeout(to); a.removeEventListener('canplaythrough',h); cb(); }
+        });
+      };
+      ensure(()=>{
+        try{
+          a.currentTime=0; a.onended=onEnd;
+          voicePlaying=true;
+          const p=a.play();
+          if(p&&p.then) p.catch(()=>{ curVoice=null; onEnd(); });   /* 播放失败按结束处理，跳下一段 */
+        }catch(e){ onEnd(); }
+      });
     }catch(e){ onEnd(); }
   };
   /* 黑幕还没散尽 → 把"起播"挂起，等 typeGateOpen 与打字同一刻出发。
