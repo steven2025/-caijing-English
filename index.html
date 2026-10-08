@@ -235,6 +235,12 @@ main.full{height:100vh}
   font-family:Georgia,"Songti SC",serif;letter-spacing:1px;flex:0 0 auto;
 }
 .ch-head .t small{color:var(--sub);font-weight:600;margin-left:10px;font-family:sans-serif;letter-spacing:0}
+.ch-head .t-credits{
+  font-size:12px;color:var(--sub);font-weight:600;white-space:nowrap;
+  border-left:1px solid rgba(212,175,55,.35);padding-left:14px;margin-left:2px;
+  letter-spacing:0;font-family:sans-serif;
+}
+.ch-head .t-credits b{color:var(--gold2);font-weight:800}
 .frame-wrap{flex:1;min-height:0;background:#fff}
 #chapterFrame{width:100%;height:100%;border:0;display:block}
 
@@ -310,6 +316,7 @@ main.full{height:100vh}
     <div class="ch-head">
       <button class="back-home" onclick="showHome()">‹ 返回首页</button>
       <span class="t" id="chTitle">Chapter</span>
+      <span class="t-credits" id="chCredits"></span>
       <nav class="ch-nav" id="chNav2" aria-label="章节导航"></nav>
     </div>
     <div class="frame-wrap"><iframe id="chapterFrame" title="章节互动练习"></iframe></div>
@@ -359,7 +366,7 @@ const COLORS={
 const CHAPTERS=[
  {n:1,cn:'经济学是什么',en:'What Is Economics?',file:'chapters/chapter1.html'},
  {n:2,cn:'经济思想录',en:'Economic Thought',file:'chapters/chapter2.html'},
- {n:3,cn:'需求与供给',en:'Demand and Supply',file:'chapters/chapter3.html'},
+ {n:3,cn:'需求与供给',en:'Demand and Supply',file:'chapters/chapter3.html',credits:'课程设计：<b>罗敏</b> 重庆工商大学 · 程序开发：<b>鄢清华</b>'},
  {n:4,cn:'成本与利润',en:'Costs and Profit',file:'chapters/chapter4.html'},
  {n:5,cn:'市场竞争',en:'Market Competition',file:'chapters/chapter5.html'},
  {n:6,cn:'生产要素',en:'Factors of Production',file:'chapters/chapter6.html'},
@@ -418,12 +425,14 @@ function openChapter(n){
   $('#home').style.display='none';
   const v=$('#chapterView');v.style.display='flex';
   $('#chTitle').innerHTML=`第 ${n} 章 · ${c.cn}<small>${c.en}</small>`;
+  $('#chCredits').innerHTML=c.credits||'';
   frame.src=c.file;
   renderNav();
   window.scrollTo(0,0);
 }
 function showHome(){
   current=0;frame.removeAttribute('src');
+  $('#chCredits').innerHTML='';
   document.querySelector('.topbar').classList.remove('hidden');
   document.querySelector('.footer').classList.remove('hidden');
   document.querySelector('main').classList.remove('full');
