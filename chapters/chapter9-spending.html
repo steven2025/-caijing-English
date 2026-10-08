@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>财经基础英语 · Unit 9 互动练习</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23003f50'/><polyline points='25,28 50,48 75,72' fill='none' stroke='%2308abd0' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/><line x1='20' y1='25' x2='20' y2='80' stroke='white' stroke-width='6'/><line x1='20' y1='80' x2='82' y2='80' stroke='white' stroke-width='6'/></svg>">
+<style>
+:root{--ink:#003f50;--green:#078b14;--green2:#54a500;--blue:#08abd0;--bg:#eef3f3;--paper:#fff;--red:#c94141;--gray:#6c858b}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","Segoe UI",Arial,sans-serif;min-width:320px}
+button{font:inherit} .app{display:flex;flex-direction:column;min-height:100vh}
+.topbar{height:50px;background:#fff;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid #d9e1e2;gap:12px}
+.brand{font-size:15px;font-weight:800;white-space:nowrap}.brand span{font-size:11px;font-weight:600;color:#52717a;margin-left:6px}
+.tabs{display:flex;gap:4px;flex:1;overflow-x:auto;scrollbar-width:thin}
+.tab{border:0;background:transparent;color:#56717a;padding:7px 10px;border-radius:5px;font-size:12.5px;white-space:nowrap;cursor:pointer}
+.tab small{display:block;font-size:10px;color:#8aa0a6;font-weight:600}
+.tab.active{background:var(--ink);color:#fff}.tab.active small{color:#cfe3e8}
+.head{padding:4px 2.2vw 2px}.step-title{font-size:19px;font-weight:900;margin:0}.step-cn{font-size:13px;color:#507079;margin:0 0 3px}.instruction{font-size:14px;font-weight:700;line-height:1.35;color:#1565c0}
+.view{display:none}.view.on{display:block}
+.guess-wrap{padding:0 2.2vw 4px}
+.nation-card{background:#fff;border:1px solid #d9e1e2;border-radius:14px;padding:6px 14px 7px;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.nation-card h3{margin:0 0 1px;font-size:15px;font-weight:900}
+.nation-card .unit{margin:0 0 3px;font-size:11.5px;color:#678188;font-weight:600}
+.nation-card .total{margin:0 0 4px;font-size:12.5px;font-weight:800;color:#31555f}.nation-card .total b{color:var(--red)}
+.guess-row{display:flex;gap:16px;align-items:flex-start;min-height:0}
+.sliders{flex:0 0 480px;display:flex;flex-direction:column;gap:5px}
+.sl-item{display:grid;grid-template-columns:190px 1fr 44px;align-items:center;gap:6px;font-size:11.5px;line-height:1.15}
+.sl-name{color:#33555f;font-weight:700;white-space:nowrap}
+.sl-name small{display:block;color:#88a0a6;font-weight:600;font-size:10px;white-space:nowrap}
+.sl-item input{width:100%;height:22px;margin:0;accent-color:var(--blue);cursor:pointer}
+.sl-val{font-weight:900;color:var(--ink);text-align:right;font-size:12px}
+.pie-box{flex:1;min-width:0;display:flex;align-items:center;justify-content:center}
+.pie-box svg{height:470px;width:auto;max-width:100%}
+.pie-label{font-size:11.5px;font-weight:800;fill:#21434d}
+.pie-note{font-size:10.5px;fill:#6c858b;font-weight:600}
+.actions-row{display:flex;gap:10px;padding:4px 2.2vw 2px;align-items:center;flex-wrap:wrap}
+.primary,.secondary{border:0;padding:9px 26px;font-weight:900;font-size:16px;cursor:pointer;border-radius:8px}
+.primary{background:var(--blue);color:#fff}.primary:disabled{background:#a9cbd3;cursor:not-allowed}
+.secondary{background:white;color:var(--ink);border:1px solid #b6c8cc;font-size:13px;padding:8px 16px}
+.feedback{min-height:20px;font-size:14px;font-weight:800;padding-left:4px}
+.note{font-size:11.5px;color:#6c858b;padding:0 2.2vw 4px;line-height:1.5}
+/* ---------- comparison ---------- */
+.cmp-head{padding:5px 2.2vw}.cmp-head h2{font-size:17px;margin:0 0 2px}.cmp-head p{font-size:12.5px;color:#507079;margin:0}
+.cmp-wrap{display:grid;grid-template-columns:minmax(470px,1fr) minmax(360px,1.15fr);gap:16px;padding:4px 2.2vw 8px;align-items:start}
+.cmp-card{background:#fff;border:1px solid #d9e1e2;border-radius:14px;padding:12px 14px;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.cmp-card h4{margin:0 0 2px;font-size:14px;font-weight:900}.cmp-card .sub{font-size:11.5px;color:#678188;margin-bottom:6px}
+.cmp-card svg{width:100%;height:auto}
+.score-card{position:sticky;top:8px;text-align:center}
+.score-num{font-size:92px;font-weight:900;color:var(--ink);line-height:1;margin:6px 0 2px}
+.score-num small{font-size:26px;color:#52717a;font-weight:800}
+.score-grade{font-size:22px;font-weight:900;color:#1b7a22;margin-bottom:10px}
+.score-diff{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:13px;text-align:left;margin:8px 0 10px;padding:8px 10px;background:#f2f7f8;border-radius:10px}
+.score-diff b{color:var(--ink)}
+.score-diff .g{color:#1b7a22}.score-diff .f{color:var(--red)}
+.info-box{text-align:left;border-top:1px dashed #c8d6d9;padding-top:8px;margin-top:6px}
+.info-box h5{margin:0 0 4px;font-size:14px;font-weight:900;color:var(--ink)}
+.info-box p{margin:0 0 8px;font-size:13.5px;line-height:1.6;color:#33555f}
+.info-box p b{color:var(--ink)}
+.info-box ul{margin:0;padding-left:16px}.info-box li{font-size:13.5px;line-height:1.55;color:#33555f;margin-bottom:4px}
+@media(max-width:1080px){
+  .sliders{flex-basis:360px}
+  .sl-item{grid-template-columns:150px 1fr 44px;gap:6px;font-size:11px}
+  .cmp-wrap{grid-template-columns:1fr}
+  .score-card{position:static}
+}
+@media(max-width:880px){
+  .topbar{padding:0 10px}.brand span{display:none}
+  .guess-wrap,.actions-row,.note,.cmp-head{padding-left:12px;padding-right:12px}
+  .guess-row{flex-direction:column;align-items:stretch}
+  .sliders{flex-basis:auto}
+  .sl-item{grid-template-columns:132px 1fr 44px}
+  .pie-box svg{height:360px}
+  .cmp-wrap{padding:4px 12px 8px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">财经基础英语 <span>UNIT 9 · MACROECONOMIC POLICY</span></div>
+    <nav class="tabs" id="countryTabs" aria-label="选择国家"></nav>
+  </header>
+
+  <!-- ===== 猜谜视图 ===== -->
+  <section class="view on" id="viewGuess">
+    <div class="head">
+      <h1 class="step-title">Guess the Government Spending</h1>
+      <div class="step-cn" id="stepCn">猜一猜各国财政支出的结构</div>
+      <div class="instruction" id="guessInstr"></div>
+    </div>
+    <div class="guess-wrap">
+      <div class="nation-card">
+        <h3 id="nationName">China · 中国</h3>
+        <p class="unit" id="nationUnit"></p>
+        <p class="total">Your total 你的总和：<b id="totX">100.0%</b>（应接近 100%）</p>
+        <div class="guess-row">
+          <div class="sliders" id="sliders"></div>
+          <div class="pie-box"><svg id="pieSvg" viewBox="0 0 800 440" role="img"></svg></div>
+        </div>
+      </div>
+    </div>
+    <div class="actions-row">
+      <button class="primary" id="revealBtn">Reveal the truth · 揭示真实比例</button>
+      <button class="secondary" id="resetBtn">Reset · 重置</button>
+      <span class="feedback" id="guessFb"></span>
+    </div>
+    <div class="note" id="noteLine"></div>
+  </section>
+
+  <!-- ===== 对比视图 ===== -->
+  <section class="view" id="viewCmp">
+    <div class="cmp-head">
+      <h2 id="cmpTitle">Your Guess vs the Reality</h2>
+      <p>Compare your guess with the actual shares, then read how this country's official accounting differs from China's.</p>
+    </div>
+    <div class="cmp-wrap">
+      <div class="cmp-card">
+        <h4 id="barTitle">United States — Guess vs Actual</h4>
+        <div class="sub" id="barSub">ACTUAL = 深青色条（实际），GUESS = 浅蓝色条（你的猜测）</div>
+        <div id="barSvg"></div>
+      </div>
+      <div class="cmp-card score-card">
+        <div class="sub">YOUR SCORE · 你的得分</div>
+        <div class="score-num" id="scoreNum">0<small>/100</small></div>
+        <div class="score-grade" id="scoreGrade"></div>
+        <div class="score-diff" id="scoreDiff"></div>
+        <div class="info-box">
+          <h5>Official accounting · 该国官方口径</h5>
+          <p id="infoScope"></p>
+          <h5>Differences from China · 与中国的差异</h5>
+          <ul id="infoDiff"></ul>
+        </div>
+        <div class="actions-row" style="justify-content:center;padding:10px 0 0">
+          <button class="secondary" id="backBtn">返回猜谜 · Back</button>
+          <button class="primary" id="restartBtn">RESTART · 重新开始</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s);
+const ns='http://www.w3.org/2000/svg';
+const PALETTE=['#08abd0','#f18b21','#078b14','#c94141','#7b5ea7','#54a500','#8a9aa0'];
+
+/* ================= 7 国数据（官方口径，来源标注于口径说明） ================= */
+const DATA={
+ CN:{name:'China',cn:'中国',unit:'¥28.74 万亿 · 2025 全国一般公共预算支出（财政部）',order:1,
+   scope:'全国一般公共预算支出：中央 + 地方全部加总；不含社会保险基金预算。2025 年支出总额 ¥28.74 万亿元。',
+   diff:['口径基准：中国为"全国"口径（中央+地方合并），多数国家只报中央/联邦口径，直接比较会高估中国的集中度。','中国的社会保险基金是独立预算，不在一般公共预算内——与德、法、日将社保纳入政府支出不同。','中国"其他"占 49.5%，因地方分散科目多（农林水、城乡社区、交通运输、公共安全、债务付息等）。'],
+   items:[
+     {n:'Social Security & Employment',cn:'社会保障和就业',v:15.5},
+     {n:'Education',cn:'教育',v:15.1},
+     {n:'Healthcare',cn:'卫生健康',v:7.5},
+     {n:'National Defense',cn:'国防',v:6.2},
+     {n:'Science & Technology',cn:'科学技术',v:4.2},
+     {n:'Environmental Protection',cn:'节能环保',v:2.0},
+     {n:'Others',cn:'其他',v:49.5}]},
+ US:{name:'United States',cn:'美国',unit:'$7.01 万亿 · FY2025 联邦净支出（U.S. Treasury / CBO）',order:2,
+   scope:'联邦政府净支出（Federal net outlays）：只含联邦层面，不含州和地方政府；财年 FY2025（2024.10–2025.9）。',
+   diff:['美国只报"联邦"口径，州和地方的教育、公共安全、交通等支出不在内；中国是全国口径。','美国社保、Medicare、Medicaid 都在联邦预算内，合计约 46%——中国社保基金独立于一般公共预算。','美国联邦层面没有独立的教育大类（教育主要由州与地方承担），这是中美结构差异最直观的例子。'],
+   items:[
+     {n:'Social Security',cn:'社会保障',v:22.5},
+     {n:'Income Security & Veterans',cn:'收入保障与退伍军人',v:15.4},
+     {n:'Medicare',cn:'老年医保',v:14.2},
+     {n:'Net Interest',cn:'债务利息',v:13.8},
+     {n:'National Defense',cn:'国防',v:12.4},
+     {n:'Medicaid',cn:'医疗救助',v:9.5},
+     {n:'Others',cn:'其他',v:12.2}]},
+ FR:{name:'France',cn:'法国',unit:'€1,600 bn · 2025 广义政府支出（INSEE, COFOG）',order:3,
+   scope:'广义政府（administrations publiques）：中央 + 地方 + 社会保障基金全部计入；功能分类采用联合国 COFOG。',
+   diff:['法国是"广义政府"口径，社保基金计入政府支出（法国社保占 52%，且含医疗）——中国社保基金独立核算，不在一般公共预算内。','法国支出占 GDP 约 57%，是 OECD 最高；中国一般公共预算支出约占 GDP 22%，但中国还有政府性基金、社保基金等"四本预算"。','法国"社会保障"分类含退休金、医疗、家庭、失业补贴，范围比中国的"社会保障和就业"更宽。'],
+   items:[
+     {n:'Social Protection',cn:'社会保障（含医疗）',v:52.0},
+     {n:'General Administration',cn:'一般行政服务',v:11.6},
+     {n:'Education',cn:'教育',v:10.0},
+     {n:'Economic Affairs',cn:'经济事务',v:8.5},
+     {n:'Security & Defence',cn:'安全与国防',v:6.9},
+     {n:'Others',cn:'其他（住房/文化/环保等）',v:7.7},
+     {n:'Debt Interest',cn:'债务利息',v:3.3}]},
+ UK:{name:'United Kingdom',cn:'英国',unit:'£1,157 bn · FY2024-25 公共部门支出（PESA/OBR）',order:4,
+   scope:'公共部门支出（expenditure on services）：中央 + 地方 + 公共企业；财年 FY2024-25（2024.4–2025.3），UNCOFOG 功能分类。',
+   diff:['英国为"公共部门"全口径（含国有部门），中国一般公共预算不含国有企业收支。','英国医疗（NHS）是独立的政府职能，占 20.9%；中国医疗支出含于一般公共预算的"卫生健康"。','英国财政年度为 4 月–次年 3 月，与中国历年不同。'],
+   items:[
+     {n:'Social Protection',cn:'社会保障（含养老金）',v:33.2},
+     {n:'Health (NHS)',cn:'医疗',v:20.9},
+     {n:'Education',cn:'教育',v:10.3},
+     {n:'Debt Interest',cn:'债务利息',v:10.8},
+     {n:'Economic Affairs',cn:'经济事务',v:7.5},
+     {n:'Defence',cn:'国防',v:5.5},
+     {n:'Others',cn:'其他',v:11.8}]},
+ IN:{name:'India',cn:'印度',unit:'₹50.7 lakh crore · FY2025-26 中央预算（Union Budget）',order:5,
+   scope:'中央（联盟）政府预算支出：不含各邦政府；财年 FY2025-26（2025.4–2026.3），预算估计数（BE）。',
+   diff:['印度为"中央"口径，不含邦支出；中国为全国口径（中央+地方合并），因此印度"对邦转移支付"是一大项（23.7%）。','印度利息支出占 21.3%（中央口径），高于中国一般公共预算中的债务付息占比。','印度财年 4 月–次年 3 月；补贴（食品/化肥/燃料）是显性大项（7.8%），中国同类补贴散见于多科目。'],
+   items:[
+     {n:'Transfers to States',cn:'对邦转移支付',v:23.7},
+     {n:'Interest Payments',cn:'利息支出',v:21.3},
+     {n:'Defence',cn:'国防',v:13.4},
+     {n:'Economic Infrastructure',cn:'经济基础设施（路/铁路）',v:10.7},
+     {n:'Subsidies',cn:'补贴（食品/化肥/燃料）',v:7.8},
+     {n:'Education & Health',cn:'教育医疗',v:4.3},
+     {n:'Others',cn:'其他',v:18.8}]},
+ RU:{name:'Russia',cn:'俄罗斯',unit:'₽41.5 万亿 · 2025 联邦预算（俄财政部，预算口径）',order:6,
+   scope:'俄罗斯联邦预算支出（联邦 = 中央口径，不含地方）；2025 历年，预算法审批口径。',
+   diff:['俄罗斯为"联邦"（中央）口径，中国为全国口径。','俄 2025 国防预算约 32.5%（加安全执法合计约 41%），是战时财政的极端结构；中国国防占 6.2%。','俄罗斯社会政策 18% 为联邦直接支出；中国社保由全国统筹+地方分担，且社保基金独立。'],
+   items:[
+     {n:'National Defence',cn:'国防',v:32.5},
+     {n:'Social Policy',cn:'社会政策',v:18.0},
+     {n:'National Economy',cn:'国民经济',v:9.6},
+     {n:'Security & Law Enforcement',cn:'安全与执法',v:8.9},
+     {n:'Debt Service',cn:'债务利息',v:5.1},
+     {n:'Healthcare',cn:'医疗',v:4.1},
+     {n:'Education & Others',cn:'教育及其他',v:21.8}]},
+ JP:{name:'Japan',cn:'日本',unit:'¥115.4 万亿 · FY2025 一般会计预算（财务省）',order:7,
+   scope:'中央一般会计预算：不含地方财政与社会保障特别会计；财年 FY2025（2025.4–2026.3），当初预算。',
+   diff:['日本为"中央一般会计"口径，地方交付税是中央对地方的转移（16.5%），类似印度的对邦转移、中国的中央对地方转移支付。','日本国债费（还本付息）占 24.6%，反映高政府债务（约 GDP 230%）；中国债务付息在"其他"科目内。','日本社会保障 33.2% 为中央负担部分；中国的社保由社保基金独立核算。'],
+   items:[
+     {n:'Social Security',cn:'社会保障',v:33.2},
+     {n:'National Debt Service',cn:'国债费（还本付息）',v:24.6},
+     {n:'Local Allocation Tax Grants',cn:'地方交付税',v:16.5},
+     {n:'Defence',cn:'防卫',v:7.5},
+     {n:'Public Works',cn:'公共事业',v:5.3},
+     {n:'Education & Science',cn:'文教及科学振兴',v:4.8},
+     {n:'Others',cn:'其他',v:8.1}]}
+};
+const ORDER=['CN','US','FR','UK','IN','RU','JP'];
+let cur='CN';
+let guess=[];
+const sliders=[];
+
+/* ---------- SVG helpers ---------- */
+function polar(cx,cy,r,ang){const a=(ang-90)*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+function arcPath(cx,cy,r0,r1,a0,a1){
+  const s=polar(cx,cy,r1,a0),e=polar(cx,cy,r1,a1),si=polar(cx,cy,r0,a0),ei=polar(cx,cy,r0,a1);
+  const large=a1-a0>180?1:0;
+  return `M${s[0].toFixed(2)},${s[1].toFixed(2)} A${r1},${r1} 0 ${large} 1 ${e[0].toFixed(2)},${e[1].toFixed(2)} L${ei[0].toFixed(2)},${ei[1].toFixed(2)} A${r0},${r0} 0 ${large} 0 ${si[0].toFixed(2)},${si[1].toFixed(2)} Z`;
+}
+function fmt(v){return (Math.round(v*10)/10).toFixed(1);}
+function mkEl(tag,attrs,parent){
+  const el=document.createElementNS(ns,tag);
+  for(const k in attrs)el.setAttribute(k,attrs[k]);
+  if(parent)parent.appendChild(el);
+  return el;
+}
+
+/* ---------- pie ---------- */
+function drawPie(svg,data,cx,cy,r,labelR,center1,center2){
+  svg.innerHTML='';
+  const total=data.reduce((s,d)=>s+d.val,0);
+  let ang=0;
+  data.forEach((d,i)=>{
+    const v=Math.max(d.val,0.0001);
+    const sweep=v/total*360;
+    const a0=ang,a1=ang+sweep;ang=a1;
+    const mid=(a0+a1)/2;
+    const pOut=polar(cx,cy,r,mid),pLab=polar(cx,cy,labelR,mid);
+    mkEl('path',{d:arcPath(cx,cy,0,r,Math.min(a0,a1),Math.max(a0,a1)),fill:d.color,stroke:'#fff','stroke-width':1.5},svg);
+    const midAng=((mid%360)+360)%360;
+    const right=midAng<=180;
+    const ex=pLab[0]+(right?26:-26);
+    mkEl('polyline',{points:`${pOut[0].toFixed(1)},${pOut[1].toFixed(1)} ${pLab[0].toFixed(1)},${pLab[1].toFixed(1)} ${ex},${pLab[1].toFixed(1)}`,fill:'none',stroke:'#9fb4ba','stroke-width':1.2},svg);
+    mkEl('text',{x:ex+(right?5:-5),y:pLab[1]-1,'text-anchor':right?'start':'end',class:'pie-label','font-size':'11.5px'},svg).textContent=d.name||'';
+    mkEl('text',{x:ex+(right?5:-5),y:pLab[1]+13,'text-anchor':right?'start':'end',class:'pie-note','font-size':'10.5px'},svg).textContent=d.label;
+  });
+  if(center1!==undefined){
+    mkEl('text',{x:cx,y:cy-4,'text-anchor':'middle',class:'pie-label','font-size':'22px'},svg).textContent=center1;
+    mkEl('text',{x:cx,y:cy+16,'text-anchor':'middle',class:'pie-note','font-size':'11.5px'},svg).textContent=center2||'';
+  }
+}
+
+/* ---------- country switch ---------- */
+function buildTabs(){
+  const tabs=$('#countryTabs');
+  tabs.innerHTML='';
+  ORDER.forEach(k=>{
+    const D=DATA[k];
+    const b=document.createElement('button');
+    b.className='tab'+(k===cur?' active':'');
+    b.innerHTML=`${D.cn} ${D.name}<small>${D.unit.split('·')[0]}</small>`;
+    b.addEventListener('click',()=>{cur=k;buildTabs();initGuess();});
+    tabs.appendChild(b);
+  });
+}
+function initGuess(){
+  const D=DATA[cur];
+  $('#nationName').textContent=`${D.name} · ${D.cn}的财政支出`;
+  $('#nationUnit').textContent=D.unit;
+  $('#noteLine').textContent=`数据口径：${D.scope} 来源见口径说明。`;
+  $('#guessInstr').textContent=`Drag each slider to guess the share of every category in ${D.name}'s government spending. The pie chart updates as you move. Finish your guess, then click "Reveal the truth".`;
+  guess=D.items.map(()=>100/D.items.length);
+  sliders.length=0;
+  const box=$('#sliders');box.innerHTML='';
+  D.items.forEach((it,i)=>{
+    const row=document.createElement('div');row.className='sl-item';
+    row.innerHTML=`<span class="sl-name">${it.n}<small>${it.cn}</small></span>
+      <input type="range" min="0" max="100" step="0.5" value="${fmt(100/D.items.length)}">
+      <span class="sl-val" id="v${i}">${fmt(100/D.items.length)}%</span>`;
+    box.appendChild(row);
+    const inp=row.querySelector('input');
+    sliders.push(inp);
+    inp.addEventListener('input',()=>{
+      let val=parseFloat(inp.value);
+      const others=guess.reduce((a,b,j)=>a+(j===i?0:b),0);
+      const max=100-others;
+      if(val>max){val=max;inp.value=fmt(max);}
+      guess[i]=val;
+      document.getElementById('v'+i).textContent=fmt(val)+'%';
+      updatePie();
+    });
+  });
+  updatePie();
+  $('#guessFb').textContent='';
+}
+function updatePie(){
+  const sum=guess.reduce((a,b)=>a+b,0);
+  const tot=$('#totX');
+  tot.textContent=fmt(sum)+'%';
+  tot.style.color=Math.abs(sum-100)<0.05?'#1b7a22':'';
+  const data=DATA[cur].items.map((it,i)=>({val:guess[i],color:PALETTE[i],label:fmt(guess[i])+'%',name:it.n}));
+  drawPie($('#pieSvg'),data,400,220,135,200,fmt(sum)+'%',`${DATA[cur].name} · your guess`);
+}
+
+/* ---------- comparison (horizontal bars + score) ---------- */
+function scoreOf(){
+  const D=DATA[cur];
+  const per=100/D.items.length;
+  let s=0;
+  D.items.forEach((it,i)=>{const d=Math.abs(guess[i]-it.v);s+=per*Math.max(0,1-d/8);});
+  return Math.round(s);
+}
+function drawBars(){
+  const D=DATA[cur];
+  const wrap=$('#barSvg');wrap.innerHTML='';
+  const n=D.items.length,rowH=40,labW=168,x0=labW+12,top=14;
+  const H=n*rowH+20;
+  const svg=mkEl('svg',{viewBox:`0 0 680 ${H}`,'width':'100%'},wrap);
+  D.items.forEach((it,i)=>{
+    const y=top+i*rowH;
+    const bar=v=>Math.max(v*4.0,1.5);
+    mkEl('text',{x:0,y:y+20,class:'pie-label','font-size':'12px'},svg).textContent=it.n;
+    mkEl('text',{x:0,y:y+33,class:'pie-note','font-size':'10px'},svg).textContent=it.cn;
+    // ACTUAL (dark) top, GUESS (light) bottom
+    mkEl('rect',{x:x0,y:y+2,width:bar(it.v),height:14,fill:'#003f50',rx:3},svg);
+    mkEl('text',{x:x0+bar(it.v)+6,y:y+13,'font-size':'11.5px','font-weight':'800',fill:'#21434d'},svg).textContent=fmt(it.v)+'%';
+    mkEl('rect',{x:x0,y:y+21,width:bar(guess[i]),height:14,fill:'#a8c8e8',rx:3},svg);
+    mkEl('text',{x:x0+bar(guess[i])+6,y:y+32,'font-size':'11.5px','font-weight':'800',fill:'#5b7d8a'},svg).textContent=fmt(guess[i])+'%';
+  });
+}
+function showScore(){
+  const D=DATA[cur];
+  const s=scoreOf();
+  $('#scoreNum').innerHTML=`${s}<small>/100</small>`;
+  const g=s>=85?'Excellent · 优秀':s>=70?'Good · 良好':s>=55?'Fair · 尚可':'Keep trying · 继续加油';
+  $('#scoreGrade').textContent=g;
+  $('#scoreGrade').style.color=s>=70?'#1b7a22':s>=55?'#d2691e':'#c94141';
+  const box=$('#scoreDiff');box.innerHTML='';
+  D.items.forEach((it,i)=>{
+    const d=guess[i]-it.v;
+    box.innerHTML+=`<span class="${Math.abs(d)<=2?'g':'f'}">${it.n.split(' ')[0]} ${d>0?'+':''}${fmt(d)}pp</span>`;
+  });
+  $('#barTitle').textContent=`${D.name} — Guess vs Actual`;
+  $('#cmpTitle').textContent=`${D.cn} · Your Guess vs the Reality`;
+  $('#infoScope').textContent=D.scope;
+  const ul=$('#infoDiff');ul.innerHTML='';
+  D.diff.forEach(t=>{const li=document.createElement('li');li.textContent=t;ul.appendChild(li);});
+}
+$('#revealBtn').addEventListener('click',()=>{
+  $('#viewGuess').classList.remove('on');
+  $('#viewCmp').classList.add('on');
+  drawBars();showScore();
+  window.scrollTo({top:0});
+});
+$('#backBtn').addEventListener('click',()=>{
+  $('#viewCmp').classList.remove('on');
+  $('#viewGuess').classList.add('on');
+  window.scrollTo({top:0});
+});
+$('#restartBtn').addEventListener('click',()=>{
+  $('#viewCmp').classList.remove('on');
+  $('#viewGuess').classList.add('on');
+  initGuess();
+  window.scrollTo({top:0});
+});
+$('#resetBtn').addEventListener('click',()=>{
+  initGuess();
+});
+buildTabs();
+initGuess();
+})();
+</script>
+</body>
+</html>
