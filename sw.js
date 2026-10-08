@@ -1,5 +1,5 @@
 /* 财经基础英语可视化学习集 · Service Worker */
-const CACHE = 'vfe-learn-v12';
+const CACHE = 'vfe-learn-v13';
 const ASSETS = [
   './',
   './index.html',
@@ -21,7 +21,9 @@ const ASSETS = [
   './chapters/chapter7.html',
   './chapters/chapter7-gdp.html',
   './chapters/chapter7-inflation.html',
-  './chapters/chapter9.html'
+  './chapters/chapter9.html',
+  './chapters/chapter9-spending.html',
+  './chapters/chapter9-macropolicy.html'
 ];
 
 self.addEventListener('install', e => {
