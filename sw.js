@@ -1,5 +1,5 @@
 /* 财经基础英语可视化学习集 · Service Worker */
-const CACHE = 'vfe-learn-v11';
+const CACHE = 'vfe-learn-v12';
 const ASSETS = [
   './',
   './index.html',
@@ -12,12 +12,15 @@ const ASSETS = [
   './chapters/chapter1.html',
   './chapters/chapter2.html',
   './chapters/chapter3.html',
+  './chapters/chapter4.html',
   './chapters/chapter5.html',
   './chapters/chapter5-pigs.html',
   './chapters/chapter5-prisoner.html',
   './chapters/chapter5-players.html',
   './chapters/chapter6.html',
   './chapters/chapter7.html',
+  './chapters/chapter7-gdp.html',
+  './chapters/chapter7-inflation.html',
   './chapters/chapter9.html'
 ];
 
