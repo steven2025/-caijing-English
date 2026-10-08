@@ -179,29 +179,37 @@ main.full{height:100vh}
 .mini-rows{display:flex;flex-direction:column;gap:10px;align-items:center}
 .mini-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .mini-card{
-  width:256px;height:94px;border-radius:15px;cursor:pointer;
+  width:182px;height:120px;border-radius:16px;cursor:pointer;
   background:rgba(8,19,14,.72);backdrop-filter:blur(8px);
   border:1px solid rgba(212,175,55,.38);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:8px 14px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:10px 12px;
   box-shadow:0 8px 22px -8px rgba(0,0,0,.6);
   transition:transform .15s,border-color .2s,box-shadow .2s;
   position:relative;overflow:hidden;
+}
+.mini-card.deal{animation:dealIn .6s cubic-bezier(.16,.84,.3,1.12) both}
+@keyframes dealIn{
+  0%{opacity:0;transform:translateY(34px) rotateX(72deg) scale(.86)}
+  70%{opacity:1}
+  100%{opacity:1;transform:none}
 }
 .mini-card::after{
   content:"";position:absolute;inset:0;opacity:0;transition:opacity .25s;
   background:radial-gradient(140px 70px at var(--mx,50%) var(--my,50%),rgba(255,255,255,.12),transparent 70%);
 }
-.mini-card:hover{transform:translateY(-2px);border-color:var(--cc)}
+.mini-card:hover{transform:translateY(-3px);border-color:var(--cc)}
 .mini-card:hover::after{opacity:1}
-.mini-card .line1{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;flex:1 1 auto}
-.mini-card .no{font-size:19px;font-weight:900;color:var(--cc);font-family:Georgia,serif;flex:0 0 auto}
-.mini-card .nm{font-size:14px;font-weight:800;color:var(--ink);white-space:nowrap;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.mini-card .line1{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;width:100%;flex:1 1 auto}
+.mini-card .no{font-size:24px;font-weight:900;color:var(--cc);font-family:Georgia,serif;line-height:1}
+.mini-card .nm{font-size:13.5px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;max-width:100%}
 .mini-card .st{
-  font-size:11px;font-weight:800;border-radius:20px;padding:4px 14px;white-space:nowrap;flex:0 0 auto;
+  font-size:10.5px;font-weight:800;border-radius:20px;padding:3px 12px;white-space:nowrap;flex:0 0 auto;
   background:rgba(113,138,119,.14);color:var(--dim);border:1px solid rgba(113,138,119,.3);
 }
+.mini-card.ready .st{display:none}
 .mini-card.ready{border-color:rgba(212,175,55,.65)}
-.mini-card.ready .st{background:color-mix(in srgb,var(--cc) 20%,transparent);color:var(--cc);border-color:color-mix(in srgb,var(--cc) 55%,transparent)}
+.mini-card.locked-card{opacity:.78;filter:saturate(.55)}
+.mini-card.locked-card .no{opacity:.6}
 .hero .cta{
   margin-top:36px;display:inline-block;border:0;border-radius:40px;padding:13px 48px;
   font-size:16px;font-weight:900;color:#241d05;position:relative;overflow:hidden;
@@ -248,22 +256,26 @@ main.full{height:100vh}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
 @media(max-width:1250px){
-  .mini-card{width:210px;height:86px}
-  .mini-card .nm{font-size:13px}
-  .mini-card .st{font-size:10.5px;padding:3px 12px}
+  .mini-card{width:158px;height:106px}
+  .mini-card .no{font-size:21px}
+  .mini-card .nm{font-size:12.5px}
 }
 @media(max-width:1000px){
-  .mini-card{width:188px;height:82px;padding:7px 12px}
-  .mini-card .nm{font-size:12.5px}
-  .mini-card .st{font-size:10px}
+  .mini-card{width:150px;height:100px;padding:8px 10px}
+  .mini-card .no{font-size:20px}
+  .mini-card .nm{font-size:12px}
   .brand-en{display:none}
 }
 @media(max-width:640px){
-  .mini-card{width:148px;height:52px}
-  .mini-card .no{font-size:15px}
-  .mini-card .nm{font-size:11px}
+  .mini-card{width:132px;height:78px}
+  .mini-card .no{font-size:16px}
+  .mini-card .nm{font-size:10.5px}
+  .mini-card .st{font-size:9px;padding:2px 8px}
   .hero .cta{font-size:14px;padding:11px 34px}
   .back-home{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .mini-card.deal{animation:none}
 }
 </style>
 </head>
@@ -365,9 +377,9 @@ function chip(c){
 }
 function miniCard(c){
   const ready=!!c.file;
-  return `<div class="mini-card ${ready?'ready':''}" data-n="${c.n}" style="--cc:${COLORS[c.n]}">
+  return `<div class="mini-card ${ready?'ready':'locked-card'}" data-n="${c.n}" style="--cc:${COLORS[c.n]}">
     <div class="line1"><span class="no">${String(c.n).padStart(2,'0')}</span><span class="nm">${c.cn}</span></div>
-    <span class="st">${ready?'开始 · Start':'即将上线'}</span>
+    ${ready?'':'<span class="st">即将上线</span>'}
   </div>`;
 }
 function bindGlow(btn){
@@ -385,6 +397,12 @@ function renderNav(){
   nav1.querySelectorAll('.ch-btn').forEach(b=>{bindGlow(b);b.onclick=()=>openChapter(+b.dataset.n)});
   nav2.querySelectorAll('.ch-btn').forEach(b=>{bindGlow(b);b.onclick=()=>openChapter(+b.dataset.n)});
   document.querySelectorAll('.mini-card').forEach(c=>{bindGlow(c);c.onclick=()=>openChapter(+c.dataset.n)});
+  /* 发牌入场：第 1 行从左到右、第 2 行紧随其后，逐张翻入；播完还原静态态让 hover 生效 */
+  const cards=document.querySelectorAll('.mini-card');
+  cards.forEach((c,i)=>{
+    c.classList.add('deal');c.style.animationDelay=(i*85)+'ms';
+    c.addEventListener('animationend',()=>{c.classList.remove('deal');c.style.animationDelay='';},{once:true});
+  });
 }
 function toast(msg){
   const t=$('#toast');t.textContent=msg;t.classList.add('show');
