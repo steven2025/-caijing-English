@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head><meta name="google" content="notranslate"><meta http-equiv="Content-Language" content="en"><!-- 运行时与埋点 SDK 已移除（平台独立部署） --><meta property="og:title" content="prisoners-dilemma"><meta property="og:image" content="https://lf3-static.bytednsdoc.com/obj/eden-cn/ylcylz_fsph_ryhs/ljhwZthlaukjlkulzlp/feisuda/avatar/1.svg">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Dungeon Tavern — Prisoner's Dilemma</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230e0b09'/%3E%3Crect x='4' y='3' width='8' height='9' fill='%233a545c'/%3E%3Crect x='6' y='2' width='4' height='2' fill='%23c9772f'/%3E%3Crect x='5' y='5' width='6' height='2' fill='%23ffb45e'/%3E%3C/svg%3E">
+<style>
+@font-face{
+  font-family:"PixelPop";
+  src:url(data:font/woff2;base64,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) format("woff2");
+  font-weight:400;font-display:swap;
+}
+@font-face{
+  font-family:"PixelPop";
+  src:url(data:font/woff2;base64,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) format("woff2");
+  font-weight:700;font-display:swap;
+}
+:root{
+  --bg-deep:#0b0907;
+  --stone:#161e20;
+  --cold:#35525b;
+  --fire:#ffb45e;
+  --fire-deep:#c9772f;
+  --ember:#8a4b1e;
+  --parch:#c9b384;
+  --mist-line:rgba(214,220,226,.22);
+  --text:#d8cdb8;
+  --text-dim:#837d6f;
+  --verd:#7ba06a;
+  --blood:#e0826a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg-deep);color:var(--text);
+  font-family:"PixelPop","Cubic 11","Microsoft YaHei",ui-monospace,monospace;
+  font-size:13px;line-height:1.7;overflow:hidden;
+  -webkit-font-smoothing:none;
+}
+/* 噪点 */
+.grain{position:fixed;inset:-50%;width:200%;height:200%;pointer-events:none;z-index:80;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  opacity:.06;mix-blend-mode:overlay;animation:grainShift .9s steps(2) infinite;}
+@keyframes grainShift{0%{transform:translate(0,0)}50%{transform:translate(-2%,1%)}100%{transform:translate(1%,-2%)}}
+
+/* ===== 黑雾按钮（无清晰轮廓，形状贴合单词长度） ===== */
+.mist{
+  position:relative;
+  display:inline-flex;align-items:center;justify-content:center;gap:.6em;
+  padding:.95em 1.9em;
+  border:none;border-radius:999px;
+  color:#cfd3d6;text-shadow:0 1px 2px rgba(0,0,0,.75);
+  white-space:nowrap;user-select:none;
+  background:
+    radial-gradient(38% 55% at 30% 38%, rgba(28,30,36,.92), transparent 70%),
+    radial-gradient(42% 60% at 68% 62%, rgba(14,16,20,.88), transparent 72%),
+    radial-gradient(60% 80% at 50% 50%, rgba(8,9,12,.65), transparent 85%);
+  -webkit-mask-image:radial-gradient(85% 100% at 50% 50%, #000 20%, rgba(0,0,0,.65) 48%, transparent 86%);
+  mask-image:radial-gradient(85% 100% at 50% 50%, #000 20%, rgba(0,0,0,.65) 48%, transparent 86%);
+  box-shadow:0 0 30px 14px rgba(4,5,8,.45), 0 0 90px 36px rgba(4,5,8,.22);
+}
+.mist::before{ /* 黑雾向四周扩散 */
+  content:"";position:absolute;inset:-48px;z-index:-1;
+  background:radial-gradient(62% 64% at 50% 50%, rgba(0,0,0,.62), transparent 68%);
+  filter:blur(28px);
+}
+.mist::after{ /* 雾中颗粒 */
+  content:"";position:absolute;inset:6px;border-radius:999px;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23m)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity:.18;mix-blend-mode:overlay;
+}
+.mist svg{flex:0 0 auto}
+.mist-click{cursor:pointer;transition:transform .12s steps(2),filter .12s;}
+.mist-click:hover{transform:translateY(-2px);filter:brightness(1.18)}
+.mist-click:active{transform:translateY(1px) scale(.98)}
+.mist-click:focus-visible{outline:2px solid var(--fire);outline-offset:3px}
+.mist.ghost{opacity:.5}
+.mist.sm{padding:.6em 1.1em;font-size:10px}
+.mist.lg{padding:1.1em 2.1em;font-size:13px}
+
+/* ===== 布局 ===== */
+#app{position:fixed;inset:0}
+.view{position:absolute;inset:0;display:none}
+.view.active{display:block}
+.scene{position:absolute;inset:0;background-size:cover;background-position:center;
+  image-rendering:pixelated;filter:brightness(.48) saturate(.82) contrast(1.06);}
+.scene::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 50% 30%,transparent 38%,rgba(6,4,2,.78) 100%);}
+
+/* 顶栏 */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:70;display:flex;align-items:center;justify-content:space-between;padding:14px 16px;pointer-events:none}
+.topbar>*{pointer-events:auto}
+.brand{display:flex;align-items:center;gap:.6em;font-size:12px;color:var(--text-dim);letter-spacing:.12em}
+.brand .dot{width:9px;height:9px;background:var(--fire-deep);box-shadow:0 0 8px var(--fire)}
+.top-actions{display:flex;gap:10px;align-items:center}
+.header-credits{flex:0 0 auto;display:flex;align-items:center;gap:.7em;font-size:10px;line-height:1.4;color:rgba(216,205,184,.72);letter-spacing:.04em;white-space:nowrap}
+.header-credits b{color:var(--fire);font-weight:700}
+.brand .zh, body.help .brand .zh{display:inline;color:var(--text-dim)}
+
+/* ===== 开场 ===== */
+#intro .panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(880px,92vw);text-align:center;z-index:5}
+.title-logo{font-size:clamp(28px,6vw,56px);color:var(--fire);letter-spacing:.08em;
+  text-shadow:0 3px 0 var(--ember),0 0 26px rgba(255,180,94,.45);line-height:1.5}
+.title-sub{margin-top:14px;font-size:13px;color:var(--text-dim);letter-spacing:.22em}
+.caption{margin:22px auto 0;max-width:680px;min-height:3.4em;font-size:14px;color:var(--parch);line-height:1.9;text-shadow:0 1px 2px rgba(0,0,0,.9)}
+body.help .caption .zh{display:block;margin-top:8px;font-size:12px;color:var(--text-dim);line-height:1.6}
+.caption.done{color:var(--fire)}
+.intro-hint{margin-top:26px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+/* ===== 规则纸 ===== */
+.rule-modal{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;background:rgba(8,6,4,.74);backdrop-filter:blur(2px)}
+.rule-modal.open{display:flex}
+.parchment{position:relative;width:min(600px,92vw);max-height:86vh;overflow:auto;
+  background:radial-gradient(ellipse at 20% 15%,rgba(255,240,200,.16),transparent 60%),
+    radial-gradient(ellipse at 85% 90%,rgba(90,60,25,.28),transparent 55%),
+    repeating-linear-gradient(0deg,rgba(120,90,40,.05) 0 2px,transparent 2px 4px),
+    linear-gradient(160deg,#d8c493,#b9a072 55%,#a08a5e);
+  color:#3b2f1d;border:3px solid #6e5a36;border-radius:4px;padding:28px 30px;
+  box-shadow:0 12px 40px rgba(0,0,0,.6),inset 0 0 40px rgba(90,60,20,.35);
+  font-family:"Cubic 11","Microsoft YaHei",serif;}
+.parchment::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:4px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23p)' opacity='0.6'/%3E%3C/svg%3E");
+  opacity:.13;mix-blend-mode:multiply;}
+.parchment h3{font-size:15px;letter-spacing:.14em;margin-bottom:14px;text-align:center}
+.parchment p{font-size:13px;line-height:2;color:#45371f;margin-bottom:10px}
+.parchment .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed rgba(80,60,30,.4);padding:6px 2px;font-size:13px}
+.parchment .row span:first-child{font-weight:bold}
+body.help .parchment .zh{display:block;font-size:11px;color:rgba(60,48,28,.78)}
+.rule-close{position:absolute;top:-14px;right:-14px}
+
+/* ===== 游戏 ===== */
+#game .stage-top{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column}
+.inq-stage{position:absolute;left:50%;top:5%;transform:translateX(-50%);z-index:3;
+  display:flex;flex-direction:column;align-items:center;gap:6px}
+.inq-portrait{width:clamp(180px,26vw,330px);height:auto;border-radius:6px;
+  box-shadow:0 16px 40px rgba(0,0,0,.65),0 0 40px rgba(255,150,60,.12);
+  image-rendering:pixelated;filter:brightness(.92) saturate(.92)}
+.inq-name{font-size:9px;letter-spacing:.26em;color:var(--text-dim)}
+/* 对话框 */
+.dialogue{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%);z-index:6;width:min(760px,94vw);text-align:center}
+.inq-line{font-size:clamp(18px,3.4vw,28px);color:#fff;letter-spacing:.05em;line-height:1.8;
+  text-shadow:0 2px 0 rgba(0,0,0,.65);min-height:3.2em}
+/* 说话人区分：警官暖金（默认），旁白·回忆与内心独白用冷色 */
+.inq-line.narr{color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.75)}
+/* 打字光标：跟在最后一个字母后面闪烁 */
+.type-caret{display:inline-block;width:.42em;height:.92em;margin-left:.1em;vertical-align:-.12em;
+  background:#fff;box-shadow:0 0 8px rgba(255,255,255,.5);animation:caretBlink .5s steps(2) infinite}
+@keyframes caretBlink{0%,49%{opacity:1}50%,100%{opacity:.12}}
+/* 打字机双层堆叠：隐形全文撑出最终宽度（整句居中），可见层叠在同一格逐字打出（字母位置固定） */
+.type-stack{display:grid}
+/* 起源字幕的 cap-line 有 ID 级 display:block 规则，必须用同样高的优先级覆盖 */
+#originCap .cap-line.type-stack{display:grid}
+.type-stack>*{grid-area:1/1}
+.type-ghost{visibility:hidden}
+.type-live{text-align:inherit}
+#originCap .cap-line .type-spk{color:var(--parch);margin-right:.6em;font-size:.85em;letter-spacing:.06em}
+body.help .inq-line .zh{display:block;font-size:13px;color:var(--text-dim);margin-top:10px;line-height:1.7}
+/* 中部按钮区 */
+.mid-col{position:absolute;left:50%;top:50%;transform:translateX(-50%);z-index:7;width:min(780px,94vw);text-align:center}
+.choices{display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
+.choice-btn{flex-direction:column;gap:.5em;padding:1.5em 2.8em;font-size:19px}
+.choice-btn .sub{display:block;margin-top:.4em;font-size:12px;letter-spacing:.16em;color:#9aa0a6;line-height:1.6}
+body.help .choice-btn .sub .zh{display:block;font-size:10px;color:#757b81;margin-top:3px;line-height:1.5}
+.choice-btn .ico{font-size:24px;line-height:1}
+.confirm-btn{padding:1.5em 2.6em;font-size:17px;max-width:100%}
+/* waiting */
+.waiting{display:none;flex-direction:column;align-items:center;gap:12px}
+.waiting.show{display:flex}
+.waiting .dots{display:flex;gap:8px}
+.waiting .dots i{width:9px;height:9px;background:var(--fire-deep);box-shadow:0 0 8px var(--fire);animation:blink 1s steps(2) infinite}
+.waiting .dots i:nth-child(2){animation-delay:.2s}.waiting .dots i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
+/* 揭晓 */
+.reveal{display:none;flex-direction:column;align-items:center;gap:12px;width:100%}
+.reveal.show{display:flex;animation:pop .3s steps(3)}
+@keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+.pair-tags{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.verdict{font-size:clamp(13px,2.6vw,19px);line-height:2;color:var(--text);text-shadow:0 2px 0 rgba(0,0,0,.65);max-width:680px}
+body.help .verdict .zh{display:block;font-size:10px;color:var(--text-dim);margin-top:4px}
+.verdict b{color:var(--fire)}
+.verdict.bad b{color:var(--blood)}
+.verdict.good b{color:var(--verd)}
+/* 揭晓态：对话区此时为空但占着 3 行高度，直接隐藏；整块垂直居中，杜绝判决文字与矩阵/按钮叠压 */
+#game.reveal-on .dialogue{display:none}
+#game.reveal-on .mid-col{top:50%;transform:translate(-50%,-50%)}
+#revealNext{margin-top:14px;font-size:15px;padding:1.1em 2.2em}
+/* 悔问 */
+.regret{display:flex;flex-direction:column;align-items:center;gap:22px}
+.regret.show{display:flex}
+.regret-q{font-size:clamp(22px,5vw,40px);color:var(--fire);letter-spacing:.04em;line-height:1.6;
+  text-shadow:0 3px 0 var(--ember),0 0 26px rgba(255,180,94,.4);max-width:820px}
+body.help .regret-q .zh{display:block;font-size:12px;color:var(--text-dim);margin-top:8px;letter-spacing:.05em}
+.regret-opts{display:flex;gap:22px;justify-content:center;flex-wrap:wrap}
+.regret-opts .mist{font-size:clamp(16px,3vw,22px);padding:1.1em 2.6em}
+/* 结局后段：So, what did you get? + 四选项 → THE END */
+.finale{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;width:min(860px,94vw)}
+.finale-q{font-size:clamp(20px,3.6vw,30px);color:var(--fire);letter-spacing:.05em;line-height:1.7;
+  text-shadow:0 2px 0 rgba(0,0,0,.7);width:100%;text-align:center}
+.finale-opts{display:flex;flex-direction:column;align-items:stretch;gap:10px;width:100%}
+.finale-opts .mist{font-size:clamp(13px,2vw,17px);padding:.8em 1.4em;max-width:100%;white-space:normal;text-align:center;line-height:1.55;
+  -webkit-mask-image:none;mask-image:none;border:1px solid rgba(255,180,94,.38);border-radius:12px;
+  background:rgba(10,12,17,.85);box-shadow:0 0 22px rgba(0,0,0,.55)}
+.finale-end{font-size:clamp(30px,6.5vw,64px);color:var(--fire);letter-spacing:.16em;line-height:1.4;
+  text-shadow:0 3px 0 var(--ember),0 0 30px rgba(255,180,94,.5);animation:pop .4s steps(3)}
+/* 矩阵 */
+/* 矩阵：收进 #reveal 文档流，跟随判决文字排版，不再绝对定位 */
+.matrix-wrap{width:min(560px,92vw);margin:10px auto 0;z-index:5;opacity:.96}
+.matrix{display:grid;grid-template-columns:72px 1fr 1fr;grid-template-rows:24px 1fr 1fr;gap:5px}
+.matrix .axis{display:flex;align-items:center;justify-content:center}
+.matrix .axis .mist{flex-direction:column;padding:.45em .6em;font-size:10px;letter-spacing:.06em;line-height:1.7;text-align:center;max-width:100%;white-space:normal}
+body.help .matrix .axis .mist .zh{display:block;font-size:9px;color:#767c82;margin-top:1px}
+.matrix .cell{position:relative;border-radius:8px;min-height:54px;background:rgba(20,25,30,.6);overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  background:linear-gradient(160deg,rgba(40,52,58,.7),rgba(20,26,29,.85));
+  border:2px solid rgba(90,104,112,.32);
+  box-shadow:inset 0 0 18px rgba(0,0,0,.5);
+  transition:filter .25s,box-shadow .25s,border-color .25s,opacity .25s;}
+.matrix .cell .who{font-size:9px;letter-spacing:.06em;color:var(--text-dim);text-align:center;line-height:1.4;opacity:0;transition:opacity .3s}
+.matrix .cell.lit .who, .matrix .cell.hist .who{opacity:1}
+body.help .matrix .cell .who .zh{display:block;font-size:9px;color:#6f767c}
+.matrix .cell .years{font-size:17px;color:var(--text);text-shadow:0 2px 0 rgba(0,0,0,.6);opacity:0;transition:opacity .3s}
+.matrix .cell.lit .years, .matrix .cell.hist .years{opacity:1}
+.matrix .cell .glow{position:absolute;inset:0;border-radius:8px;opacity:0;transition:opacity .3s;
+  box-shadow:inset 0 0 30px rgba(255,180,94,.32),0 0 26px rgba(255,150,60,.4)}
+.matrix .cell.lit{border-color:var(--fire);
+  background:linear-gradient(160deg,rgba(201,119,47,.42),rgba(60,34,12,.66));}
+.matrix .cell.lit .glow{opacity:1}
+.matrix .cell.lit .years{color:var(--fire);text-shadow:0 0 12px rgba(255,180,94,.85)}
+.matrix .cell.hist{border-color:rgba(90,120,134,.35);
+  background:linear-gradient(160deg,rgba(36,52,58,.5),rgba(16,22,24,.6));
+  opacity:.42;filter:saturate(.5)}
+.matrix .cell.hist .years{color:#6f848d}
+/* 黑屏过渡：全局唯一一层黑幕，淡入淡出都由它完成 */
+#blackout{position:fixed;inset:0;background:#000;z-index:200;opacity:0;pointer-events:none;
+  transition:opacity .8s ease;will-change:opacity}
+#blackout.on{opacity:1}
+
+.hidden{display:none!important}
+/* 起源过场字幕带：界面底部 1/4 */
+#originCap{position:absolute;left:0;right:0;top:75%;bottom:0;z-index:7;display:flex;flex-direction:column;justify-content:center;gap:6px;padding:0 5% 2%;text-align:left;font-size:clamp(17px,2.8vw,23px);line-height:1.7;letter-spacing:.04em;background:linear-gradient(to top,rgba(6,8,12,.9) 55%,rgba(6,8,12,0));text-shadow:0 2px 0 rgba(0,0,0,.8)}
+#originCap .cap-line{display:block}
+#originCap #originSpk{color:var(--parch);margin-right:.6em;font-size:.85em;letter-spacing:.06em}
+#originCap #originEn{color:#fff}
+#originCap.cap-buchanan #originEn{color:#fff}
+#originCap.cap-narr #originEn{color:#fff}
+#originCap.cap-officer #originEn{color:#fff}
+body.help #originCap .zh{display:block;font-size:.72em;color:var(--text-dim);line-height:1.7}
+.zh{display:none}
+body.help .zh{display:block}
+body.help .mist .zh{display:block;font-size:9px;color:#9aa0a6;margin-top:4px;letter-spacing:.04em}
+
+@media (max-width:760px){
+  body{font-size:11px}
+  .topbar{padding:10px}
+  .brand{font-size:8px}
+  .header-credits{display:none}
+  .mist{padding:.8em 1.3em}
+  .inq-portrait{width:150px}
+  .inq-stage{top:4%}
+  .dialogue{top:50%}
+  .mid-col{top:72%}
+  .matrix{grid-template-columns:64px 1fr 1fr;grid-template-rows:30px 1fr 1fr;gap:4px}
+  .matrix .cell{min-height:60px}
+  .matrix .cell .years{font-size:13px}
+  .choice-btn{padding:.8em 1.1em;font-size:13px}
+  .inq-line{font-size:15px;min-height:3em}
+  .caption{font-size:10px}
+  .regret-q{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .grain{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- 顶栏 -->
+<header class="topbar">
+  <div class="brand"><span class="dot"></span><span>PRISONER'S DILEMMA<span class="zh"> · 囚徒困境</span></span></div>
+  <div class="header-credits">课程设计：<b>罗敏</b> 重庆工商大学<i class="sep">·</i>程序开发：<b>范雨果</b> 25会计五班</div>
+  <div class="top-actions">
+    <button id="muteBtn" class="mist sm mist-click" role="switch" aria-checked="true">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M1 5h3l3-3v10l-3-3H1z"/><path d="M9 4l3 3-3 3z" opacity=".7"/></svg>
+      <span id="muteLabel">SOUND ON</span>
+    </button>
+    <button id="helpBtn" class="mist sm mist-click">HELP<span class="zh"> / 求助</span></button>
+  </div>
+</header>
+
+<!-- 视图：开场 -->
+<section id="intro" class="view active">
+  <div class="scene" style="background-image:url('https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/1.png')"></div>
+  <div class="panel">
+    <div class="title-logo">PRISONER'S<br>DILEMMA</div>
+    <div class="intro-hint" style="margin-top:40px">
+      <button id="startBtn" class="mist mist-click lg">START ▶<span class="zh"> 开始</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- 视图：游戏 -->
+<section id="game" class="view">
+  <div class="scene" id="gameScene"></div>
+  <div class="stage-top">
+    <!-- 对话框（警官已在场景图中） -->
+    <div class="dialogue">
+      <div class="inq-line" id="inqLine"></div>
+    </div>
+    <!-- 中部按钮区 -->
+    <div class="mid-col">
+      <div class="choices" id="choiceA">
+        <button id="btnCoop" class="mist mist-click choice-btn">
+          <span class="ico">🤝</span><span>COOPERATE<span class="sub">stay silent<span class="zh">保持沉默，不指认对方</span></span></span>
+        </button>
+        <button id="btnDefect" class="mist mist-click choice-btn">
+          <span class="ico">🗡️</span><span>DEFECT<span class="sub">confess<span class="zh">坦白，指认对方</span></span></span>
+        </button>
+      </div>
+      <div class="choices hidden" id="choiceB">
+        <button id="btnChange" class="mist mist-click confirm-btn">Change my mind<span class="zh">改变</span></button>
+        <button id="btnConfirm" class="mist mist-click confirm-btn">Stick to it<span class="zh">不改</span></button>
+      </div>
+      <div class="waiting" id="waiting">
+        <span class="mist sm">B is making its choice...<span class="zh">B 正在做出选择……</span></span>
+        <div class="dots"><i></i><i></i><i></i></div>
+      </div>
+      <div class="reveal" id="reveal">
+        <div class="pair-tags" id="pairTags">
+          <span class="mist sm" id="youTag">YOU —</span>
+          <span class="mist sm" id="bTag">BUCHANAN —</span>
+        </div>
+        <div class="verdict" id="verdict"></div>
+        <div class="matrix-wrap hidden" id="matrix-wrap">
+          <div class="matrix" id="matrix">
+            <div class="axis"></div>
+            <div class="axis"><span class="mist sm">YOU COOPERATE<span class="zh">你合作</span></span></div>
+            <div class="axis"><span class="mist sm">YOU DEFECT<span class="zh">你背叛</span></span></div>
+            <div class="axis"><span class="mist sm">B COOPERATES<span class="zh">B 合作</span></span></div>
+            <div class="cell" id="c_CC"><div class="who">YOU 1YR · B 1YR<span class="zh">双双沉默</span></div><div class="years">1·1</div><div class="glow"></div></div>
+            <div class="cell" id="c_DC"><div class="who">YOU FREE · B 10YR<span class="zh">你背叛 B 沉默</span></div><div class="years">0·10</div><div class="glow"></div></div>
+            <div class="axis"><span class="mist sm">B DEFECTS<span class="zh">B 背叛</span></span></div>
+            <div class="cell" id="c_CD"><div class="who">YOU 10YR · B FREE<span class="zh">你沉默 B 背叛</span></div><div class="years">10·0</div><div class="glow"></div></div>
+            <div class="cell" id="c_DD"><div class="who">YOU 8YR · B 8YR<span class="zh">双双背叛</span></div><div class="years">8·8</div><div class="glow"></div></div>
+          </div>
+        </div>
+
+        <button id="revealNext" class="mist mist-click">CONTINUE ▶<span class="zh"> 继续</span></button>
+      </div>
+      <div class="regret hidden" id="regretBox">
+        <div class="regret-q" id="regretQ">Do you regret the choices you've made?<span class="zh">你后悔自己做出的选择吗？</span></div>
+        <div class="regret-opts">
+          <button id="regretYes" class="mist mist-click lg">Yes<span class="zh">重开</span></button>
+          <button id="regretNo" class="mist mist-click lg">No<span class="zh">继续</span></button>
+        </div>
+      </div>
+      <div class="finale hidden" id="finaleBox">
+        <div class="finale-q" id="finaleQ"></div>
+        <div class="finale-opts" id="finaleOpts"></div>
+        <div class="finale-end hidden" id="finaleEnd">THE END</div>
+      </div>
+    </div>
+  </div>
+  <div id="originCap" class="hidden">
+    <div class="cap-line"><span id="originSpk"></span><span id="originEn"></span></div>
+    <span class="zh" id="originZh"></span>
+  </div>
+  <button id="originNext" class="mist mist-click hidden" style="position:absolute;right:3%;bottom:3.5%;z-index:9;">CONTINUE ▶<span class="zh"> 继续</span></button>
+</section>
+
+<!-- 黑屏过渡 -->
+<div id="blackout"></div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+
+/* ===== 状态 ===== */
+let round=0, strategy=null, pendingChoice=null, lastPlayer=null, historyCells=[];
+let firstChoice=null, finalChoice=null;   /* 初选 / 最终提交（选“改变”则取反初选） */
+let shownYou=null, shownB=null;           /* 当前揭晓画面用的组合，供「继续」回看时复用 */
+let phase='idle'; /* idle | listening | ask | confirm | waiting | reveal | regret */
+let busy=false;   /* 黑屏转场进行中：屏蔽一切输入，防止转场叠加 */
+let muted=false;   /* 每次进入默认有声：不再继承上次的静音状态（曾导致"一进去没音乐"） */
+let helpOn=false;
+
+/* ===== Web Audio 音效 ===== */
+let AC=null;
+function ensureAC(){ if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}} if(AC&&AC.state==='suspended')AC.resume(); return AC; }
+function tone(freq,dur,type,vol,when){ try{ const ctx=ensureAC(); if(!ctx||muted)return;
+  const t=ctx.currentTime+(when||0); const o=ctx.createOscillator(),g=ctx.createGain();
+  o.type=type||'square'; o.frequency.setValueAtTime(freq,t);
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol||0.14,t+0.008);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+dur+0.02);
+}catch(e){} }
+function noiseBurst(dur,vol,when,lp){ try{ const ctx=ensureAC(); if(!ctx||muted)return;
+  const t=ctx.currentTime+(when||0); const len=Math.max(1,Math.floor(ctx.sampleRate*dur));
+  const buf=ctx.createBuffer(1,len,ctx.sampleRate); const d=buf.getChannelData(0);
+  for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*(1-i/len);
+  const s=ctx.createBufferSource(); s.buffer=buf; const g=ctx.createGain(); g.gain.value=vol||0.1;
+  let n=s; if(lp){const f=ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=lp; s.connect(f); n=f;}
+  n.connect(g); g.connect(ctx.destination); s.start(t);
+}catch(e){} }
+/* 人声配音（playLine / tts）播放期间打字 blip 自动静音，播完恢复——避免与人声打架 */
+let voicePlaying=false;
+const sfx={
+  click(){ tone(180,.07,'square',.11); tone(260,.05,'square',.07,.02); },
+  /* 选项点击：MC 放置方块般的短促木质"tuk"——宽带噪声做敲击头，加两个下滑正弦做木质腔体 */
+  choose(){ noiseBurst(.045,.3,0,1500); tone(235,.05,'square',.1); tone(165,.09,'sine',.22,.008); tone(115,.08,'sine',.13,.05); },
+  reveal(){ tone(70,.18,'sine',.26); tone(55,.22,'sine',.2,.02); tone(440,.09,'square',.07,.28); tone(660,.07,'square',.06,.32); },
+  paper(){ noiseBurst(.18,.11,0,900); tone(220,.08,'sine',.05,.03); },
+  door(){ tone(110,.22,'sawtooth',.1); noiseBurst(.25,.1,0,500); },
+  /* 打字 blip：每字一响的短促方波（Undertale 式），旁白偏低、警官偏高 */
+  blip(who){ if(voicePlaying) return; const base = who==='narr' ? 300 : (who==='officer' ? 560 : 430);
+    tone(base*(0.92+Math.random()*0.16), .035, 'square', .045); },
+  blackout(){ tone(60,.9,'sine',.22); noiseBurst(.8,.08,0,300); }
+};
+
+/* ===== 逐字打字机（Undertale 式）：逐字打出 + 每字 blip + 跟随光标 =====
+   说话人名（Buchanan: / OFFICER: / NARRATOR:）在独立元素里直接显示，不参与打字。
+   速度：此前的 0.7 倍（每字 37ms）；标点额外停顿，读起来有呼吸。
+   起手时机：黑幕完全消失之后才开打（typeGate 闸门），不在黑屏中途偷跑。
+   居中不跳字：双层堆叠（.type-stack）——隐形全文（.type-ghost）撑出最终宽度使整句居中，
+   可见层（.type-live）叠在同一格子上逐字打出，字母位置与最终完全一致，光标跟随右移。
+   测试钩子：window.PD_TYPE_MS=0 关闭打字（smoke2.js 用它跑回归）。 */
+const TYPE_MS = (typeof window!=='undefined' && typeof window.PD_TYPE_MS==='number') ? window.PD_TYPE_MS : 37;
+const TYPE_PAUSE = {'.':370,'!':370,'?':370,',':185,';':230,':':170};
+let typeTimer=null, typeCtl=null, typeGate=false, typePending=null;
+
+/* ===== 打字节奏跟随真人配音（2026-10-06）=====
+   要求："话说到哪，字出现到哪；音频一个字节都不改"。
+   做法：不改音频，只让打字机以音频播放位置为唯一时间基准——
+     VOICE_DUR[id] = [起声偏移 ms, 有效语音时长 ms]（measure_voice.py 实测，去掉头尾静音）
+     每帧读 audio.currentTime：播到 40% 就打到 40% 的字，语音停顿（词间空白）时字也停。
+   这样无论人声多快多慢、中间停多久，文字都贴着声音走，且音频文件本身完全没动。
+   无配音的句子（NO_VOICE）与静音状态：curVoice=null，走原来的固定速度 TYPE_MS。
+   VOICE_COVER：音频只念了显示文本的前 N 个字符时填 N（超出部分按固定速度补完）；
+   不填 = 音频覆盖整句。 */
+const VOICE_DUR = {
+  o1:[140,7480], o2:[140,4320], o3:[140,8760], o4:[140,3560],
+  pressC:[100,12260], pressCC:[140,5520], pressDC:[140,3820], soul:[160,2660],
+  regret:[200,1820], v_CC:[200,5260], v_CD:[220,6480], v_DC:[220,4400], v_DD:[240,3260]
+};
+/* soul 素材只念了前一句（"Are you sure you want to do this?"，含引号 35 字符），
+   后半句是画面文字、无人声 → 前半句跟着声音走，后半句回到固定速度。 */
+const VOICE_COVER = { soul:35 };
+let curVoice=null;        /* 当前句正在播的人声 {a, lead, span, cover}；无配音时为 null */
+let pendingVoice=null;    /* 黑幕未散时挂起的人声起播函数，等黑幕散尽与打字同时出发 */
+
+function caretNew(){ const c=document.createElement('span'); c.className='type-caret'; return c; }
+function caretDel(ctl){ try{ if(ctl&&ctl.caret&&ctl.caret.parentNode) ctl.caret.parentNode.removeChild(ctl.caret); }catch(e){} }
+function typeCancel(){ if(typeTimer){ clearTimeout(typeTimer); typeTimer=null; } typeCtl=null; typePending=null; }
+function typeFlush(){   /* 立即补全（切场景 / 点击继续时调用） */
+  const c=typeCtl||typePending;
+  typeCtl=null; typePending=null;
+  if(typeTimer){ clearTimeout(typeTimer); typeTimer=null; }
+  if(!c) return;
+  try{ if(c.live){ c.live.textContent=c.text; } else if(c.el) c.el.textContent=c.text; }catch(e){}
+  caretDel(c);
+  try{ if(c.after) c.after(); }catch(e){}
+}
+function typeStart(ctl){
+  typeCtl=ctl; typeTimer=null;
+  const n=ctl.text.length;
+  const v=curVoice;                                    /* 本句的人声（没有则为 null） */
+  const cover=(v&&v.cover)?Math.min(n,v.cover):n;      /* 跟着声音走的前 N 个字 */
+  const now=()=>(typeof performance!=='undefined'&&performance.now)?performance.now():Date.now();
+  const t0=now();
+  let i=0, started=false, stalled=false;
+  const put=function(k){                               /* 一次补 k 个字符 */
+    for(let q=0;q<k && i<n;q++){
+      const ch=ctl.text[i++];
+      ctl.live.insertBefore(document.createTextNode(ch), ctl.caret);  /* 追加在光标前，已有字母位置不动 */
+      if(ch!==' ' && ch!=='\n') sfx.blip(ctl.who);
+    }
+  };
+  const step=()=>{
+    if(typeCtl!==ctl) return;                          /* 已被新一句取代，自动作废 */
+    if(i>=n){ typeCtl=null; typeTimer=null; caretDel(ctl);
+      if(ctl.after) try{ ctl.after(); }catch(e){} return; }
+    let d;
+    if(v && i<cover && !stalled){
+      /* 时间轴模式：音频播到百分之几，字就出到百分之几——声音停（词间停顿）字也停 */
+      const t=(v.a.currentTime||0)*1000 - v.lead;
+      if(t>0) started=true;
+      if(!started && now()-t0>1500) stalled=true;      /* 音频压根没跑起来 → 退回定速，不至于卡住 */
+      if(!stalled){
+        if(t<0) d=40;                                  /* 还在前导静音里，先等声音出来 */
+        else{
+          const target=Math.min(cover, Math.round(Math.min(1, t/v.span)*cover));
+          if(target>i){ put(target-i); d=16; }         /* 追平进度 */
+          else d=Math.max(16, Math.min(48, v.span/cover));
+        }
+      }
+    }
+    if(d===undefined){                                 /* 定速模式：无人声 / 超出人声覆盖范围 */
+      const ch=ctl.text[i++];
+      ctl.live.insertBefore(document.createTextNode(ch), ctl.caret);
+      if(ch!==' ' && ch!=='\n') sfx.blip(ctl.who);
+      d=TYPE_MS + (TYPE_PAUSE[ch]||0);
+    }
+    typeTimer=setTimeout(step, d);
+  };
+  typeTimer=setTimeout(step, v?0:90);                  /* 有人声就立刻起跑，与声音同时出发 */
+}
+function typeText(el, text, who, after){
+  typeFlush();
+  if(!el) return;
+  text = text||'';
+  if(TYPE_MS<=0){ el.textContent=text; if(after) try{after();}catch(e){} return; }
+  el.classList.add('type-stack');
+  el.textContent='';
+  const ghost=document.createElement('span'); ghost.className='type-ghost'; ghost.textContent=text;
+  const live=document.createElement('span');  live.className='type-live';
+  const caret=caretNew();                     /* 光标跟在已打出的最后一个字母后面 */
+  live.appendChild(caret);
+  el.appendChild(ghost); el.appendChild(live);
+  const ctl={el:el,live:live,text:text,who:who,after:after,caret:caret};
+  if(typeGate){ typePending=ctl; return; }    /* 黑幕还在 → 等它散尽 */
+  typeStart(ctl);
+}
+/* 起源字幕：说话人名 + 正文在同一行整体居中，双层堆叠不打字跳位（人名不打） */
+function typeOrigin(spk, text, who, after){
+  const line=document.querySelector('#originCap .cap-line');
+  if(!line) return;
+  if(TYPE_MS<=0){
+    const sp=$('originSpk'); sp.textContent=spk; sp.style.display=spk?'':'none';
+    $('originEn').textContent=text;
+    if(after) try{after();}catch(e){}
+    return;
+  }
+  typeFlush();
+  line.classList.add('type-stack');
+  line.textContent='';
+  const ghost=document.createElement('span'); ghost.className='type-ghost';
+  const live=document.createElement('span');  live.className='type-live';
+  if(spk){
+    const gs=document.createElement('span'); gs.className='type-spk'; gs.textContent=spk; ghost.appendChild(gs);
+    const ls=document.createElement('span'); ls.className='type-spk'; ls.textContent=spk; live.appendChild(ls);
+  }
+  ghost.appendChild(document.createTextNode(text));
+  const en=document.createElement('span'); en.id='originEn';    /* 颜色规则仍挂在 #originEn 上 */
+  const caret=caretNew();
+  en.appendChild(caret); live.appendChild(en);
+  line.appendChild(ghost); line.appendChild(live);
+  const ctl={el:en,live:en,text:text,who:who,after:after,caret:caret};
+  if(typeGate){ typePending=ctl; return; }
+  typeStart(ctl);
+}
+function typeGateClose(){ typeGate=true; pendingVoice=null; }   /* 黑屏开始：禁止起手（连挂起的人声一起作废） */
+function typeGateOpen(){                      /* 黑幕完全消失：声音与打字同时出发 */
+  typeGate=false;
+  const v=pendingVoice; pendingVoice=null;
+  if(v){ try{ v(); }catch(e){} }              /* 先起播人声（同步设置 curVoice），再起打字 */
+  const p=typePending; typePending=null;
+  if(p) typeStart(p);
+}
+/* ===== 台词表：8 句分支剧情 + 4 句判决 + 悔问 + 等待 =====
+   who: officer=警官（暖金、音调略高） / narr=旁白：回忆与内心独白（冷色、更低更慢） */
+const LINES = {
+  ask:     {who:'officer', en:"So, what are you planning to do?",
+            zh:"那么，你打算怎么做？"},
+  pressC:  {who:'officer', en:"Silence, huh? According to what your associate said, you played a much bigger part than that.",
+            zh:"沉默？照你同伙的说法，你在里面扮演的角色可比这重得多。"},
+  memD:    {who:'narr', en:"“Trust me,” he said, “as long as we don't say anything, this will always belong just to you and me.”",
+            zh:"“相信我，”他说，“只要咱俩都不开口，它就永远只属于你和我。”"},
+  memCD:   {who:'narr', en:"The face of your friend appears before your eyes, along with that hefty “loot”.",
+            zh:"你朋友的脸浮现在眼前，还有那笔沉甸甸的“赃物”。"},
+  pressCC: {who:'officer', en:"So, it seems you're determined to stay on this road of no return?",
+            zh:"这么看来，你是铁了心要走这条不归路？"},
+  pressDC: {who:'officer', en:"“I can tell, you can get out of this punishment.”",
+            zh:"“我看得出来，你能躲过这一罚。”"},
+  memDD:   {who:'narr', en:"“Hey,” he laughed, “swear it quickly.” “Of course, I'll do it too,” you saw him pull your hand, “we'll never betray each other.”",
+            zh:"“嘿，”他笑了，“快发誓。”“当然，我也会的，”你看见他拉住你的手，“我们永远不背叛彼此。”"},
+  soul:    {who:'narr', en:"“Are you sure you want to do this?” You feel as if you're watching yourself sitting in the chair from above, as if your soul has left your body.",
+            zh:"“你确定要这样做吗？”你感觉自己仿佛正从上方看着坐在椅子上的自己，仿佛你的灵魂已经离开了身体。"},
+  waiting: {who:'narr', en:"We are asking Buchanan the same question.",
+            zh:"我们正在问 Buchanan 同一个问题。"},
+  regret:  {who:'officer', en:"Do you regret the choices you've made?",
+            zh:"你后悔自己做出的选择吗？"}
+};
+
+/* ===== 语音：优先播 https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/voice/<id>.mp3（任务1 生成），缺失时回退 SpeechSynthesis ===== */
+const audioCache = {};
+/* 每句一个整句音频文件 https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/voice/<id>.mp3（gen_voice.py 生成），
+   不切段、不插人工停顿，停顿由 TTS 按标点自然处理 */
+const LINE_GAPS = {};
+let seqTimers=[], lineGen=0;
+/* 用户指定不发声的句子：结局（判决揭晓）之前的全部语音静音 ——
+   起源四句 o1-o4、审讯 ask/pressC/pressCC/pressDC、回忆与内心独白 memD/memCD/memDD/soul、等待页 waiting。
+   结局判决四句 v_CC/v_CD/v_DC/v_DD 与悔问 regret 保留音频。
+   必须用 NO_VOICE 而非只删文件：否则 playLine 会退回浏览器合成音（女声复读）。 */
+/* 用户指定不发声的句子：这些台词没有对应的人声素材，保持静音（不能回退合成音）。
+   o1-o4 / pressC / pressCC / pressDC / soul 已由用户提供的剪映人声视频提取配音（2026-10-06）。
+   仍静音：ask（无素材）、memD / memCD / memDD（回忆旁白，无素材）、waiting（无素材）。
+   判决四句 v_CC/v_CD/v_DC/v_DD 与悔问 regret 为 TTS 配音，保持不变。 */
+const NO_VOICE = {'ask':1,'memCD':1,'memD':1,'memDD':1,'waiting':1};
+function getAudio(src){
+  if(audioCache[src]===undefined){
+    const a = new Audio(src);
+    a.preload='auto';
+    a.addEventListener('error',()=>{ audioCache[src]=false; });
+    audioCache[src]=a;
+  }
+  return audioCache[src];
+}
+function pauseAllAudio(){
+  Object.keys(audioCache).forEach(k=>{
+    const a=audioCache[k];
+    if(a&&a!==false){ try{ a.onended=null; a.pause(); a.currentTime=0; }catch(e){} }
+  });
+}
+function stopSeq(){ lineGen++; seqTimers.forEach(clearTimeout); seqTimers=[]; voicePlaying=false; }
+/* 逐句播放，带停顿的台词按段播放并在段间留白。
+   接续必须用 ended 事件（play() 的 Promise 在"开始播放"时就 resolve，拿它当"播完"会叠音）。
+   缺文件策略：缺哪段跳哪段，绝不退回合成音重念整句（平台曾有文件缺失 → 女声整句复读的事故）；
+   只有整句一个文件都放不出来时才用合成音兜底。
+   lineGen 代际号：新台词/停止会让旧句的所有异步回调（ended/看门狗/catch）自动失效。 */
+/* ===== 背景音乐：按场景切曲，缺文件自动静默跳过 =====
+   把 mp3 放进 https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/bgm/ 即生效，文件名见 BGM_FILE。
+   映射：4DD 童年拉手=Good Night；4CD 夕阳提宝箱=Respite；
+   7DD/7CD=An Ending；7CC=Hopes And Dreams；其余=Fallen Down (Reprise) */
+const BGM_VOL=0.14, BGM_FADE_MS=700;   /* 此前 0.24 的 60%：更不干扰配音 */
+const BGM_FILE={
+  fallen:'https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/bgm/fallen_down_reprise.mp3',
+  goodnight:'https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/bgm/good_night.mp3',
+  respite:'https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/bgm/respite.mp3',
+  ending:'https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/bgm/an_ending.mp3',
+  hopes:'https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/bgm/hopes_and_dreams.mp3'
+};
+const BGM_SCENE={'4DD':'goodnight','4CD':'respite','7DD':'ending','7CD':'ending','7DC':'ending','7CC':'hopes'};
+const bgmEl=new Audio(); bgmEl.loop=true; bgmEl.preload='auto';
+const bgmBad={}, bgmErr={};
+let bgmCur=null, bgmScene=null, bgmTimer=null, bgmPending=null;
+function bgmFade(target, done){
+  if(bgmTimer){ clearInterval(bgmTimer); bgmTimer=null; }
+  bgmTimer=setInterval(()=>{
+    const v=bgmEl.volume||0, d=target-v;
+    if(Math.abs(d)<0.04){ bgmEl.volume=target; clearInterval(bgmTimer); bgmTimer=null; if(done) done(); return; }
+    bgmEl.volume=Math.max(0,Math.min(1,v+d*0.2));
+  }, 30);
+}
+/* 让当前曲真正"出声"：先确保没被暂停，再把音量拉到 BGM_VOL。
+   绝不能只调 play() —— 切曲时 volume 被归零做淡入，若那次淡入因自动播放被
+   拦截而没执行，音量会永远停在 0：看起来在播、实际一点声音都没有。
+   这是"开场没音乐 / 静音再打开没声音"的根因，所有续播都必须走这里。 */
+function bgmResume(){
+  if(muted || !bgmCur || bgmBad[bgmCur]) return;
+  const up=()=>{ if(!muted && (bgmEl.volume||0) < BGM_VOL-0.005) bgmFade(BGM_VOL); };
+  try{
+    if(bgmEl.paused){
+      const p=bgmEl.play();
+      if(p&&p.then) p.then(up).catch(()=>{}); else up();
+    }else up();
+  }catch(e){}
+}
+function bgmPlay(key){
+  const src=BGM_FILE[key]; if(!src) return;
+  bgmErr[key]=0;                      /* 显式请求该曲 → 清掉失败计数，允许再次尝试 */
+  if(bgmCur===key){
+    /* 同曲：上一次切曲可能还在淡出、src 尚未真正切换 —— 必须先撤销它，
+       否则淡出结束后会把本曲覆盖掉；然后把音量拉起来（不能只 play） */
+    if(bgmPending){ bgmPending=null; }
+    bgmResume();
+    return;
+  }
+  const start=()=>{
+    bgmPending=null; bgmCur=key;
+    let settled=false;
+    /* 关键：无论 play() 成功、失败还是迟迟不兑现，都必须把音量拉到目标值。
+       只靠 promise 回调的话，一旦那次回调没发生，volume 就永远停在 0 → 无声。 */
+    const finish=()=>{ if(settled) return; settled=true; if(!muted) bgmFade(BGM_VOL); };
+    try{
+      bgmEl.src=src; bgmEl.volume=0; bgmEl.currentTime=0;
+      const p=bgmEl.play();
+      if(p&&p.then) p.then(finish).catch(err=>{
+        /* NotAllowedError = 自动播放拦截（用户还没交互），不是文件坏了：
+           不拉黑，等手势后由 bgmUnlock / 看门狗补播；音量照样拉起来 */
+        if(!err || err.name!=='NotAllowedError') bgmBumpErr(key);
+        finish();
+      });
+      else finish();
+    }catch(e){ bgmBumpErr(key); finish(); }
+    setTimeout(finish, 1200);          /* 兜底：1.2 秒后无论如何音量到位 */
+  };
+  bgmPending=start;                                   /* 记下待换曲，便于后续同曲请求撤销 */
+  if(bgmCur && !bgmEl.paused) bgmFade(0, start); else start();
+}
+function bgmBumpErr(key){        /* 累计两次真实加载失败才拉黑，避免偶发网络抖动永久静音 */
+  bgmErr[key]=(bgmErr[key]||0)+1;
+  if(bgmErr[key]>=2) bgmBad[key]=true;
+}
+/* 自动播放补启动：用户在页面里第一次真实交互（点 START / 任意点击 / 按键）时，
+   把被浏览器拦下的那次播放补上，保证从开场就有音乐；此后每次交互都做一次
+   轻量体检（若音乐意外停了或音量掉到 0，自动恢复）。 */
+let gameStarted=false, hadGesture=false;
+function bgmUnlock(){
+  hadGesture=true;
+  if(muted) return;
+  if(bgmCur){ bgmResume(); return; }
+  if(gameStarted) bgmPlay(BGM_SCENE[bgmScene||'']||'fallen');
+}
+['pointerdown','keydown','touchstart'].forEach(ev=>{
+  window.addEventListener(ev, bgmUnlock, {passive:true});
+});
+/* 看门狗：每 2 秒体检一次。切后台、被其它音频打断、首次自动播放被拦截等
+   导致的"停了 / 音量为 0"都会在这里自动补回，不依赖玩家再点一次按钮。 */
+setInterval(()=>{
+  if(muted || !hadGesture || !bgmCur || bgmBad[bgmCur]) return;
+  if(bgmEl.paused || (bgmEl.volume||0) < BGM_VOL-0.005) bgmResume();
+}, 2000);
+function bgmFor(sceneKey){
+  bgmScene=sceneKey;
+  if(muted) return;
+  bgmPlay(BGM_SCENE[sceneKey]||'fallen');
+}
+bgmEl.addEventListener('error',()=>{
+  if(!bgmCur) return;
+  const bad=bgmCur;
+  bgmBumpErr(bad);
+  if(bgmBad[bad] && bad!=='fallen'){ bgmCur=null; bgmPlay('fallen'); }   /* 该曲缺失 → 退回默认曲 */
+});
+/* 音乐意外中断（切后台、缓冲失败等）时自动补回 */
+bgmEl.addEventListener('pause',()=>{ if(!muted && bgmCur) setTimeout(bgmResume, 60); });
+
+function playLine(id, text, who){
+  curVoice=null;                      /* 本句默认无人声 → 打字走固定速度 */
+  stopSeq(); pauseAllAudio();
+  if(muted || NO_VOICE[id]) return;
+  const myGen=++lineGen;
+  const alive=()=>myGen===lineGen;
+  const gaps = LINE_GAPS[id]||[];
+  const n = gaps.length+1;
+  let i=1, played=0;
+  const step=()=>{
+    if(!alive()) return;
+    while(i<=n && getAudio('https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/voice/'+(n>1 ? id+'_'+i : id)+'.mp3')===false) i++;
+    if(i>n){ if(played===0) tts(text,who); return; }
+    const a = getAudio('https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/voice/'+(n>1 ? id+'_'+i : id)+'.mp3');
+    /* 当前段播完后到下一段之间的停顿：gaps[i-1]（i 为当前段序号，1 起） */
+    const gap = gaps[i-1]||300;
+    let advanced=false, wd=null;
+    const onEnd=()=>{
+      if(advanced || !alive()) return; advanced=true;
+      voicePlaying=false;
+      if(wd!==null){ clearTimeout(wd); wd=null; }
+      played++;
+      i++; seqTimers.push(setTimeout(step, gap));
+    };
+    /* 看门狗：估计时长 + 4s 仍没收到 ended 就强制接续 */
+    wd=setTimeout(onEnd, (isFinite(a.duration)&&a.duration>0 ? a.duration*1000 : 20000)+4000);
+    seqTimers.push(wd);
+    /* 把正在播的这一句交给打字机：从此字的进度 = 声音的进度 */
+    function bindVoice(){
+      const d=VOICE_DUR[id];
+      curVoice = d ? {a:a, lead:d[0], span:d[1], cover:VOICE_COVER[id]||0} : null;
+    }
+    try{
+      a.currentTime=0; a.onended=onEnd;
+      voicePlaying=true;
+      bindVoice();                            /* 同步绑定：紧接着的 typeStart 就能读到 */
+      const p=a.play();
+      if(p&&p.then) p.catch(()=>{ curVoice=null; onEnd(); });   /* 播放失败按结束处理，跳下一段 */
+    }catch(e){ onEnd(); }
+  };
+  /* 黑幕还没散尽 → 把"起播"挂起，等 typeGateOpen 与打字同一刻出发。
+     否则声音会在全黑期间偷跑 1.2 秒，字一出来就已经落后一大截。 */
+  if(typeGate){ pendingVoice=step; } else step();
+}
+/* 兜底合成音：旁白更低沉更慢，以此区分说话人 */
+function tts(text, who){
+  if(muted || !text || !('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  setTimeout(()=>{
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang='en-US';
+    u.pitch = who==='narr' ? 0.15 : 0.35;
+    u.rate  = who==='narr' ? 0.78 : 0.88;
+    u.volume = 1;
+    u.onstart=()=>{ voicePlaying=true; };
+    u.onend=u.onerror=()=>{ voicePlaying=false; };
+    speechSynthesis.speak(u);
+  }, 60);
+}
+function stopSpeak(){
+  typeFlush();
+  pendingVoice=null; curVoice=null;
+  stopSeq(); pauseAllAudio();
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+}
+/* ===== 黑屏过渡：全局唯一实现 =====
+   每一次台词 / 场景变化，都严格走同一条时间线：
+   ① 点击后，当前台词原样保持 1 秒（让用户看清）
+   ② 黑幕缓缓淡入（0.8 秒渐变）
+   ③ 完全变黑之后，才换台词 / 换场景
+   ④ 全黑短暂保持，让新内容就位
+   ⑤ 黑幕缓缓淡出（0.8 秒渐变）
+   想调节奏，只改下面三个数字即可。 */
+const HOLD_MS=1000;        /* ① 点击后旧台词的保持时长 */
+const FADE_MS=800;         /* ②⑤ 黑幕淡入 / 淡出时长（与 CSS 的 .8s 保持一致） */
+const BLACK_HOLD_MS=400;   /* ④ 全黑后新内容就位时长 */
+let fadeToken=0;           /* 转场令牌：新转场会作废尚未完成的旧转场 */
+function blackoutOn(on){ $('blackout').classList.toggle('on',!!on); }
+
+/* ===== 场景背景：每次黑屏在全黑时切换 =====
+   START 用 https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/1.png；游戏各阶段按编号取图，缺图自动回退 1.png。
+   只需把图片放进 https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/ 并按此命名：
+   2.png 出题 / 3.png 确认 / 4.png 等待B / 5.png 揭晓 / 6.png 悔问 */
+const SCENE_ID = { ask:'2', branch:'3', result:'4', soul:'5', waiting:'6', reveal:'7', regret:'8' };
+const SCENE_FILES = ['1','2','3','3C','3D','4','4CC','4CD','4DC','4DD','5','6','7','7CC','7CD','7DC','7DD','8'];
+/* 每个编号同时探测 .png 与 .jpg，先到先得 */
+const sceneReady = {};
+SCENE_FILES.forEach(f=>{
+  ['.png','.jpg'].forEach(ext=>{
+    const img = new Image();
+    img.onload = ()=>{ if(!sceneReady[f]) sceneReady[f]='https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/'+f+ext; };
+    img.src = 'https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/'+f+ext;
+  });
+});
+/* ===== 起源剧情过场：START 之后、问话之前。字幕在底部 1/4，HELP 看中文；
+   同一张图多句台词时，每句切换照旧走黑屏转场。 ===== */
+const ORIGIN_STEPS=[
+  {id:'o1',img:'origin_1',who:'buchanan',en:"Whoa! So many treasures, if we succeed, it's going to be amazing!",zh:"嚯！如此多的宝物，我们要是成功了可不得了！"},
+  {id:'o2',img:'origin_2',who:'buchanan',en:"Oh... no... they... they caught up.",zh:"哦……不……他们……他们追上来了"},
+  {id:'o3',img:'origin_2',who:'buchanan',en:"When they interrogate us, none of us should confess. Trust me, we'll all be fine, okay?",zh:"当他们审问我们的时候，我们谁也不要招供。相信我，我们都会没事的，好吗？"},
+  {id:'o4',img:'origin_3',who:'officer',en:"Hey! You two idiots, you're under arrest.",zh:"喂！你们两个混蛋，你们被捕了"}
+];
+const originReady={};
+let originStep=0;
+ORIGIN_STEPS.map(x=>x.img).filter((v,i,a)=>a.indexOf(v)===i).forEach(f=>{
+  const img=new Image();
+  img.onload=()=>{ originReady[f]=true; };
+  img.src='https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/'+f+'.jpg';
+});
+const ORIGIN_SPK={buchanan:'Buchanan:',officer:'OFFICER:',narr:'NARRATOR:'};
+function setupOriginStep(k){
+  setPhase('origin');
+  originStep=k;
+  hideAll();
+  const st=ORIGIN_STEPS[k];
+  $('originCap').classList.remove('hidden');
+  $('originCap').classList.remove('cap-buchanan','cap-narr','cap-officer');
+  $('originCap').classList.add('cap-'+st.who);
+  $('originNext').classList.remove('hidden');
+  const spk=ORIGIN_SPK[st.who]||'';
+  $('originZh').textContent='';
+  typeOrigin(spk, st.en, st.who, ()=>{ $('originZh').textContent=st.zh; });
+  playLine(st.id, st.en, st.who);
+  bgmFor('origin');
+  const url=originReady[st.img] ? 'https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/'+st.img+'.jpg' : 'https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/1.png';
+  const el=$('gameScene');
+  if(el) el.style.backgroundImage="url('"+url+"')";
+}
+function pickScene(f){ return (f && sceneReady[f]) || null; }
+function setScene(phase, a, b){
+  let f = SCENE_ID[phase] || '2';
+  if(phase==='branch')      f = '3'+(a||'');
+  else if(phase==='result') f = '4'+(a||'')+(b||'');
+  else if(phase==='reveal') f = '7'+(a||'')+(b||'');
+  const url = pickScene(f) || pickScene(SCENE_ID[phase]) || 'https://caijing-english-1311686407.cos.ap-guangzhou.myqcloud.com/chapter5/qiutu/1.png';
+  const el = $('gameScene');
+  if(el) el.style.backgroundImage = "url('"+url+"')";
+  if(phase!=='regret') bgmFor(f);   /* 悔问页沿用揭晓页的结果音乐，不切曲（'8' 无映射会回退默认曲） */
+}
+function sceneTransition(swap){
+  typeFlush();                 /* 点击继续：正在打的字立刻补全 */
+  typeGateClose();             /* 黑屏期间不打字 */
+  const my=++fadeToken;
+  const alive=()=>my===fadeToken;
+  return new Promise(resolve=>{
+    setTimeout(()=>{                                        /* ① 当前台词保持 1 秒 */
+      if(!alive()){ resolve(false); return; }
+      blackoutOn(true);                                     /* ② 黑幕缓缓淡入 */
+      setTimeout(()=>{
+        if(!alive()){ resolve(false); return; }
+        if(typeof swap==='function'){ try{ swap(); }catch(e){ console.error('[转场] 全黑时切换内容出错:', e); } }  /* ③ 全黑 → 换台词 */
+        setTimeout(()=>{
+          if(!alive()){ resolve(false); return; }
+          blackoutOn(false);                                /* ④⑤ 黑幕缓缓淡出 */
+          setTimeout(()=>{ if(alive()) typeGateOpen(); }, FADE_MS);  /* 黑幕散尽才开始打字 */
+          resolve(true);   /* 淡出一启动就放行点击，避免新画面已可见却点不动 */
+        }, BLACK_HOLD_MS);
+      }, FADE_MS);
+    }, HOLD_MS);
+  });
+}
+
+/* ===== 进入游戏 ===== */
+function enterGame(){
+  strategy = ['dice','snitch','keeper','grudger'][Math.floor(Math.random()*4)];
+  round=1; lastPlayer=null; historyCells=[];
+  document.querySelectorAll('#matrix .cell').forEach(c=>c.classList.remove('lit','hist'));
+  return sceneTransition(()=>{        /* 开场 → 游戏，同样走黑屏 */
+    showView('game');
+    renderHistory();
+    setupOriginStep(0);   /* 起源剧情：底部字幕带，CONTINUE 逐句推进 */
+  });
+}
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  $(name).classList.add('active');
+}
+function setPhase(p){ phase=p; }
+function setLine(L){
+  const el=$('inqLine'); el.innerHTML='';
+  const e=document.createElement('span'); e.textContent=''; el.appendChild(e);
+  const z=document.createElement('span'); z.className='zh'; z.textContent=''; el.appendChild(z);
+  el.classList.toggle('narr', !!(L&&L.who==='narr'));
+  typeText(e, (L&&L.en)||'', (L&&L.who), ()=>{ z.textContent=(L&&L.zh)||''; });
+}
+
+function hideAll(){
+  ['choiceA','choiceB','regretBox','finaleBox','matrix-wrap','revealNext','originNext','originCap'].forEach(id=>$(id).classList.add('hidden'));
+  $('waiting').classList.remove('show');
+  $('reveal').classList.remove('show');
+  $('game').classList.remove('reveal-on');   /* 离开揭晓态，恢复对话区与布局 */
+}
+function setBtnLabel(id,en,zh){
+  const b=$(id);
+  if(b.firstChild) b.firstChild.nodeValue=en;
+  const z=b.querySelector('.zh'); if(z) z.textContent=zh;
+}
+/* 复用 choiceB 这一对按钮，按阶段换文案与回调 */
+function showPair(en1,zh1,on1, en2,zh2,on2){
+  setBtnLabel('btnChange',en1,zh1);  $('btnChange').onclick=on1;
+  setBtnLabel('btnConfirm',en2,zh2); $('btnConfirm').onclick=on2;
+  $('choiceB').classList.remove('hidden');
+}
+
+/* ① 出题：警官问话（此时还没选择，固定 2.png） */
+function setupAsk(){
+  setPhase('ask');
+  firstChoice=null; finalChoice=null;
+  hideAll();
+  $('choiceA').classList.remove('hidden');
+  setScene('ask');
+  setLine(LINES.ask);
+  playLine('ask', LINES.ask.en, LINES.ask.who);
+}
+function askChoice(){ return sceneTransition(setupAsk); }
+
+/* ② 初选：C 沉默 / D 坦白 → 分支反应句 */
+function onChoice(c){
+  if(phase!=='ask'||busy) return;
+  busy=true; sfx.choose(); firstChoice=c;
+  const lid = c==='C' ? 'pressC' : 'memD';
+  const L = LINES[lid];
+  sceneTransition(()=>{
+    setPhase('branch');
+    hideAll();
+    setScene('branch', firstChoice);
+    setLine(L);
+    playLine(lid, L.en, L.who);
+    showPair('Change my mind','改变', ()=>onBranch(false),
+             'Stick to it','不改',   ()=>onBranch(true));
+  }).then(()=>{ busy=false; });
+}
+
+/* ③ 改变 / 不改：keep=false 即取反初选，最终提交的是 finalChoice */
+function onBranch(keep){
+  if(phase!=='branch'||busy) return;
+  busy=true; sfx.choose();
+  const first=firstChoice;
+  finalChoice = keep ? first : (first==='C'?'D':'C');
+  const lid = first==='C' ? (keep?'pressCC':'memCD') : (keep?'memDD':'pressDC');
+  const L = LINES[lid];
+  sceneTransition(()=>{
+    setPhase('result');
+    hideAll();
+    /* CONTINUE 现在住在 #reveal 容器里：只 remove hidden 不够，必须把容器显示出来，
+       并清空上一次揭晓残留的标签/判决文字，否则该页只有台词没有按钮 */
+    /* 清空标签文字之外，还要把整行标签隐藏——空 chip 仍会渲染成两个黑点 */
+    $('youTag').textContent=''; $('bTag').textContent='';
+    $('pairTags').classList.add('hidden');
+    const rv=$('verdict'); rv.innerHTML=''; rv.classList.remove('bad','good');
+    $('reveal').classList.add('show');
+    setScene('result', first, finalChoice);
+    setLine(L);
+    playLine(lid, L.en, L.who);
+    $('revealNext').classList.remove('hidden');
+    $('revealNext').onclick=()=>{ if(phase==='result'&&!busy) goSoul(); };
+  }).then(()=>{ busy=false; });
+}
+
+/* ④ 汇合：内心独白 + 确定 / 不确定 */
+function goSoul(){
+  busy=true; sfx.click();
+  const L=LINES.soul;
+  sceneTransition(()=>{
+    setPhase('soul');
+    hideAll();
+    setScene('soul');
+    setLine(L);
+    playLine('soul', L.en, L.who);
+    showPair("Yes, I'm sure",'确定', ()=>onFinalConfirm(),
+             "I'm not sure",'不确定', ()=>onSoulBack());
+  }).then(()=>{ busy=false; });
+}
+/* 不确定 → 回到最初问话，整条分支重走 */
+function onSoulBack(){
+  if(phase!=='soul'||busy) return;
+  busy=true; sfx.click();
+  sceneTransition(setupAsk).then(()=>{ busy=false; });
+}
+/* 确定 → 提交最终选择，进入等待 */
+function onFinalConfirm(){
+  if(phase!=='soul'||busy) return;
+  busy=true; sfx.choose();
+  const you=finalChoice;
+  lastPlayer=you;                     /* 供 grudger（记仇型）参考玩家上一轮选择 */
+  sceneTransition(()=>{
+    setPhase('waiting');
+    hideAll();
+    $('waiting').classList.add('show');
+    setScene('waiting');
+    setLine(LINES.waiting);
+    /* 等待页不配音：两句分段音频总在揭晓前一刻被截断（用户听到半句 "the same question"），按要求整句删除 */
+  }).then(()=>{
+    busy=false;
+    setTimeout(()=>revealRound(you, aiDecide()), 1300);
+  });
+}
+function aiDecide(){
+  lastPlayer = lastPlayer===null ? null : lastPlayer;
+  switch(strategy){
+    case 'dice': return Math.random()<0.5?'C':'D';
+    case 'snitch': return 'D';
+    case 'keeper': return 'C';
+    case 'grudger': return lastPlayer!==null?lastPlayer:(Math.random()<0.5?'C':'D');
+    default: return Math.random()<0.5?'C':'D';
+  }
+}
+function revealRound(you,b){
+  if(phase!=='waiting'||busy) return;
+  busy=true;
+  sceneTransition(()=>{
+    setPhase('reveal');
+    sfx.reveal();
+    shownYou=you; shownB=b;
+    setScene('reveal', you, b);
+    $('waiting').classList.remove('show');
+    $('youTag').textContent='YOU — '+(you==='C'?'COOPERATE':'DEFECT');
+    $('bTag').textContent='BUCHANAN — '+(b==='C'?'COOPERATE':'DEFECT');
+    $('pairTags').classList.remove('hidden');
+    const v=verdictFor(you,b);
+    const rv=$('verdict'); rv.innerHTML=v.en+'<span class="zh">'+v.zh+'</span>';
+    rv.classList.toggle('bad',!!v.bad); rv.classList.toggle('good',!!v.good);
+    $('matrix-wrap').classList.remove('hidden');
+    setLine({en:"",zh:""});
+    $('reveal').classList.add('show');
+    $('game').classList.add('reveal-on');
+    $('revealNext').classList.remove('hidden');
+    lightMatrix(you,b);
+    renderHistory();
+    playLine(v.vid, v.speak, 'officer');
+    /* 玩家点 CONTINUE 后，同样经黑屏过渡到「是否后悔」之问 */
+    $('revealNext').onclick=()=>{
+      if(phase!=='reveal'||busy) return;
+      busy=true; sfx.click();
+      sceneTransition(()=>{
+        setPhase('regret');
+        setScene('regret');
+        bgmFor('7'+shownYou+shownB);   /* 悔问页保持最终结果的音乐（setScene('regret') 会错误回退默认曲） */
+        $('reveal').classList.remove('show');
+        /* 悔问页对话区为空，沿用 reveal-on 的居中布局：问题+按钮整体上移，不再沉在屏幕下部 */
+        $('game').classList.add('reveal-on');
+        $('revealNext').classList.add('hidden');
+        $('matrix-wrap').classList.add('hidden');
+        $('regretBox').classList.remove('hidden');
+        playLine('regret', LINES.regret.en, 'officer');
+      }).then(()=>{ busy=false; });
+    };
+  }).then(()=>{ busy=false; });
+}
+function verdictFor(you,b){
+  if(you==='C'&&b==='C') return {
+    en:'Both stayed silent. Each serves <b>1 year</b> — trust paid off.',
+    zh:'双双沉默，各判 1 年。信任换来了最好的结局。',
+    vid:'v_CC', speak:'Both stayed silent. Each serves one year. Trust paid off.', good:true };
+  if(you==='C'&&b==='D') return {
+    en:'You stayed silent. <b>Buchanan betrayed you.</b> You serve <b>10 years</b>; he walks free.',
+    zh:'你保持沉默，Buchanan 背叛了你。你判 10 年，他无罪释放。',
+    vid:'v_CD', speak:'You stayed silent. Buchanan betrayed you. You serve ten years, and he walks free.', bad:true };
+  if(you==='D'&&b==='C') return {
+    en:'You betrayed Buchanan. You go <b>free</b>; he serves <b>10 years</b>.',
+    zh:'你背叛了 Buchanan。你无罪释放，他判 10 年。',
+    vid:'v_DC', speak:'You betrayed Buchanan. You walk free, and he serves ten years.' };
+  return {
+    en:'You betrayed each other. Both serve <b>8 years</b>.',
+    zh:'互相背叛，各判 8 年。',
+    vid:'v_DD', speak:'You betrayed each other. Both serve eight years.', bad:true };
+}
+function lightMatrix(you,b){
+  const id='c_'+you+b;
+  // 之前 lit 的变成 hist
+  document.querySelectorAll('#matrix .cell.lit').forEach(c=>{
+    c.classList.remove('lit');
+    c.classList.add('hist');
+  });
+  // 当前回合的变成 lit
+  const cur=$(id);
+  if(cur){
+    cur.classList.remove('hist');
+    cur.classList.add('lit');
+  }
+  // 记录历史
+  if(historyCells.indexOf(id)<0) historyCells.push(id);
+}
+function renderHistory(){
+  if(!historyCells.length) return;
+}
+/* 后悔 */
+function regretYes(){
+  if(phase!=='regret'||busy) return;
+  busy=true; sfx.blackout(); stopSpeak();
+  sceneTransition(()=>{
+    /* 之前 lit 的变成 hist（保留显示内容） */
+    document.querySelectorAll('#matrix .cell.lit').forEach(c=>{
+      c.classList.remove('lit');
+      c.classList.add('hist');
+    });
+    lastPlayer=null;
+    strategy=['dice','snitch','keeper','grudger'][Math.floor(Math.random()*4)];
+    round=1;
+    setupAsk();                       /* 重开后直接回到出题，不再叠加一次黑屏 */
+    bgmFor('ask');                    /* YES 重开 → 恢复 Fallen Down (Reprise) */
+  }).then(()=>{ busy=false; });
+}
+function regretNo(){
+  if(phase!=='regret'||busy) return;
+  busy=true; sfx.click();
+  sceneTransition(()=>{ setupFinale(); }).then(()=>{ busy=false; });
+}
+
+/* ===== 结局后段：悔问选 No → So, what did you get? + 四选项 → THE END =====
+   选项文案待用户提供，改 FINAL_OPTS 这四行即可（en=英文，zh=HELP 中文）。 */
+const FINAL_Q = "So, what did you get?";
+const FINAL_OPTS = [
+  {en:'In a one-shot game, betrayal is the optimal move. But in a long game, cooperation slowly becomes the shared choice of both sides.',
+   zh:'单次博弈里，背叛是最优解。但如果是长期的博弈，合作会慢慢成为双方的共同选择'},
+  {en:'The root of mutual suspicion is "I don\'t know what the other side will do."',
+   zh:'互相猜疑的根源，是"我不知道对方会怎么做"。'},
+  {en:'Trust is fragile — not because people aren\'t kind, but because the system forces you to betray.',
+   zh:'信任是脆弱的，不是人不够善良，而是制度在逼你背叛。'},
+  {en:'Everyone\'s "rational" choice adds up to collective "irrationality". Individual rationality ≠ collective optimum.',
+   zh:'各自的"理性"加在一起，变成了集体的"非理性"。个体理性 ≠ 集体最优'}
+];
+function setupFinale(){
+  setPhase('finale');
+  hideAll();
+  bgmFor('7'+shownYou+shownB);   /* 结局段音乐 = 最终结果同款：7CC→hopes，其余→an_ending */
+  $('finaleBox').classList.remove('hidden');
+  $('finaleEnd').classList.add('hidden');
+  const opts=$('finaleOpts'); opts.innerHTML=''; opts.classList.remove('hidden');
+  FINAL_OPTS.forEach(o=>{
+    const b=document.createElement('button');
+    b.className='mist mist-click';
+    const t=document.createElement('span'); t.textContent=o.en; b.appendChild(t);
+    const z=document.createElement('span'); z.className='zh'; z.textContent=o.zh; b.appendChild(z);
+    b.addEventListener('click',()=>{
+      if(busy) return; busy=true;
+      sfx.choose();
+      sceneTransition(()=>{
+        $('finaleQ').classList.add('hidden');       /* 问题和选项一起消失 */
+        opts.classList.add('hidden');
+        $('finaleEnd').classList.remove('hidden');  /* 黑幕散尽后正中只留 THE END */
+      }).then(()=>{ busy=false; });
+    });
+    opts.appendChild(b);
+  });
+  typeText($('finaleQ'), FINAL_Q, 'narr');
+}
+
+/* ===== 规则纸 ===== */
+/* ===== 静音 ===== */
+function syncMuteUI(){
+  $('muteBtn').setAttribute('aria-checked',String(!muted));
+  $('muteLabel').textContent=muted?'MUTED':'SOUND ON';
+  $('muteBtn').classList.toggle('ghost',muted);
+}
+function setMuted(m){
+  muted=m;
+  syncMuteUI();
+  if(m){ stopSpeak(); bgmFade(0,()=>{ try{ bgmEl.pause(); }catch(e){} }); }
+  else{
+    /* 恢复播放时必须走能拉起音量的路径；若当前曲已被判坏则退回默认曲 */
+    const key=BGM_SCENE[bgmScene||'']||'fallen';
+    if(bgmBad[key]){ bgmCur=null; bgmPlay('fallen'); }
+    else bgmPlay(key);
+  }
+}
+
+/* ===== 双语求助键 ===== */
+function applyHelp(){ document.body.classList.toggle('help',helpOn); }
+function toggleHelp(){ helpOn=!helpOn; applyHelp(); sfx.click(); }
+
+/* ===== 事件 ===== */
+$('startBtn').addEventListener('click',()=>{
+  if(busy) return; busy=true; sfx.click();
+  gameStarted=true;
+  bgmUnlock();                 /* 在真实用户手势里启动 BGM，规避自动播放拦截 */
+  enterGame().then(()=>{ busy=false; });
+});
+$('originNext').addEventListener('click',()=>{
+  if(phase!=='origin'||busy) return;
+  busy=true; sfx.click();
+  const nxt=originStep+1;
+  sceneTransition(()=>{
+    if(nxt<ORIGIN_STEPS.length) setupOriginStep(nxt);
+    else setupAsk();
+  }).then(()=>{ busy=false; });
+});
+$('btnCoop').addEventListener('click',()=>onChoice('C'));
+$('btnDefect').addEventListener('click',()=>onChoice('D'));
+$('regretYes').addEventListener('click',regretYes);
+$('regretNo').addEventListener('click',regretNo);
+$('muteBtn').addEventListener('click',()=>setMuted(!muted));
+$('helpBtn').addEventListener('click',toggleHelp);
+document.addEventListener('keydown',e=>{
+  if(phase==='ask' && !busy && !e.metaKey && !e.ctrlKey){
+    if(e.key.toLowerCase()==='c') onChoice('C');
+    else if(e.key.toLowerCase()==='d') onChoice('D');
+  }
+});
+
+/* ===== 初始化 ===== */
+/* 注意：这里只同步静音按钮状态，**不在页面加载时尝试播放**——
+   浏览器一定会拦截（NotAllowedError），留下"在播但音量为 0"的残状态，
+   正是之前开场没音乐的根因。真正的起播交给用户手势（bgmUnlock）。 */
+syncMuteUI();
+applyHelp();
+if('speechSynthesis' in window){ speechSynthesis.getVoices(); }
+})();
+</script>
+</body>
+</html>
