@@ -58,12 +58,16 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
 .swrow{display:flex;align-items:center;justify-content:space-between;padding:9px 4px;border-bottom:1px solid var(--line);font-size:14px;}
 .swrow:last-child{border-bottom:none;}
 .swrow .ch{color:var(--gold);font-weight:700;margin-right:10px;}
-.switch{position:relative;width:44px;height:24px;flex:none;margin-left:12px;}
+.switch{position:relative;width:52px;height:28px;flex:none;margin-left:10px;}
 .switch input{opacity:0;width:0;height:0;}
-.sl{position:absolute;inset:0;background:#2a3a5c;border-radius:20px;cursor:pointer;transition:.2s;}
-.sl:before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#93a5c0;border-radius:50%;transition:.2s;}
-.switch input:checked+.sl{background:var(--gold);}
-.switch input:checked+.sl:before{transform:translateX(20px);background:#14100a;}
+.sl{position:absolute;inset:0;background:#22304d;border:1.5px solid #40537e;border-radius:20px;cursor:pointer;transition:.2s;}
+.sl:before{content:"";position:absolute;width:20px;height:20px;left:3px;top:2px;background:#8fa3c4;border-radius:50%;transition:.2s;}
+.switch input:checked+.sl{background:linear-gradient(135deg,var(--gold),#a9861f);border-color:var(--gold);box-shadow:0 0 10px rgba(212,175,55,.55);}
+.switch input:checked+.sl:before{transform:translateX(22px);background:#14100a;}
+.lab{color:var(--sub);font-size:12.5px;margin-left:14px;transition:.2s;cursor:pointer;user-select:none;}
+.lab.on{color:var(--gold);font-weight:700;}
+.lab+.switch{margin-left:8px;}
+.swrow.dirty{background:rgba(212,175,55,.05);border-radius:8px;}
 .bar{height:16px;border-radius:8px;background:#2a3a5c;overflow:hidden;}
 .bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#a9861f);}
 .stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px;}
@@ -111,8 +115,10 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
     <div class="box" id="stuBox">
       <h3>学生名单 <span style="font-size:12px;color:var(--sub);font-weight:400;" id="curCls"></span></h3>
       <div class="row" style="margin-bottom:10px">
-        <input id="importTxt" placeholder="每行：姓名,学号 （英文逗号或中文逗号）">
-        <button class="btn" onclick="importStudents()">导入 Import</button>
+        <button class="btn gold" onclick="downloadTemplate()">下载模板 Template</button>
+        <button class="btn" onclick="$('#fileImport').click()">选择文件 Choose File</button>
+        <input type="file" id="fileImport" accept=".xlsx,.xls" style="display:none" onchange="onFilePicked()">
+        <span style="color:var(--sub);font-size:12.5px">下载模板 → 填写「姓名 / 班级 / 学号」→ 选择文件自动导入（每人自动生成 6 位邀请码）</span>
       </div>
       <div style="overflow-x:auto;max-height:340px;overflow-y:auto"><table><thead><tr><th>姓名</th><th>学号</th><th>邀请码</th><th>操作</th></tr></thead><tbody id="stuBody"></tbody></table></div>
     </div>
@@ -127,6 +133,10 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
     <span style="color:var(--sub);font-size:13px">选择班级，逐章设置开放</span>
   </div>
   <div style="max-width:680px" id="swList"></div>
+  <div style="max-width:680px;margin-top:14px;display:flex;align-items:center;gap:12px">
+    <button class="btn gold" id="saveSw" onclick="saveSwitches()" disabled>保存本班设置 Save</button>
+    <span style="color:var(--sub);font-size:12.5px" id="swHint">勾选后点「保存」统一生效</span>
+  </div>
 </div>
 
 <!-- ============ 测试控制 ============ -->
@@ -159,6 +169,7 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
 </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 const API_URL='https://1311686407-6z755znqlt.ap-guangzhou.tencentscf.com';
 const CHS={1:'经济学是什么',2:'经济思想录',3:'需求与供给',4:'成本与利润',5:'市场竞争',6:'博弈论与策略',7:'通胀与购买力',8:'经济增长与经济周期',9:'宏观经济政策'};
@@ -255,10 +266,62 @@ async function importStudents(){
     $('#importTxt').value='';loadClasses();openClass(curClass,$('#curCls').textContent.replace('· ',''));
   }catch(e){}
 }
+/* ---------- Excel 模板：下载 + 上传导入 ---------- */
+function downloadTemplate(){
+  const rows=[['姓名','班级','学号'],['张三','23人资','2023001'],['李四','23人资','2023002']];
+  try{
+    if(window.XLSX){
+      const ws=XLSX.utils.aoa_to_sheet(rows);
+      ws['!cols']=[{wch:12},{wch:14},{wch:12}];
+      const wb=XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb,ws,'学生名单');
+      XLSX.writeFile(wb,'学生导入模板.xlsx');
+    }else{
+      const csv='\ufeff'+rows.map(r=>r.join(',')).join('\r\n');
+      const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='学生导入模板.csv';a.click();
+      msg('已下载 CSV 模板（可另存为 xlsx）','ok');return;
+    }
+    msg('模板已下载，请填写后上传导入','ok');
+  }catch(e){msg('下载模板失败，请检查网络');}
+}
+async function onFilePicked(){
+  const f=$('#fileImport').files[0];
+  if(!f)return;
+  if(!curClass)return msg('请先选择一个班级');
+  if(!window.XLSX)return msg('Excel 解析组件加载失败，请检查网络后重试');
+  let students=[];
+  try{
+    const buf=await f.arrayBuffer();
+    const wb=XLSX.read(buf,{type:'array'});
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+    let hi=null;
+    for(let ri=0;ri<Math.min(rows.length,5);ri++){
+      const r=rows[ri];let nameI=-1,noI=-1;
+      r.forEach((h,i)=>{const hh=String(h).trim();if(/姓名|^name$/i.test(hh))nameI=i;if(/学号|学生号|student\s*no|^no\.?$/i.test(hh))noI=i;});
+      if(nameI>=0&&noI>=0){hi={row:ri+1,name:nameI,no:noI};break;}
+    }
+    if(!hi)return msg('未识别到「姓名 / 学号」表头，请使用下载的模板');
+    for(let ri=hi.row;ri<rows.length;ri++){
+      const r=rows[ri];
+      if(!r||!r.length)continue;
+      const name=String(r[hi.name]==null?'':r[hi.name]).trim();
+      const no=String(r[hi.no]==null?'':r[hi.no]).trim().replace(/\.0+$/,'');
+      if(name&&no&&!/学号/i.test(no))students.push({name,student_no:no});
+    }
+  }catch(e){return msg('文件解析失败，请使用下载的模板填写');}
+  if(!students.length)return msg('文件中没有有效学生数据（姓名 + 学号）');
+  try{
+    const d=await api('import_students',{class_id:curClass,students});
+    msg('成功导入 '+d.count+' 人（重复跳过）','ok');
+    $('#fileImport').value='';loadClasses();openClass(curClass,$('#curCls').textContent.replace('· ',''));
+  }catch(e){}
+}
 async function resetStu(id){try{const d=await api('reset_student_code',{student_id:id});msg('新邀请码 '+d.code,'ok');openClass(curClass,'');}catch(e){}}
 async function removeStu(id){if(!confirm('移除该学生？'))return;try{await api('remove_student',{student_id:id});loadClasses();openClass(curClass,'');}catch(e){}}
 
-/* ---------- 章节开关（按班级） ---------- */
+/* ---------- 章节开关（按班级，勾选暂存 + 保存确认） ---------- */
+let swDraft={};
 async function loadSwitches(){
   const cid=$('#swCls').value;
   const box=$('#swList');
@@ -266,23 +329,40 @@ async function loadSwitches(){
   try{
     const d=await api('get_switches',{class_id:cid});
     const sw=d.switches||{};
+    swDraft={};
+    $('#saveSw').disabled=true;
     box.innerHTML='';
     Object.keys(CHS).forEach(n=>{
       const st=sw[n]||{content:false,quiz:false};
       const row=document.createElement('div');row.className='swrow';
       row.innerHTML='<div><span class="ch">CH'+String(n).padStart(2,'0')+'</span>'+CHS[n]+
-        '<span style="margin-left:16px;color:var(--sub);font-size:12.5px">内容 Content</span>'+
-        '<label class="switch"><input type="checkbox" '+(st.content?'checked':'')+' onchange="setSw('+n+',\'content\',this.checked)"><span class="sl"></span></label>'+
-        '<span style="margin-left:16px;color:var(--sub);font-size:12.5px">测试 Quiz</span>'+
-        '<label class="switch"><input type="checkbox" '+(st.quiz?'checked':'')+' onchange="setSw('+n+',\'quiz\',this.checked)"><span class="sl"></span></label></div>';
+        '<span class="lab'+(st.content?' on':'')+'" data-l="'+n+'-content">内容 Content</span>'+
+        '<label class="switch"><input type="checkbox" id="sw-'+n+'-content" '+(st.content?'checked':'')+' onchange="markSw('+n+')"><span class="sl"></span></label>'+
+        '<span class="lab'+(st.quiz?' on':'')+'" data-l="'+n+'-quiz">测试 Quiz</span>'+
+        '<label class="switch"><input type="checkbox" id="sw-'+n+'-quiz" '+(st.quiz?'checked':'')+' onchange="markSw('+n+')"><span class="sl"></span></label></div>';
       box.appendChild(row);
     });
   }catch(e){}
 }
-async function setSw(ch,key,val){
+function markSw(ch){
+  const c=document.getElementById('sw-'+ch+'-content').checked;
+  const q=document.getElementById('sw-'+ch+'-quiz').checked;
+  swDraft[ch]={content:c,quiz:q};
+  document.querySelectorAll('[data-l="'+ch+'-content"]').forEach(x=>x.classList.toggle('on',c));
+  document.querySelectorAll('[data-l="'+ch+'-quiz"]').forEach(x=>x.classList.toggle('on',q));
+  $('#saveSw').disabled=false;
+}
+async function saveSwitches(){
   const cid=$('#swCls').value;
+  const keys=Object.keys(swDraft);
   if(!cid)return;
-  try{await api('set_switch',{class_id:cid,ch,content:key==='content'?val:undefined,quiz:key==='quiz'?val:undefined});}catch(e){loadSwitches();}
+  if(!keys.length)return msg('没有需要保存的修改');
+  try{
+    await Promise.all(keys.map(ch=>api('set_switch',{class_id:cid,ch:+ch,content:swDraft[ch].content,quiz:swDraft[ch].quiz})));
+    msg('已保存 '+keys.length+' 章的开放设置 / Saved','ok');
+    swDraft={};$('#saveSw').disabled=true;
+    loadSwitches();
+  }catch(e){}
 }
 
 /* ---------- 测试控制 ---------- */
