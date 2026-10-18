@@ -535,7 +535,7 @@ window.addEventListener('appinstalled',()=>{
   toast('安装成功，可在桌面打开本应用');
 });
 window.openInstallGuide=()=>$('#installModal').classList.add('show');
-window.openQuiz=()=>location.href='quiz/login.html';
+window.openQuiz=()=>location.href='quiz/quiz.html';
 window.closeInstallGuide=()=>$('#installModal').classList.remove('show');
 $('#installModal').addEventListener('click',e=>{if(e.target.id==='installModal')closeInstallGuide()});
 $('#installNow').addEventListener('click',async()=>{
