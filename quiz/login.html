@@ -118,7 +118,7 @@ const FIELDS = {
   ]
 };
 const ACTION = {student:'student_login',teacher:'teacher_login',admin:'admin_login'};
-const NEXT = {student:'../index.html',teacher:'teacher.html',admin:'admin.html'};
+const NEXT = {student:'quiz.html',teacher:'teacher.html',admin:'admin.html'};
 
 let role='student';
 const $=s=>document.querySelector(s);
@@ -166,7 +166,7 @@ $('#f_student_no')&&$('#f_student_no').focus();
     const t=localStorage.getItem('quiz_token');
     if(t){
       const r=localStorage.getItem('quiz_role');
-      const next=(r==='teacher'?'teacher.html':r==='admin'?'admin.html':'../index.html');
+      const next=(r==='teacher'?'teacher.html':r==='admin'?'admin.html':'quiz.html');
       location.replace(next);
     }
   }catch(e){}

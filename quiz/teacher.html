@@ -64,10 +64,17 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
 .sl:before{content:"";position:absolute;width:20px;height:20px;left:3px;top:2px;background:#8fa3c4;border-radius:50%;transition:.2s;}
 .switch input:checked+.sl{background:linear-gradient(135deg,var(--gold),#a9861f);border-color:var(--gold);box-shadow:0 0 10px rgba(212,175,55,.55);}
 .switch input:checked+.sl:before{transform:translateX(22px);background:#14100a;}
-.lab{color:var(--sub);font-size:12.5px;margin-left:14px;transition:.2s;cursor:pointer;user-select:none;}
+.lab{color:var(--sub);font-size:12.5px;transition:.2s;cursor:pointer;user-select:none;}
 .lab.on{color:var(--gold);font-weight:700;}
 .lab+.switch{margin-left:8px;}
 .swrow.dirty{background:rgba(212,175,55,.05);border-radius:8px;}
+.swtable{display:grid;grid-template-columns:minmax(190px,1fr) 168px 168px;gap:0;align-items:center;}
+.swtable .hd{color:var(--sub);font-size:12px;font-weight:700;letter-spacing:1px;padding:8px 14px;border-bottom:1.5px solid var(--line);}
+.swtable .hd:first-child{padding-left:4px;}
+.swtable .swname{font-size:14px;padding:11px 4px;border-bottom:1px solid rgba(42,58,92,.55);display:flex;align-items:center;gap:10px;}
+.swtable .swname .ch{color:var(--gold);font-weight:700;font-size:12.5px;flex:none;}
+.swtable .swcell{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid rgba(42,58,92,.55);justify-content:flex-start;}
+.swtable .swcell .switch{margin-left:0;}
 .bar{height:16px;border-radius:8px;background:#2a3a5c;overflow:hidden;}
 .bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#a9861f);}
 .stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px;}
@@ -86,7 +93,7 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
   <div><h1>测试中心 · 教师工作台 <span style="color:var(--gold)">Teacher</span></h1><div class="en">CLASS · QUIZ · RESULTS</div></div>
   <div class="sp"></div>
   <div class="who">欢迎 <b id="tName">教师</b></div>
-  <button class="btn" onclick="goQuiz()">考试页</button>
+  <button class="btn" onclick="goPreview()">预览学生端</button>
   <button class="btn gold" onclick="logout()">退出</button>
 </div>
 
@@ -331,14 +338,15 @@ async function loadSwitches(){
     const sw=d.switches||{};
     swDraft={};
     $('#saveSw').disabled=true;
-    box.innerHTML='';
+    box.innerHTML='<div class="hd">章节 Chapter</div><div class="hd">内容 Content</div><div class="hd">测试 Quiz</div>';
     Object.keys(CHS).forEach(n=>{
       const st=sw[n]||{content:false,quiz:false};
       const row=document.createElement('div');row.className='swrow';
-      row.innerHTML='<div><span class="ch">CH'+String(n).padStart(2,'0')+'</span>'+CHS[n]+
-        '<span class="lab'+(st.content?' on':'')+'" data-l="'+n+'-content">内容 Content</span>'+
-        '<label class="switch"><input type="checkbox" id="sw-'+n+'-content" '+(st.content?'checked':'')+' onchange="markSw('+n+')"><span class="sl"></span></label>'+
-        '<span class="lab'+(st.quiz?' on':'')+'" data-l="'+n+'-quiz">测试 Quiz</span>'+
+      row.style.cssText='display:contents;';
+      row.innerHTML='<div class="swname"><span class="ch">CH'+String(n).padStart(2,'0')+'</span>'+CHS[n]+'</div>'+
+        '<div class="swcell"><span class="lab'+(st.content?' on':'')+'" data-l="'+n+'-content">内容</span>'+
+        '<label class="switch"><input type="checkbox" id="sw-'+n+'-content" '+(st.content?'checked':'')+' onchange="markSw('+n+')"><span class="sl"></span></label></div>'+
+        '<div class="swcell"><span class="lab'+(st.quiz?' on':'')+'" data-l="'+n+'-quiz">测试</span>'+
         '<label class="switch"><input type="checkbox" id="sw-'+n+'-quiz" '+(st.quiz?'checked':'')+' onchange="markSw('+n+')"><span class="sl"></span></label></div>';
       box.appendChild(row);
     });
@@ -482,6 +490,7 @@ async function exportCsv(){
 }
 
 function goQuiz(){location.href='quiz.html';}
+function goPreview(){location.href='quiz.html?preview=1';}
 function logout(){try{localStorage.removeItem('quiz_token');localStorage.removeItem('quiz_role');localStorage.removeItem('quiz_user');}catch(e){}location.href='login.html';}
 
 /* ---------- 启动 ---------- */
