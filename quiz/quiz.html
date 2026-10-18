@@ -405,7 +405,7 @@ let answers={mc:[null,null,null,null,null], tr:['','','','','']};
 
 const $=s=>document.querySelector(s);
 function show(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('show'));$('#'+v).classList.add('show');}
-function goHome(){try{if(window.parent&&parent.showHome)parent.showHome();else location.href='index.html';}catch(e){location.href='index.html';}}
+function goHome(){try{if(window.parent&&window.parent!==window&&parent.showHome)parent.showHome();else location.href='../index.html';}catch(e){location.href='../index.html';}}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function fmt(sec){const m=Math.max(0,Math.floor(sec/60)),s=Math.max(0,Math.floor(sec%60));return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
 function clearPolls(){if(pollTimer){clearInterval(pollTimer);pollTimer=null;} if(clockTimer){clearInterval(clockTimer);clockTimer=null;}}
