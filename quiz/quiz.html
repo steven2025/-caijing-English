@@ -124,7 +124,7 @@ main{position:relative;z-index:1}
 .opt.sel .k{background:linear-gradient(140deg,var(--gold3),var(--gold));color:#241d05}
 /* 翻译 */
 .t-area .stem{margin-bottom:18px}
-.t-area textarea{width:100%;min-height:150px;resize:vertical;border-radius:14px;padding:16px 18px;font-size:18px;line-height:1.7;
+.t-area textarea{width:100%;height:230px;resize:none;border-radius:14px;padding:16px 18px;font-size:18px;line-height:1.7;
   background:rgba(255,255,255,.05);border:2px solid rgba(212,175,55,.28);color:var(--ink);font-family:inherit;flex:1}
 .t-area textarea:focus{outline:none;border-color:var(--gold)}
 /* 底部导航 */
@@ -420,6 +420,15 @@ function api(action,body){
   return fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token()},
     body:JSON.stringify(Object.assign({action},body||{}))}).then(r=>r.json());
 }
+function apiT(action,body,ms){
+  if(!ONLINE)return Promise.reject(new Error('offline'));
+  const ctl=new AbortController();
+  const tm=setTimeout(()=>ctl.abort(),ms||20000);
+  return fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token()},
+    body:JSON.stringify(Object.assign({action},body||{})),signal:ctl.signal})
+    .then(r=>{clearTimeout(tm);return r.json();})
+    .catch(e=>{clearTimeout(tm);throw e;});
+}
 
 /* ================= 选章 ================= */
 let openChapters=null; /* 学生本班已开放测试章节 */
@@ -605,10 +614,10 @@ function doSubmit(){autoSubmit('交卷成功');}
 function autoSubmit(tip){
   submitted=true;clearPolls();clearDraft();
   if(!ONLINE){localJudge();return;}
-  api('submit',{ch:cur,mc:answers.mc.map(i=>i===null?null:KEYS[i]),trans:answers.tr}).then(d=>{
+  apiT('submit',{ch:cur,mc:answers.mc.map(i=>i===null?null:KEYS[i]),trans:answers.tr},25000).then(d=>{
     if(d.ok){enterSubmitted();}
     else{failApi(d);submitted=false;}
-  }).catch(()=>{failApi({error:'网络错误，交卷未成功，请重试'});submitted=false;});
+  }).catch(()=>{failApi({error:'提交请求超时，请稍后重新交卷；若已提示成功请勿重复操作'});submitted=false;});
 }
 function enterSubmitted(){
   $('#timer').style.display='none';
