@@ -113,6 +113,17 @@ main,.topbar,.footer{position:relative;z-index:1}
 .install-btn .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#1d7a3c;margin-right:7px;box-shadow:0 0 0 0 rgba(29,122,60,.5);animation:pulse 1.8s infinite}
 @keyframes pulse{70%{box-shadow:0 0 0 7px rgba(29,122,60,0)}100%{box-shadow:0 0 0 0 rgba(29,122,60,0)}}
 
+.quiz-btn{
+  flex:0 0 auto;border:0;border-radius:12px;padding:9px 18px;margin-left:10px;
+  font-size:13px;font-weight:900;color:#241d05;white-space:nowrap;cursor:pointer;
+  background:linear-gradient(120deg,#fdf3cf,var(--gold) 45%,var(--gold2) 80%,#fdf3cf);
+  background-size:220% auto;animation:flow 4s linear infinite;
+  box-shadow:0 4px 0 #8a6f1e,0 8px 18px -6px rgba(212,175,55,.5);
+  transition:transform .15s,box-shadow .2s;
+}
+.quiz-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #8a6f1e,0 12px 24px -8px rgba(212,175,55,.65)}
+.quiz-btn:active{transform:translateY(1px);box-shadow:0 2px 0 #8a6f1e}
+
 /* ---------- 安装指南弹层 ---------- */
 .modal{
   position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;
@@ -210,6 +221,13 @@ main.full{height:100vh}
 .mini-card.ready{border-color:rgba(212,175,55,.65)}
 .mini-card.locked-card{opacity:.78;filter:saturate(.55)}
 .mini-card.locked-card .no{opacity:.6}
+.mini-card.locked-auth{opacity:.45;filter:saturate(.35);cursor:not-allowed}
+.mini-card.locked-auth .no{opacity:.55}
+.mini-card.locked-auth .st{background:rgba(212,175,55,.08);color:var(--dim);border-color:rgba(212,175,55,.22)}
+.mini-card.locked-auth:hover{transform:none;border-color:rgba(212,175,55,.38)}
+.mini-card.locked-auth::after{opacity:0}
+.ch-btn.locked-auth{opacity:.5;cursor:not-allowed;filter:saturate(.45)}
+.ch-btn.locked-auth:hover{transform:none;box-shadow:none}
 .hero .cta{
   margin-top:36px;display:inline-block;border:0;border-radius:40px;padding:13px 48px;
   font-size:16px;font-weight:900;color:#241d05;position:relative;overflow:hidden;
@@ -294,6 +312,8 @@ main.full{height:100vh}
   </div>
   <nav class="ch-nav" id="chNav" aria-label="章节导航"></nav>
   <button class="install-btn" id="installBtn" onclick="openInstallGuide()"><span class="dot"></span>安装 App</button>
+  <button class="quiz-btn" id="quizBtn" onclick="openQuiz()">测试中心 Quiz</button>
+  <button class="quiz-btn" id="authBtn" onclick="authAction()">登录 Login</button>
 </header>
 
 <main>
@@ -378,15 +398,61 @@ const $=s=>document.querySelector(s);
 const nav1=$('#chNav'),nav2=$('#chNav2'),frame=$('#chapterFrame');
 let current=0,toastTimer=null;
 
+/* ================= 登录与章节开放控制 ================= */
+const QUIZ_API='https://1311686407-6z755znqlt.ap-guangzhou.tencentscf.com';
+let loginState='guest';      /* guest | student | teacher | admin */
+let loginName='';
+let accessMap=null;          /* student：{ch:true}；teacher/admin：null=全开 */
+function getTok(){try{return localStorage.getItem('quiz_token')||'';}catch(e){return '';}}
+function getRole(){try{return localStorage.getItem('quiz_role')||'';}catch(e){return '';}}
+function initAuth(){
+  const tok=getTok(),role=getRole();
+  if(!tok||!role){loginState='guest';loginName='';accessMap=null;renderAuth();return;}
+  if(role==='teacher'||role==='admin'){loginState=role;accessMap=null;}
+  else{
+    loginState='student';
+    accessMap={1:true}; /* 兜底：默认第 1 章 */
+    fetch(QUIZ_API,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},
+      body:JSON.stringify({action:'my_chapters'})}).then(r=>r.json()).then(j=>{
+      if(j.ok&&j.data){
+        if(j.data.all){accessMap=null;}
+        else{const m={};;(j.data.content||[]).forEach(ch=>m[ch]=true);accessMap=m;}
+      }
+      renderNav();
+    }).catch(()=>{});
+  }
+  try{const u=JSON.parse(localStorage.getItem('quiz_user')||'{}');loginName=u.name||u.student_no||'';}catch(e){}
+  renderAuth();
+}
+function isOpen(n){
+  if(!CHAPTERS.find(c=>c.n===n)?.file)return false; /* 尚未上线的章永远不可点 */
+  if(loginState==='guest')return false;
+  if(accessMap===null)return true;                   /* 教师/管理员全开 */
+  return !!accessMap[n];
+}
+function renderAuth(){
+  const b=$('#authBtn');if(!b)return;
+  if(loginState==='guest'){b.textContent='登录 Login';b.style.opacity='1';}
+  else{b.textContent='退出 · '+(loginName||(loginState==='teacher'?'教师':'学生'));}
+}
+window.authAction=()=>{
+  if(loginState==='guest'){location.href='quiz/login.html';return;}
+  if(!confirm('确定退出登录？/ Sign out?'))return;
+  try{localStorage.removeItem('quiz_token');localStorage.removeItem('quiz_role');localStorage.removeItem('quiz_user');}catch(e){}
+  location.reload();
+};
+
 function chip(c){
-  const ready=!!c.file;
-  return `<button class="ch-btn ${ready?'ready':''}${current===c.n?' on':''}" data-n="${c.n}" style="--cc:${COLORS[c.n]}"><b>${c.n}</b>${c.cn}</button>`;
+  const ready=!!c.file,open=isOpen(c.n);
+  return `<button class="ch-btn ${ready?'ready':''}${open?'':' locked-auth'}${current===c.n?' on':''}" data-n="${c.n}" style="--cc:${COLORS[c.n]}"><b>${c.n}</b>${c.cn}</button>`;
 }
 function miniCard(c){
-  const ready=!!c.file;
-  return `<div class="mini-card ${ready?'ready':'locked-card'}" data-n="${c.n}" style="--cc:${COLORS[c.n]}">
+  const ready=!!c.file,open=isOpen(c.n);
+  const st=ready?(open?'':'<span class="st">'+(loginState==='guest'?'登录后开放':'未开放')+'</span>'):'<span class="st">即将上线</span>';
+  const cls=ready?(open?'ready':'locked-auth'):'locked-card';
+  return `<div class="mini-card ${cls}" data-n="${c.n}" style="--cc:${COLORS[c.n]}">
     <div class="line1"><span class="no">${String(c.n).padStart(2,'0')}</span><span class="nm">${c.cn}</span></div>
-    ${ready?'':'<span class="st">即将上线</span>'}
+    ${st}
   </div>`;
 }
 function bindGlow(btn){
@@ -418,6 +484,11 @@ function toast(msg){
 function openChapter(n){
   const c=CHAPTERS.find(x=>x.n===n);if(!c)return;
   if(!c.file){toast('第 '+n+' 章内容制作中 · Coming Soon');return}
+  if(!isOpen(n)){
+    if(loginState==='guest')toast('请先登录后学习 · Please sign in first');
+    else toast('本章尚未开放 · Not yet unlocked');
+    return;
+  }
   current=n;
   document.querySelector('.topbar').classList.add('hidden');
   document.querySelector('.footer').classList.add('hidden');
@@ -442,7 +513,13 @@ function showHome(){
 }
 window.openChapter=openChapter;
 window.showHome=showHome;
-window.enterFirstReady=()=>{const f=CHAPTERS.find(c=>c.file);if(f)openChapter(f.n)};
+window.enterFirstReady=()=>{
+  const f=CHAPTERS.find(c=>c.file&&isOpen(c.n));
+  if(f)openChapter(f.n);
+  else if(loginState==='guest')toast('请先登录后学习 · Please sign in first');
+  else toast('暂无开放的章节 · No chapter unlocked yet');
+};
+initAuth();
 renderNav();
 
 /* ---------- PWA 安装 ---------- */
@@ -458,6 +535,7 @@ window.addEventListener('appinstalled',()=>{
   toast('安装成功，可在桌面打开本应用');
 });
 window.openInstallGuide=()=>$('#installModal').classList.add('show');
+window.openQuiz=()=>location.href='quiz/login.html';
 window.closeInstallGuide=()=>$('#installModal').classList.remove('show');
 $('#installModal').addEventListener('click',e=>{if(e.target.id==='installModal')closeInstallGuide()});
 $('#installNow').addEventListener('click',async()=>{
