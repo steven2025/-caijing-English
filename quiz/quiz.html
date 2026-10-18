@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>测试中心 · Quiz Hub</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230d1f18'/%3E%3Cpath d='M50 22 L84 40 L50 58 L16 40 Z' fill='%23d4af37'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg0:#070f0c;--bg1:#0b1712;--bg2:#101f18;
+  --gold:#d4af37;--gold2:#e8c56a;--gold3:#f8e7a8;
+  --ink:#f5eeda;--sub:#b9cbbe;--dim:#6f8876;
+  --line:rgba(212,175,55,.16);
+  --ok:#3ddc97;--no:#fb7185;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:radial-gradient(1200px 700px at 82% -10%,rgba(212,175,55,.14),transparent 60%),
+             radial-gradient(1000px 600px at -10% 30%,rgba(56,189,248,.08),transparent 55%),
+             linear-gradient(160deg,var(--bg0),var(--bg1) 45%,var(--bg2));
+  color:var(--ink);font-family:"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  display:flex;flex-direction:column;min-height:100vh;
+}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(1.4px 1.4px at 12% 22%,rgba(232,197,106,.5),transparent 60%),
+    radial-gradient(1px 1px at 78% 12%,rgba(232,197,106,.4),transparent 60%),
+    radial-gradient(1.6px 1.6px at 35% 68%,rgba(232,197,106,.35),transparent 60%),
+    radial-gradient(1px 1px at 92% 55%,rgba(232,197,106,.4),transparent 60%),
+    radial-gradient(1.3px 1.3px at 55% 88%,rgba(232,197,106,.3),transparent 60%);}
+button{font-family:inherit;cursor:pointer}
+main{position:relative;z-index:1}
+
+/* ---------- 顶栏 ---------- */
+.topbar{height:60px;flex:0 0 60px;display:flex;align-items:center;gap:16px;padding:0 22px;
+  background:rgba(6,14,10,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);position:relative;z-index:2;}
+.topbar .t{font-size:17px;font-weight:900;color:var(--gold2);letter-spacing:1px;white-space:nowrap;font-family:Georgia,"Songti SC",serif;}
+.topbar .t small{color:var(--sub);font-weight:600;margin-left:10px;font-family:sans-serif;letter-spacing:0}
+.topbar .spacer{flex:1}
+.back-home{border:1px solid var(--gold);background:transparent;color:var(--gold2);padding:7px 15px;border-radius:11px;font-size:13px;font-weight:800;white-space:nowrap;
+  box-shadow:0 3px 0 rgba(0,0,0,.35);transition:transform .15s,box-shadow .2s,background .2s;}
+.back-home:hover{background:rgba(212,175,55,.14);transform:translateY(-1px)}
+.back-home:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+#timer{display:none;align-items:center;gap:8px;padding:7px 18px;border-radius:30px;font-size:15px;font-weight:900;letter-spacing:1px;color:var(--gold3);
+  border:1.5px solid rgba(212,175,55,.5);background:rgba(212,175,55,.08);}
+#timer.warn{color:#fff;border-color:var(--no);background:rgba(251,113,133,.16);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.7}}
+
+/* ---------- 视图 ---------- */
+.view{display:none;max-width:920px;margin:0 auto;padding:22px 20px 60px;width:100%}
+.view.show{display:block}
+.sub{color:var(--sub);font-size:13px;margin-top:6px}
+
+/* ---------- 选章 ---------- */
+.pick-head{text-align:center;margin-bottom:24px}
+.pick-head .t1{font-size:26px;font-weight:900}
+.pick-head .t1 b{color:var(--gold2);font-family:Georgia,"Songti SC",serif}
+.pick-head .t2{font-size:13.5px;color:var(--sub);margin-top:6px}
+.pick-head .bar{width:64px;height:4px;border-radius:4px;margin:12px auto 0;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.ch-grid{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.ch-card{flex:1 1 200px;max-width:232px;min-height:148px;border-radius:20px;cursor:pointer;background:rgba(10,23,17,.82);
+  border:1.5px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:18px 14px;
+  box-shadow:0 8px 22px -10px rgba(0,0,0,.6);transition:transform .15s,border-color .2s,box-shadow .2s;position:relative;overflow:hidden}
+.ch-card::after{content:"";position:absolute;inset:0;opacity:0;transition:opacity .25s;
+  background:radial-gradient(160px 80px at 50% 50%,rgba(255,255,255,.1),transparent 70%)}
+.ch-card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 14px 30px -12px rgba(212,175,55,.4)}
+.ch-card:hover::after{opacity:1}
+.ch-card .no{font-size:15px;font-weight:900;color:var(--gold2);letter-spacing:2px}
+.ch-card .cn{font-size:17px;font-weight:900}
+.ch-card .en{font-size:11.5px;color:var(--sub);text-align:center;line-height:1.4}
+.ch-card .meta{font-size:11px;color:var(--dim);margin-top:2px}
+.ch-card.lock{opacity:.5;cursor:not-allowed;filter:saturate(.55)}
+.ch-card.lock:hover{transform:none;border-color:var(--line);box-shadow:0 8px 22px -10px rgba(0,0,0,.6)}
+.ch-card.lock::after{opacity:0}
+.ch-card.lock .no{color:var(--dim)}
+.ch-card.lock .tag-lock{font-size:11px;color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:2px 10px;margin-top:2px}
+
+/* ---------- 等待页 ---------- */
+.wait-box{max-width:520px;margin:90px auto 0;text-align:center;background:rgba(10,23,17,.82);
+  border:1.5px solid var(--line);border-radius:24px;padding:44px 34px}
+.wait-box .ic{width:70px;height:70px;margin:0 auto 18px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:2px solid rgba(212,175,55,.5);background:rgba(212,175,55,.08)}
+.wait-box .ic svg{width:36px;height:36px;stroke:var(--gold2)}
+.wait-box h2{font-size:21px;font-weight:900;color:var(--gold2);margin-bottom:10px}
+.wait-box p{font-size:14.5px;color:var(--sub);line-height:1.8}
+.wait-box .hint{font-size:12px;color:var(--dim);margin-top:14px}
+
+/* ---------- 做题（一题一页） ---------- */
+.qz-wrap{max-width:820px;margin:0 auto}
+.qz-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.qz-head .sec{font-size:19px;font-weight:900;color:var(--gold2)}
+.qz-head .sec small{font-size:12px;color:var(--sub);font-weight:600;margin-left:8px}
+.qz-head .quit{margin-left:auto;border:1.5px solid var(--line);background:rgba(255,255,255,.03);color:var(--sub);
+  padding:7px 16px;border-radius:11px;font-size:13px;font-weight:700}
+.qz-head .quit:hover{color:var(--no);border-color:var(--no)}
+/* 题号索引条 */
+.idx-bar{display:flex;gap:9px;flex-wrap:wrap;background:rgba(10,23,17,.75);border:1px solid var(--line);
+  border-radius:16px;padding:12px 14px;margin-bottom:16px}
+.idx-dot{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:900;color:var(--dim);background:rgba(255,255,255,.03);border:1.5px solid rgba(212,175,55,.18);cursor:pointer;transition:all .15s}
+.idx-dot:hover{border-color:var(--gold2);color:var(--gold2)}
+.idx-dot.done{color:#241d05;background:linear-gradient(140deg,var(--gold3),var(--gold));border-color:transparent}
+.idx-dot.cur{border-color:var(--gold2);color:var(--gold2);box-shadow:0 0 0 3px rgba(212,175,55,.18)}
+/* 题目卡片 */
+.q-card{background:rgba(10,23,17,.82);border:1.5px solid var(--line);border-radius:22px;padding:34px 40px 30px;min-height:330px;
+  display:flex;flex-direction:column}
+.q-card .q-no{font-size:13px;font-weight:900;color:var(--dim);letter-spacing:2px;margin-bottom:10px}
+.q-card .q-type{display:inline-block;font-size:12px;font-weight:800;padding:3px 14px;border-radius:20px;margin-bottom:16px;align-self:flex-start;
+  background:rgba(56,189,248,.14);color:#7dd3fc;border:1px solid rgba(56,189,248,.35)}
+.q-card .q-type.mc{background:rgba(212,175,55,.12);color:var(--gold2);border-color:rgba(212,175,55,.4)}
+.q-card .stem{font-size:21px;line-height:1.75;font-weight:700;margin-bottom:24px}
+.opts{display:flex;flex-direction:column;gap:12px;margin-top:auto}
+.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:2px solid rgba(212,175,55,.24);
+  background:rgba(255,255,255,.03);color:var(--ink);border-radius:14px;padding:15px 18px;font-size:18px;line-height:1.55;transition:border-color .15s,background .15s,transform .1s}
+.opt:hover{border-color:var(--gold2)}
+.opt .k{flex:0 0 30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;
+  color:var(--gold2);border:1.5px solid rgba(212,175,55,.4);background:rgba(212,175,55,.08)}
+.opt.sel{border-color:var(--gold);background:rgba(212,175,55,.16)}
+.opt.sel .k{background:linear-gradient(140deg,var(--gold3),var(--gold));color:#241d05}
+/* 翻译 */
+.t-area .stem{margin-bottom:18px}
+.t-area textarea{width:100%;min-height:150px;resize:vertical;border-radius:14px;padding:16px 18px;font-size:18px;line-height:1.7;
+  background:rgba(255,255,255,.05);border:2px solid rgba(212,175,55,.28);color:var(--ink);font-family:inherit;flex:1}
+.t-area textarea:focus{outline:none;border-color:var(--gold)}
+/* 底部导航 */
+.q-nav{display:flex;align-items:center;gap:14px;margin-top:18px}
+.q-nav .btn-prev,.q-nav .btn-next{flex:1;border:0;border-radius:40px;padding:14px 20px;font-size:16px;font-weight:900;color:#241d05;
+  background:linear-gradient(120deg,#fdf3cf,var(--gold) 45%,var(--gold2) 80%,#fdf3cf);background-size:220% auto;
+  box-shadow:0 5px 0 #8a6f1e;transition:transform .15s,box-shadow .2s}
+.q-nav .btn-prev:hover,.q-nav .btn-next:hover{transform:translateY(-2px);box-shadow:0 7px 0 #8a6f1e}
+.q-nav .btn-prev:active,.q-nav .btn-next:active{transform:translateY(1px);box-shadow:0 2px 0 #8a6f1e}
+.q-nav .btn-prev:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:0 5px 0 #8a6f1e}
+.q-nav .btn-prev{background:transparent;color:var(--gold2);border:1.5px solid var(--gold);box-shadow:0 3px 0 rgba(0,0,0,.35)}
+.q-nav .btn-prev:hover{background:rgba(212,175,55,.12);box-shadow:0 5px 0 rgba(0,0,0,.35)}
+.q-nav .mid{font-size:13px;color:var(--dim);font-weight:700;white-space:nowrap}
+.q-nav .mid b{color:var(--gold2);font-size:15px}
+
+/* ---------- 已提交等待 ---------- */
+.sub-box{max-width:560px;margin:80px auto 0;text-align:center;background:rgba(10,23,17,.85);
+  border:1.5px solid var(--gold);border-radius:24px;padding:44px 34px}
+.sub-box .ic{width:70px;height:70px;margin:0 auto 18px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:rgba(61,220,151,.12);border:2px solid rgba(61,220,151,.5)}
+.sub-box .ic svg{width:34px;height:34px;stroke:var(--ok)}
+.sub-box h2{font-size:21px;font-weight:900;color:var(--ok);margin-bottom:10px}
+.sub-box p{font-size:14.5px;color:var(--sub);line-height:1.9}
+.sub-box .hint{font-size:12.5px;color:var(--dim);margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+
+/* ---------- 结果 ---------- */
+.score-hero{display:flex;align-items:center;gap:26px;background:rgba(10,23,17,.82);border:1.5px solid var(--line);
+  border-radius:24px;padding:26px 30px;margin-bottom:20px;flex-wrap:wrap}
+.score-ring{flex:0 0 132px;width:132px;height:132px;position:relative}
+.score-ring svg{width:132px;height:132px;transform:rotate(-90deg)}
+.score-ring .bg{stroke:rgba(212,175,55,.15)}
+.score-ring .fg{stroke:var(--gold);stroke-linecap:round;transition:stroke-dashoffset 1s ease}
+.score-ring .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-ring .num b{font-size:34px;font-weight:900;color:var(--gold3);font-family:Georgia,serif}
+.score-ring .num span{font-size:11px;color:var(--dim)}
+.score-info{flex:1;min-width:220px}
+.score-info .lvl{font-size:19px;font-weight:900;color:var(--gold2);margin-bottom:6px}
+.score-info .line{font-size:13px;color:var(--sub);line-height:1.8}
+.score-info .line b{color:var(--ink)}
+.r-block{background:rgba(10,23,17,.75);border:1px solid var(--line);border-radius:20px;padding:20px 22px;margin-bottom:20px}
+.r-block .r-title{font-size:15.5px;font-weight:900;color:var(--gold3);margin-bottom:12px}
+.r-item{padding:14px 0;border-bottom:1px dashed rgba(212,175,55,.14)}
+.r-item:last-child{border-bottom:0}
+.r-item .q-line{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.6}
+.r-item .q-line .mark{flex:0 0 22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900}
+.r-item .ok .mark{background:rgba(61,220,151,.18);color:var(--ok);border:1px solid rgba(61,220,151,.5)}
+.r-item .bad .mark{background:rgba(251,113,133,.16);color:var(--no);border:1px solid rgba(251,113,133,.5)}
+.r-item .ans{font-size:12.5px;color:var(--sub);margin-top:6px}
+.r-item .ans b{color:var(--gold2)}
+.r-item .your{font-size:12.5px;color:var(--no);margin-top:3px}
+.r-item .your.good{color:var(--ok)}
+.r-item .q-line .s2{flex:0 0 34px;font-weight:900;color:var(--gold2);font-size:14px;text-align:right}
+.ref{font-size:12.5px;color:var(--sub);margin-top:7px;line-height:1.7;background:rgba(212,175,55,.06);border-radius:10px;padding:9px 12px}
+.ref b{color:var(--gold2);font-weight:800}
+.ai-line{font-size:12.5px;color:#7dd3fc;margin-top:7px;background:rgba(56,189,248,.07);border-radius:10px;padding:8px 12px}
+.ai-line b{color:#7dd3fc}
+.action-row{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:8px}
+
+/* ---------- 弹层 ---------- */
+.modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;
+  background:rgba(4,9,7,.72);backdrop-filter:blur(6px);padding:20px}
+.modal.show{display:flex}
+.modal-card{width:min(540px,94vw);border-radius:20px;background:linear-gradient(170deg,#10241a,#0b1a13);
+  border:1px solid rgba(212,175,55,.35);box-shadow:0 30px 80px rgba(0,0,0,.6);padding:26px 28px}
+.modal-card h3{font-size:19px;font-weight:900;color:var(--gold2);margin-bottom:10px}
+.modal-card p{font-size:14px;color:var(--sub);line-height:1.75;margin-bottom:18px}
+.m-btns{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap}
+.btn{border:0;border-radius:40px;padding:11px 34px;font-size:14.5px;font-weight:900;color:#241d05;
+  background:linear-gradient(120deg,#fdf3cf,var(--gold) 45%,var(--gold2) 80%,#fdf3cf);background-size:220% auto;
+  box-shadow:0 4px 0 #8a6f1e;transition:transform .15s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #8a6f1e}
+.btn.ghost{background:transparent;color:var(--gold2);border:1.5px solid var(--gold);box-shadow:0 3px 0 rgba(0,0,0,.35)}
+.btn.ghost:hover{background:rgba(212,175,55,.12)}
+
+@media(max-width:760px){
+  .ch-card{flex:1 1 150px;min-height:128px}
+  .topbar .t small{display:none}
+  .view{padding:16px 12px 50px}
+  .q-card{padding:24px 20px 22px}
+  .q-card .stem{font-size:18px}
+  .opt{font-size:16px;padding:12px 14px}
+  .idx-dot{width:34px;height:34px;font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="back-home" onclick="goHome()">‹ 返回首页</button>
+  <span class="t">测试中心<small>Quiz Hub · 一题一页 · 教师统一公布</small></span>
+  <span class="spacer"></span>
+  <span id="timer"></span>
+</header>
+
+<main>
+  <!-- 选章 -->
+  <section id="viewPick" class="view show">
+    <div class="pick-head">
+      <div class="t1">选择章节 · <b>Choose a Chapter</b></div>
+      <div class="t2" id="modeTip">每章 5 单选 + 5 翻译 · 30 分钟 · 教师统一收卷与公布</div>
+      <div class="bar"></div>
+    </div>
+    <div class="ch-grid" id="chGrid"></div>
+  </section>
+
+  <!-- 等待开始 -->
+  <section id="viewWait" class="view">
+    <div class="wait-box">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 2h6"/></svg></div>
+      <h2 id="waitTitle">测试尚未开始</h2>
+      <p id="waitMsg">本章节测试由任课教师统一开启，请稍候…</p>
+      <div class="hint">页面会自动检测开始状态，无需刷新</div>
+    </div>
+  </section>
+
+  <!-- 一题一页 -->
+  <section id="viewQuiz" class="view">
+    <div class="qz-wrap">
+      <div class="qz-head">
+        <div class="sec" id="qzSec">Chapter</div>
+        <button class="quit" onclick="confirmQuit()">退出 Exit</button>
+      </div>
+      <div class="idx-bar" id="idxBar"></div>
+      <div class="q-card" id="qCard"></div>
+      <div class="q-nav">
+        <button class="btn-prev" id="btnPrev" onclick="nav(-1)">‹ 上一题 Previous</button>
+        <span class="mid" id="qPos">1 / 10</span>
+        <button class="btn-next" id="btnNext" onclick="nav(1)">下一题 Next ›</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 已提交等待 -->
+  <section id="viewSubmitted" class="view">
+    <div class="sub-box">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <h2>已提交 Submitted</h2>
+      <p>你的答卷已提交并锁定。<br>成绩与参考答案将在 <b style="color:var(--gold2)">教师点击「结束测试」</b>后统一公布。</p>
+      <div class="hint">页面会自动检测公布状态，无需刷新</div>
+    </div>
+  </section>
+
+  <!-- 结果 -->
+  <section id="viewResult" class="view">
+    <div id="resBody"></div>
+  </section>
+</main>
+
+<!-- 确认弹层 -->
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <h3 id="mTitle">提示</h3>
+    <p id="mMsg"></p>
+    <div class="m-btns" id="mBtns"></div>
+  </div>
+</div>
+
+<script>
+/* ================= 配置 ================= */
+const CONFIG = {
+  API_URL: 'https://1311686407-6z755znqlt.ap-guangzhou.tencentscf.com'   /* 部署后填入：https://<你的域名>/api（URL 模式） */
+};
+const API_URL = CONFIG.API_URL;
+const ONLINE = !!API_URL;
+const KEYS = ['A','B','C','D'];
+const TOTAL = 10;
+const TIME_MIN = 30;
+const POLL_MS = 8000;
+
+/* ================= 题库（9 章） ================= */
+const QUIZ = {
+1:{cn:'经济学是什么',en:'What Is Economics?',mc:['A','D','B','B','C'],q:['Economics is best defined as the study of ______','Because people respond to incentives, ______','Which of the following best describes the primary focus of microeconomics?','According to the passage, positive economics is often referred to as ______.','Which of the following statements about normative economics is TRUE?'],
+o:[['how society manages its scarce resources.','how to run a business most profitably.','how to predict inflation, unemployment, and stock prices.','how the government can stop the harm from unchecked self-interest.'],
+['policymakers can alter outcomes by changing punishments or rewards.','policies can have unintended consequences.','society faces a trade-off between efficiency and equality.','All of the above'],
+['The study of overall economic growth and inflation at the national level.','The analysis of the behavior of individual units within the economy.','The management of government fiscal and monetary policies.','The evaluation of international trade and exchange rates.'],
+['"what ought to be" economics','"what is" economics','"what should be" economics','"what could be" economics'],
+['Normative statements can be proven or disproven solely through data or experimentation.','Normative economics refrains from expressing value judgments.','Normative economics is not empirically testable and relies on ethical, moral, or subjective foundations.','Normative economics strictly presents facts, relationships, and causation.']],
+tr:[['e2c','Economics provides a framework for analyzing and understanding a wide range of issues, from personal finance to global trade, and examining the complexities of the production, distribution, and consumption of goods and services, as well as the factors influencing these processes.','经济学为分析和理解从个人财务到全球贸易等广泛问题提供了一个框架，并研究了商品和服务的生产、分配和消费的复杂性以及影响这些过程的因素。'],
+['e2c','The benefits an individual could have received by taking an alternative action are the opportunity costs of the action he/she did take.','一个人通过采取替代行动本可以获得的利益，就是他/她所采取的行动的机会成本。'],
+['e2c','Trade allows individuals and nations to specialize in producing what they are most efficient at and exchange goods and services, leading to mutual benefit.','贸易使个人和国家能够专门生产他们最擅长的产品，并交换商品和服务，从而实现互惠互利。'],
+['e2c','Maximization refers to the process in which individuals or firms make choices to achieve their goals or objectives while facing constraints.','最大化是指个人或企业在面临约束的情况下，为实现其目标或目的而做出选择的过程。'],
+['e2c','As Adam Smith put it, firms and households\u2019 interplay in markets acts as if they are controlled by an \u201cinvisible hand\u201d that guides them to desirable market outcomes.','正如亚当·斯密所说，企业和家庭在市场中的相互作用，仿佛被一只\u201c看不见的手\u201d所支配，引导它们走向合意的市场结果。']]},
+2:{cn:'经济思想录',en:'Economic Thought',mc:['C','B','C','A','A'],q:['What was Aristotle\u2019s attitude toward economic activities according to the passage?','According to Aristotle, why was unlimited wealth accumulation problematic?','What can be inferred from the discussion of traditional Chinese economic thought?','Which of the following best reflects a similarity between Aristotle\u2019s economic thought and traditional Chinese economic thought?','What do the achievements of ancient China mentioned in the passage mainly show?'],
+o:[['He believed that making money should be the ultimate goal of human life.','He considered all forms of trade and business activities immoral.','He distinguished between necessary economic activities and the excessive pursuit of wealth.','He believed that economic activities should be completely controlled by the government.'],
+['Because it might prevent people from participating in trade.','Because it could make people focus too much on money rather than a good life.','Because wealth had no practical value in human society.','Because merchants usually harmed economic development.'],
+['Ancient Chinese thinkers paid little attention to economic development.','Traditional Chinese economic thought focused only on agriculture and ignored trade.','Chinese thinkers considered economic development closely related to people\u2019s well-being and social stability.','Ancient Chinese economic ideas were completely different from all modern economic theories.'],
+['Both emphasized that economic activities should serve broader human and social goals.','Both argued that governments should never intervene in economic affairs.','Both believed that accumulating wealth was the only measure of success.','Both rejected trade and commercial activities completely.'],
+['Ancient China developed advanced economic ideas and practices in areas such as agriculture, commerce, and technology.','Ancient China depended entirely on foreign trade for economic growth.','Ancient Chinese economic development was mainly based on military expansion.','Ancient China had already developed modern capitalism.']],
+tr:[['c2e','中国古代经济思想强调，经济发展的最终目的不仅是创造财富，也是改善人民的生活。','Traditional Chinese economic thought emphasized that the ultimate goal of economic development was not only to create wealth but also to improve people\'s lives.'],
+['c2e','许多中国古代思想家认为，财富追求应该符合道德原则，并服务于社会的整体利益。','Many ancient Chinese thinkers believed that the pursuit of wealth should follow moral principles and serve the overall interests of society.'],
+['c2e','中国古代经济思想重视政府在维护市场秩序和保障人民生活方面的作用。','Traditional Chinese economic thought attached importance to the role of the government in maintaining market order and ensuring people\'s livelihoods.'],
+['c2e','早期中国经济思想家认识到，农业、贸易和手工业的发展对于国家的繁荣具有重要意义。','Early Chinese economic thinkers recognized that the development of agriculture, trade, and handicrafts was of great importance to the prosperity of the country.'],
+['c2e','中国古代的经济成就表明，一个社会的发展不仅取决于财富的积累，也取决于资源的合理利用和有效管理。','The economic achievements of ancient China show that the development of a society depends not only on the accumulation of wealth but also on the proper use and effective management of resources.']]},
+3:{cn:'需求与供给',en:'Demand and Supply',mc:['A','B','C','B','A'],q:['Demand is defined as the quantity of a good or service that consumers are ______ to buy at different prices.','According to the law of supply, when the price of a product goes up, producers usually ______.','A market reaches equilibrium when the quantity demanded is ______ the quantity supplied at a certain price.','If the price of a good rises and the quantity demanded falls only a little, the demand for this good is ______.','Which of the following factors would most likely cause an increase in the demand for a normal good?'],
+o:[['able and willing','forced and required','eager but unable','reluctant and unwilling'],
+['reduce the quantity supplied','increase the quantity supplied','stop producing the product','keep the quantity supplied unchanged'],
+['greater than','smaller than','equal to','different from'],
+['elastic','inelastic','perfectly elastic','unrelated to price'],
+['A rise in consumers\u2019 income','A fall in the price of the good itself','An improvement in production technology','A decrease in the number of buyers']],
+tr:[['e2c','Supply and demand are the most important concepts in economics.','供给和需求是经济学中最重要的概念。'],
+['e2c','The equilibrium price and equilibrium quantity occur where the supply and demand curves cross\u2014that is, where the quantity demanded is equal to the quantity supplied.','均衡价格和均衡数量出现在供给曲线与需求曲线的交点处，即需求量等于供给量之处。'],
+['e2c','Demand for a good is said to be elastic if the quantity demanded responds substantially to changes in the price. Demand is said to be inelastic if the quantity demanded responds only slightly to changes in the price.','如果需求量对价格变化反应很大，那么这种商品的需求就被称为富有弹性。如果需求量对价格变化反应很小，那么这种需求就被称为缺乏弹性。'],
+['e2c','The price of any good adjusts to bring the quantity supplied and the quantity demanded for that good into balance.','任何一种商品的价格都会进行调整，以使该商品的供给量和需求量达到平衡。'],
+['e2c','Goods with close substitutes tend to have more elastic demand because it is easier for consumers to switch from that good to others. For example, butter and margarine are easily substitutable. A small increase in the price of butter, assuming the price of margarine is held fixed, causes the quantity of butter sold to fall by a large amount.','替代品较多的商品往往需求更富有弹性，因为消费者更容易从一种商品转向其他商品。例如，黄油和人造黄油很容易相互替代。假设人造黄油的价格保持不变，黄油价格的小幅上涨会导致黄油的销售量大幅下降。']]},
+4:{cn:'成本与利润',en:'Costs and Profit',mc:['B','C','B','B','B'],q:['According to the law of diminishing marginal utility, which of the following statement is correct?','A graduate runs his own small shop. He does not draw salary from the shop, but he could earn 3000 yuan monthly if he works for other companies. This forgone salary belongs to ______.','Which of the following descriptions about sunk cost is true?','The law of diminishing returns indicates that ______.','If a streetfood vendor gains total revenue of $600, his explicit costs are $200, and his implicit costs equal $150. What is his economic profit?'],
+o:[['Total utility keeps decreasing when people consume more goods','The extra satisfaction brought by each additional unit consumed gradually falls','Marginal utility must become negative as consumption rises','Consumers will stop buying goods once marginal utility starts to drop'],
+['explicit cost','sunk cost','implicit cost','marginal cost'],
+['Sunk cost should be fully considered when making future decisions','Sunk cost is money already spent and cannot be recovered','Rent you need to pay next month is a typical sunk cost','Sunk cost is one kind of explicit cost that must be counted into profit calculation'],
+['keeping all inputs unchanged, output will rise endlessly','when one input increases while other inputs stay constant, extra output from each new unit of this input will finally decrease','as production expands, both explicit and implicit costs must decline','more working hours always bring proportionally more learning outcomes'],
+['$400','$250','$450','$350']],
+tr:[['c2e','效用指个体从商品与服务的消费中获得的主观价值或满足水平。','Utility refers to the subjective value or level of satisfaction that individuals derive from the consumption of goods and services.'],
+['c2e','边际效用递减规律表明，随着消费数量增加，每一单位商品带来的额外满足感会逐步下降。','The law of diminishing marginal utility states that as the quantity consumed increases, the additional satisfaction brought by each unit of goods will decrease gradually.'],
+['c2e','总效用是消费者消费一定数量商品所得到的全部满足感，是每一个消费单位边际效用的累积总和。','Total utility is the overall satisfaction a consumer gets from consuming a certain quantity of goods, and it is the cumulative sum of the marginal utilities from each consumed unit.'],
+['c2e','边际成本代表企业每多生产一单位产出时发生的总成本变动，它能够帮助经营者判断是否应当继续扩大生产规模。','Marginal cost represents the change in total cost that occurs when a firm produces one additional unit of output, and it can help operators judge whether they should further expand their production scale.'],
+['c2e','企业的经济利润是销售收入扣除所有显性成本与隐性成本之后剩余的收益。','A firm\u2019s economic profit is the gain that remains after subtracting both explicit costs and implicit costs from its sales revenue.']]},
+5:{cn:'市场竞争',en:'Market Competition',mc:['B','B','A','B','B'],q:['In a perfectly competitive market, firms are called "price takers" because they ______.','A profit-maximizing firm should continue to produce as long as its marginal revenue ______ marginal cost.','In the prisoner\u2019s dilemma, two rational players end up with a worse outcome than if they had cooperated because each player ______.','A public good is characterized by two key features: non-excludability and ______.','Which of the following best describes the free-rider problem?'],
+o:[['can set any price they want to maximize profit','must accept the market price determined by supply and demand','compete mainly by advertising and product differentiation','are protected by government regulations from price competition'],
+['is less than','is greater than or equal to','is unrelated to','falls below'],
+['has a dominant strategy to defect','cannot understand the other player\u2019s choice','is forced by law to confess','prefers cooperation over personal gain'],
+['high rivalry in consumption','non-rivalry in consumption','exclusive ownership by the government','limited availability to a small group'],
+['Everyone pays for a public good voluntarily, so it is always provided.','People can enjoy a public good without paying for it, so private markets tend to underprovide it.','Private firms always produce more public goods than is socially optimal.','The government has no role in providing public goods.']],
+tr:[['e2c','A market is an organization consisting of the buyers and sellers of a commodity, though the word is sometimes taken to mean the place where the market is held or the area which the market serves.','市场是由某种商品的买方和卖方构成的一种组织，尽管这个词有时也被用来指市场交易发生的场所或市场所服务的区域。'],
+['e2c','A perfectly competitive industry is one where none of the firms can influence anything.','完全竞争行业是指其中任何一家企业都无法影响任何事物的行业。'],
+['e2c','At the profit-maximizing point, the firm chooses output and inputs with the goal of achieving maximum economic profits.','在利润最大化点，企业选择产出和投入，以实现最大化的经济利润。'],
+['e2c','In the prisoner\u2019s dilemma, each player has an incentive to defect, even though cooperation would make both players better off.','在囚徒困境中，每个参与者都有动机选择背叛，尽管合作会使双方都变得更好。'],
+['e2c','Public goods are goods that are non-excludable and non-rivalrous, which means that people cannot be prevented from using them and one person\'s use does not reduce their availability to others.','公共物品是具有非排他性和非竞争性的物品，这意味着人们无法被阻止使用它们，而且一个人的使用不会减少其他人对它们的可用性。']]},
+6:{cn:'生产要素',en:'Factors of Production',mc:['B','C','B','A','B'],q:['According to the passage, why are labor, capital, and land called factors of production?','What does the income of different production factors refer to?','Why is the demand for production factors called derived demand?','How may artificial intelligence and automation influence the demand for production factors?','A company decides to use more machines and fewer workers to produce its products. Which economic concept best explains this decision?'],
+o:[['Because they are mainly consumed by households.','Because they are resources used by firms to produce goods and services.','Because they can only be found in agricultural production.','Because they determine the prices of final products directly.'],
+['Labor earns rent, capital earns wages, and land earns interest.','Labor earns interest, capital earns rent, and land earns wages.','Labor earns wages, capital earns interest, and land earns rent.','Labor, capital, and land receive the same type of income.'],
+['Because firms demand factors mainly to satisfy their own consumption needs.','Because the demand for factors comes from the demand for the goods and services they help produce.','Because the demand for factors is independent of market demand.','Because factor demand always increases when factor prices rise.'],
+['They may increase the demand for capital while reducing the demand for labor in some production processes.','They will completely eliminate the need for all production factors.','They will always increase the demand for labor regardless of the industry.','They have no influence on the choice of production factors.'],
+['Product market equilibrium','Factor substitution','Consumer utility','Income distribution']],
+tr:[['c2e','由于人口结构的变化，一些行业面临劳动力短缺，因此企业需要提高工资水平以吸引更多劳动者。','Due to changes in population structure, some industries are facing labor shortages, so companies need to increase wages to attract more workers.'],
+['c2e','随着电子商务的发展，许多企业增加了对技术人才和物流设施的需求，因为这些生产要素能够帮助企业提高效率。','With the development of e-commerce, many companies have increased their demand for technological talent and logistics facilities because these production factors can help improve efficiency.'],
+['c2e','人工智能技术的应用使一些企业减少了对简单劳动的需求，同时增加了对高技能劳动者和资本设备的需求。','The application of artificial intelligence technology has enabled some companies to reduce their demand for low-skilled labor while increasing their demand for skilled workers and capital equipment.'],
+['c2e','当劳动力成本不断上升时，一些制造企业可能会选择使用更多自动化设备，以降低生产成本。','When labor costs continue to rise, some manufacturing companies may choose to use more automated equipment to reduce production costs.'],
+['c2e','消费者对新能源汽车需求的增长推动了电池、技术人才和生产设备等相关生产要素需求的增加。','The growing demand for new energy vehicles has increased the demand for related production factors, such as batteries, skilled workers, and production equipment.']]},
+7:{cn:'GDP 与经济周期',en:'GDP and Business Cycle',mc:['B','B','C','B','C'],q:['Which of the following statements correctly illustrates the difference between GDP and GNP?','Real GDP differs from nominal GDP mainly because real GDP ______.','According to the expenditure-approach formula of GDP (GDP=C+I+G+(X-M)), the letter M stands for ______.','National income is the total income gained by a country\u2019s residents and businesses, which consists of ______.','Which of the following activities belongs to national income redistribution according to the textbook?'],
+o:[['GDP focuses on the ownership of production assets while GNP focuses on production locations','Production made by a foreign-owned factory operating within China counts toward China\u2019s GDP','GNP equals GDP minus net income from abroad','Income earned by Chinese citizens working overseas is included in China\u2019s GDP'],
+['counts only the income of domestic residents','adjusts the output value for changes in price levels such as inflation','includes imports and excludes exports','takes foreign net income into full consideration'],
+['government military spending','money supply of the whole country','goods and services imported from other countries','total manufacturing output'],
+['tax revenue, welfare funds and transfer payments','wages, interest, rent and profits','consumption, investment and government spending','accumulated funds and consumption funds only'],
+['Factory workers getting monthly salaries from their employers','Land owners receiving rent from land tenants','The government providing social welfare subsidies to low-income groups','Investors earning interest from their capital investment']],
+tr:[['e2c','The national income distribution system adopted by most countries is the functional value distribution system which is considered to hold a balanced link between production and consumption.','大多数国家采用的国民收入分配制度是功能价值分配制度，它被认为在生产和消费之间保持了平衡的联系。'],
+['e2c','Redistribution is carried out based on initial distribution between the material and nonmaterial production sectors, among various departments of the national economy, and different parts of the population.','再分配是基于物质生产部门和非物质生产部门之间、国民经济各部门之间以及不同人口群体之间的初次分配之上进行的。'],
+['e2c','For those people who are engaged in activities in the field of intangible production, such as national administrative personnel, military personnel, cultural and artistic workers, teachers, and medical workers, their income is formed through the redistribution of national income.','对于从事无形生产领域活动的人员，如国家行政人员、军事人员、文艺工作者、教师、医务工作者等，其收入是通过国民收入再分配形成的。'],
+['e2c','After the initial distribution and redistribution, national income is divided into accumulation and consumption funds according to its ultimate use, which are used for accumulation and consumption respectively.','经过初次分配和再分配后，国民收入按照最终用途分为积累基金和消费基金，分别用于积累和消费。'],
+['e2c','China\'s GDP has grown from 54 trillion yuan to 114 trillion yuan to account for 18.5 percent of the world economy, up 7.2 percentage points.','中国国内生产总值从 54 万亿元增长到 114 万亿元，占世界经济比重达到 18.5%，提升 7.2 个百分点。']]},
+8:{cn:'经济增长与经济周期',en:'Economic Growth & Business Cycle',mc:['B','C','B','C','A'],q:['Which of the following is the best definition of economic growth?','During which phase of the business cycle does real GDP reach its lowest point before recovery begins?','A recession is typically defined as a decline in real GDP for at least:','Which of the following is most likely to be a leading economic indicator?','What is the term for the maximum sustainable level of output an economy can produce without causing inflation to accelerate?'],
+o:[['A short-term increase in consumer spending','A sustained increase in a country\u2019s real GDP over time','A temporary rise in the inflation rate','A decline in the unemployment rate during a recession'],
+['Expansion','Peak','Trough','Boom'],
+['One month','Two consecutive quarters','Five years','One fiscal year'],
+['The unemployment rate','Corporate profits','Building permits and stock prices','The consumer price index'],
+['Potential GDP','Nominal GDP','Aggregate demand','Disposable income']],
+tr:[['c2e','经济增长通常用实际国内生产总值（GDP）的增长率来衡量。','Economic growth is usually measured by the growth rate of real GDP.'],
+['c2e','经济周期包括扩张、顶峰、衰退和谷底四个阶段。','The business cycle consists of four phases: expansion, peak, recession, and trough.'],
+['c2e','当经济进入衰退期时，失业率上升，消费者支出下降。','When the economy enters a recession, the unemployment rate rises and consumer spending falls.'],
+['c2e','政府通常通过财政政策和货币政策来平抑经济周期的波动。','Governments usually use fiscal policy and monetary policy to smooth out fluctuations in the business cycle.'],
+['c2e','潜在产出是指在不引发通货膨胀加速的情况下，经济能够持续生产的最大产出水平。','Potential output refers to the maximum level of output an economy can sustainably produce without causing inflation to accelerate.']]},
+9:{cn:'宏观政策',en:'Macroeconomic Policy',mc:['B','B','B','A','C'],q:['What is the primary reason for government intervention in modern economies?','Which of the following best illustrates the government\u2019s role in providing public goods and services?','What is the primary purpose of monetary policy implemented by central banks?','In the context of fiscal policy, which of the following scenarios would most likely require the implementation of a contractionary fiscal policy?','Which of the following best describes the primary goal of macroeconomic policy?'],
+o:[['To increase corporate profits','To address market failure','To reduce international trade','To eliminate private businesses'],
+['Setting a maximum price for essential commodities to prevent price gouging','Building a nationwide high-speed railway network','Adjusting interest rates to control inflation','Enforcing anti-monopoly laws to break up large corporations'],
+['To directly control the prices of all goods and services in the economy.','To regulate the money supply and credit conditions to achieve macroeconomic stability.','To replace fiscal policy as the sole tool for economic management.','To eliminate all forms of unemployment regardless of economic conditions.'],
+['A country with rapidly increasing inflation and economic overheating.','A country experiencing high unemployment and declining consumer spending.','A country facing significant income inequality and social unrest.','A country recovering from a natural disaster with damaged infrastructure.'],
+['To maximize individual company profits','To regulate international trade agreements','To stabilize economic growth and control inflation','To increase government revenue through taxation']],
+tr:[['e2c','Market regulation refers to the rules and interventions imposed by the government to change the behavior of firms and address market failures.','市场管制是指政府为改变企业行为并解决市场失灵而施加的规则和干预。'],
+['e2c','Monetary policy refers to the actions and measures implemented by a central bank or monetary authority to regulate and control the supply of money, credit, and interest rates in an economy.','货币政策是指中央银行或货币当局为调控经济中的货币供应量、信贷和利率而采取的行动和措施。'],
+['e2c','An expansionary monetary policy can increase the economy\u2019s money supply by decreasing interest rates, lowering reserve requirements for banks, and purchasing government securities by central banks. This policy helps to lower unemployment rates and stimulates business activities and consumer spending.','扩张性货币政策可以通过降低利率、降低银行准备金要求以及中央银行购买政府证券来增加经济的货币供应。这种政策有助于降低失业率，刺激商业活动和消费支出。'],
+['e2c','We will improve the system of macroeconomic governance, give full play to the strategic guidance of national development plans, and enhance coordination between fiscal and monetary policies.','健全宏观经济治理体系，发挥国家发展规划的战略导向作用，加强财政政策和货币政策协调配合。'],
+['e2c','We will deepen structural reform in the financial sector, modernize the central bank system, and strengthen and refine modern financial regulation.','深化金融体制改革，建设现代中央银行制度，加强和完善现代金融监管。']]}
+};
+
+/* ================= 状态 ================= */
+let cur=0, curIdx=0, exam=null, pollTimer=null, clockTimer=null, submitted=false;
+let answers={mc:[null,null,null,null,null], tr:['','','','','']};
+
+const $=s=>document.querySelector(s);
+function show(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('show'));$('#'+v).classList.add('show');}
+function goHome(){try{if(window.parent&&parent.showHome)parent.showHome();else location.href='index.html';}catch(e){location.href='index.html';}}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmt(sec){const m=Math.max(0,Math.floor(sec/60)),s=Math.max(0,Math.floor(sec%60));return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+function clearPolls(){if(pollTimer){clearInterval(pollTimer);pollTimer=null;} if(clockTimer){clearInterval(clockTimer);clockTimer=null;}}
+function openModal(title,msg,btns){$('#mTitle').textContent=title;$('#mMsg').innerHTML=msg;$('#mBtns').innerHTML=btns; $('#modal').classList.add('show');}
+function closeModal(){$('#modal').classList.remove('show');}
+
+/* ================= 在线 API ================= */
+function token(){try{return localStorage.getItem('quiz_token')||'';}catch(e){return '';}}
+function api(action,body){
+  if(!ONLINE)return Promise.reject(new Error('offline'));
+  return fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token()},
+    body:JSON.stringify(Object.assign({action},body||{}))}).then(r=>r.json());
+}
+
+/* ================= 选章 ================= */
+let openChapters=null; /* 学生本班已开放测试章节 */
+function renderPick(){
+  const g=$('#chGrid');g.innerHTML='';
+  Object.keys(QUIZ).forEach(n=>{
+    const c=QUIZ[n];
+    const open=!ONLINE || !openChapters || openChapters[n]!==false;
+    const el=document.createElement('div');el.className='ch-card'+(open?'':' lock');
+    el.innerHTML='<div class="no">CHAPTER '+String(n).padStart(2,'0')+'</div>'+
+      '<div class="cn">'+c.cn+'</div><div class="en">'+c.en+'</div>'+
+      (open?'<div class="meta">5 单选 + 5 翻译 · '+TIME_MIN+' 分钟</div>':'<div class="tag-lock">本章测试未开放 · Locked</div>');
+    if(open)el.onclick=()=>startQuiz(+n);
+    g.appendChild(el);
+  });
+  $('#modeTip').textContent=ONLINE?(openChapters?'已开放章节由教师按班级统一管理，仅显示本班开放的测试':'每章 5 单选 + 5 翻译 · 30 分钟 · 教师统一收卷与公布'):'本地演示模式（未配置 API_URL）：答题后即时查看结果';
+}
+function loadChapters(){
+  if(!ONLINE){renderPick();return;}
+  api('my_chapters').then(d=>{
+    if(d.ok&&d.data&&d.data.all){openChapters=null;}
+    else if(d.ok&&d.data){const m={};d.data.quiz.forEach(ch=>m[ch]=true);openChapters=m;}
+    else{openChapters={1:true};}
+    renderPick();
+  }).catch(()=>{openChapters={1:true};renderPick();});
+}
+
+/* ================= 进入试卷 ================= */
+function startQuiz(n){
+  cur=n;submitted=false;
+  $('#qzSec').innerHTML='第 '+n+' 章 · '+QUIZ[n].cn+'<small>'+QUIZ[n].en+'</small>';
+  $('#timer').style.display='inline-flex';
+  if(ONLINE)checkStatusAndRoute();
+  else{startDemo();}
+}
+function startDemo(){
+  exam={status:'running',ends_at:Date.now()+TIME_MIN*60000};
+  loadDraft();
+  enterQuiz();
+  startClock();
+}
+
+/* ---------- 在线：查状态并分流 ---------- */
+function checkStatusAndRoute(){
+  api('test_status',{ch:cur}).then(d=>{
+    if(!d.ok)return failApi(d);
+    exam=d.data;
+    if(d.data.status==='none'){enterWait('测试尚未开始','本章节测试由任课教师统一开启，请稍候…');pollWait();}
+    else if(d.data.status==='running'){
+      loadDraft();enterQuiz();startClock();
+      pollRunning();
+    }else{ /* ended：若已交过卷 → 看结果；否则提示已结束 */
+      api('my_result',{ch:cur}).then(m=>{
+        if(m.ok&&m.data&&m.data.result){renderResult(m.data.result);}
+        else{enterWait('本章测试已结束','教师已结束本测试，你未提交答卷，无法查看结果。',false);}
+      }).catch(()=>failApi({error:'网络错误'}));
+    }
+  }).catch(()=>failApi({error:'无法连接服务器，请检查网络'}));
+}
+function enterWait(title,msg,poll){
+  $('#waitTitle').textContent=title;$('#waitMsg').innerHTML=msg;
+  show('viewWait');
+  if(poll!==false){clearPolls();pollTimer=setInterval(()=>{
+    api('test_status',{ch:cur}).then(d=>{
+      if(d.ok&&d.data&&d.data.status==='running'){clearPolls();loadDraft();enterQuiz();startClock();pollRunning();}
+    }).catch(()=>{});
+  },POLL_MS);}
+}
+function failApi(d){
+  openModal('提示',esc((d&&d.error)||'操作失败'),'<button class="btn" onclick="closeModal();goHome()">返回</button>');
+  $('#timer').style.display='none';
+}
+
+/* ================= 本地草稿 ================= */
+function draftKey(){return 'quiz_draft_'+cur;}
+function loadDraft(){
+  try{
+    const s=localStorage.getItem(draftKey());
+    if(s){const d=JSON.parse(s);answers=d.answers||{mc:[null,null,null,null,null],tr:['','','','','']};}
+    else answers={mc:[null,null,null,null,null],tr:['','','','','']};
+  }catch(e){answers={mc:[null,null,null,null,null],tr:['','','','','']};}
+  curIdx=0;
+}
+function saveDraft(){
+  try{localStorage.setItem(draftKey(),JSON.stringify({ch:cur,answers,updated_at:Date.now()}));}catch(e){}
+}
+function clearDraft(){try{localStorage.removeItem(draftKey());}catch(e){}}
+
+/* ================= 答题（一题一页） ================= */
+function enterQuiz(){
+  renderIdx();
+  renderQ();
+  show('viewQuiz');
+  window.scrollTo(0,0);
+}
+function renderIdx(){
+  const c=QUIZ[cur];
+  $('#idxBar').innerHTML=c.q.concat(['trans']).map((x,i)=>{
+    const done=i<5?answers.mc[i]!==null:answers.tr[i-5].trim()!=='';
+    const cls='idx-dot'+(done?' done':'')+(i===curIdx?' cur':'');
+    return '<div class="'+cls+'" onclick="jump('+i+')">'+(i+1)+'</div>';
+  }).join('');
+  $('#qPos').textContent=(curIdx+1)+' / '+TOTAL;
+  $('#btnNext').textContent=(curIdx===TOTAL-1)?'交卷 Submit ›':'下一题 Next ›';
+}
+function jump(i){curIdx=i;renderIdx();renderQ();}
+function nav(d){
+  const n=curIdx+d;
+  if(n<0||n>9)return;
+  if(n===10){confirmSubmit();return;}
+  curIdx=n;renderIdx();renderQ();
+}
+function renderQ(){
+  const c=QUIZ[cur];
+  const qCard=$('#qCard');
+  if(curIdx<5){
+    const i=curIdx;
+    qCard.innerHTML='<div class="q-no">MULTIPLE CHOICE · 每题 10 分</div><div class="q-type mc">单选 Multiple Choice</div>'+
+      '<div class="stem"><b style="color:var(--gold2)">'+String(i+1)+'.</b> '+esc(c.q[i])+'</div>'+
+      '<div class="opts">'+c.o[i].map((op,j)=>
+        '<button class="opt'+(answers.mc[i]===j?' sel':'')+'" onclick="pickMc('+j+')">'+
+        '<span class="k">'+KEYS[j]+'</span><span>'+esc(op)+'</span></button>').join('')+'</div>';
+  }else{
+    const i=curIdx-5,t=c.tr[i];
+    const dir=t[0]==='e2c'?'英译中':'中译英';
+    qCard.innerHTML='<div class="q-no">TRANSLATION · 满分 5 分</div><div class="q-type">翻译 '+dir+'</div>'+
+      '<div class="stem"><b style="color:var(--gold2)">'+String(i+1)+'.</b> '+esc(t[1])+'</div>'+
+      '<textarea placeholder="在此输入你的译文…" oninput="saveTrans(this.value)">'+esc(answers.tr[i])+'</textarea>';
+  }
+}
+function pickMc(j){
+  answers.mc[curIdx]=j;saveDraft();renderIdx();
+}
+function saveTrans(v){
+  answers.tr[curIdx-5]=v;saveDraft();
+  renderIdx();
+}
+
+/* ================= 倒计时 ================= */
+function startClock(){
+  if(clockTimer)clearInterval(clockTimer);
+  clockTimer=setInterval(tick,1000);tick();
+}
+function tick(){
+  const el=$('#timer');
+  if(!exam)return;
+  const remain=Math.max(0,Math.floor((exam.ends_at-Date.now())/1000));
+  el.textContent='⏱ '+fmt(remain);
+  el.classList.toggle('warn',remain<=300&&remain>0);
+  if(remain<=0){
+    clearInterval(clockTimer);
+    if(!submitted)autoSubmit('时间到，自动收卷');
+  }
+}
+/* 在线：教师提前结束 → 自动收卷并公布 */
+function pollRunning(){
+  if(pollTimer)clearInterval(pollTimer);
+  pollTimer=setInterval(()=>{
+    api('test_status',{ch:cur}).then(d=>{
+      if(d.ok&&d.data&&d.data.status==='ended'){
+        clearPolls();
+        if(!submitted)autoSubmit('教师已结束测试，正在收卷…');
+        else{api('my_result',{ch:cur}).then(m=>{if(m.ok&&m.data&&m.data.result)renderResult(m.data.result);}).catch(()=>{});}
+      }
+    }).catch(()=>{});
+  },POLL_MS);
+}
+
+/* ================= 交卷 ================= */
+function confirmSubmit(){
+  let blank=0;
+  for(let i=0;i<5;i++)if(answers.mc[i]===null)blank++;
+  for(let i=0;i<5;i++)if(!answers.tr[i].trim())blank++;
+  openModal('确认交卷',
+    (blank?'还有 <b style="color:var(--no)">'+blank+'</b> 题未作答，未作答部分计 0 分。<br>':'')+
+    '交卷后答案将锁定，不能修改。确定交卷吗？',
+    '<button class="btn ghost" onclick="closeModal()">继续检查</button>'+
+    '<button class="btn" onclick="closeModal();doSubmit()">确认交卷</button>');
+}
+function doSubmit(){autoSubmit('交卷成功');}
+function autoSubmit(tip){
+  submitted=true;clearPolls();clearDraft();
+  if(!ONLINE){localJudge();return;}
+  api('submit',{ch:cur,mc:answers.mc.map(i=>i===null?null:KEYS[i]),trans:answers.tr}).then(d=>{
+    if(d.ok){enterSubmitted();}
+    else{failApi(d);submitted=false;}
+  }).catch(()=>{failApi({error:'网络错误，交卷未成功，请重试'});submitted=false;});
+}
+function enterSubmitted(){
+  $('#timer').style.display='none';
+  show('viewSubmitted');
+  clearPolls();
+  pollTimer=setInterval(()=>{
+    api('my_result',{ch:cur}).then(m=>{
+      if(m.ok&&m.data&&m.data.result){clearPolls();renderResult(m.data.result);}
+    }).catch(()=>{});
+  },POLL_MS);
+}
+function confirmQuit(){
+  openModal('退出本卷','退出后本次作答保留在本地草稿，但不会提交。确定退出吗？',
+    '<button class="btn ghost" onclick="closeModal()">继续作答</button>'+
+    '<button class="btn" onclick="closeModal();clearPolls();$(\'#timer\').style.display=\'none\';show(\'viewPick\')">退出</button>');
+}
+
+/* ================= 本地判分（演示模式） ================= */
+function localJudge(){
+  const c=QUIZ[cur];
+  let mcScore=0;
+  const mcDetail=c.mc.map((ans,i)=>{
+    const picked=answers.mc[i]===null?null:KEYS[answers.mc[i]];
+    const right=picked===ans;if(right)mcScore+=10;
+    return {q:i+1,stem:c.q[i],ans,picked,right};
+  });
+  const trDetail=c.tr.map((t,i)=>({q:i+1,dir:t[0],src:t[1],ref:t[2],answer:answers.tr[i]||'',score:0,comment:''}));
+  renderResult({mc_score:mcScore,trans_score:0,total:mcScore,mc:mcDetail,trans:trDetail,trans_scores:[]});
+}
+
+/* ================= 结果页 ================= */
+function renderResult(r){
+  clearPolls();$('#timer').style.display='none';
+  const ringR=58;window.__circ=2*Math.PI*ringR;
+  const mc=r.mc||[], tr=r.trans||[], trs=(r.trans_scores||[]);
+  let transScore=r.trans_score||0;
+  $('#resBody').innerHTML=
+  '<div class="score-hero"><div class="score-ring"><svg viewBox="0 0 132 132">'+
+    '<circle class="bg" cx="66" cy="66" r="'+ringR+'" fill="none" stroke-width="11"/>'+
+    '<circle class="fg" id="ringFg" cx="66" cy="66" r="'+ringR+'" fill="none" stroke-width="11" stroke-dasharray="'+window.__circ+'" stroke-dashoffset="'+window.__circ+'"/>'+
+  '</svg><div class="num"><b id="scoreNum">0</b><span>/ 100</span></div></div>'+
+  '<div class="score-info"><div class="lvl" id="lvl">评分中…</div>'+
+  '<div class="line">单选：<b>'+r.mc_score+'</b> / 50 分</div>'+
+  '<div class="line">翻译：<b>'+transScore+'</b> / 50 分</div>'+
+  '<div class="line" style="color:var(--dim)">第 '+cur+' 章 · '+QUIZ[cur].cn+'</div></div></div>'+
+  '<div class="r-block"><div class="r-title">I · 多项选择 Multiple Choice</div>'+
+  mc.map(m=>'<div class="r-item '+(m.right?'ok':'bad')+'"><div class="q-line">'+
+    '<span class="mark">'+(m.right?'✓':'✕')+'</span>'+
+    '<span style="flex:1">'+(m.q)+'. '+esc(m.stem)+'</span>'+
+    '<span class="s2">'+(m.right?'+10':'0')+'</span></div>'+
+    (m.right?'':'<div class="your">你的答案：'+(m.picked||'未作答')+'</div>')+
+    '<div class="ans">正确答案：<b>'+m.ans+'</b></div></div>').join('')+'</div>'+
+  '<div class="r-block"><div class="r-title">II · 翻译 Translation（AI 评分 0~5/句）</div>'+
+  tr.map((t,i)=>{
+    const sc=trs[i]||{score:t.score||0,comment:t.comment||''};
+    return '<div class="r-item"><div class="q-line"><span style="flex:1"><b>'+(i+1)+'.</b> '+(t.dir==='e2c'?'英译中':'中译英')+'</span>'+
+      '<span class="s2">'+sc.score+'</span></div>'+
+      '<div class="ref"><b>你的译文：</b>'+(t.answer?esc(t.answer):'<i style="color:var(--no)">（未作答）</i>')+'</div>'+
+      '<div class="ref"><b>参考答案：</b>'+esc(t.ref)+'</div>'+
+      (sc.comment?'<div class="ai-line"><b>AI 评语：</b>'+esc(sc.comment)+'</div>':'')+'</div>';
+  }).join('')+'</div>'+
+  '<div class="action-row"><button class="btn ghost" onclick="show(\'viewPick\')">返回选章 Back</button></div>';
+  show('viewResult');
+  let t=0;
+  const step=()=>{t=Math.min(r.total,t+5);$('#scoreNum').textContent=t;
+    $('#ringFg').style.strokeDashoffset=window.__circ*(1-t/100);
+    $('#lvl').textContent=level(t);
+    if(t<r.total)requestAnimationFrame(step);};
+  setTimeout(step,80);window.scrollTo(0,0);
+}
+function level(t){if(t>=90)return '优秀 Excellent';if(t>=75)return '良好 Good';if(t>=60)return '及格 Pass';return '需加油 Keep Practicing';}
+
+loadChapters();
+if(ONLINE&&!token()){
+  openModal('请先登录','测试中心需要学生账号（学号 + 邀请码）登录后使用。','<button class="btn" onclick="location.href=\'login.html\'">去登录</button>');
+}
+</script>
+</body>
+</html>

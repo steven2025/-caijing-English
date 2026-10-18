@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测试中心 · 管理员 | Admin</title>
+<style>
+:root{
+  --bg:#0e1420; --panel:#161f30; --panel2:#1b2740; --line:#2a3a5c;
+  --gold:#d4af37; --gold-soft:rgba(212,175,55,.14);
+  --txt:#e8eef7; --sub:#93a5c0; --ok:#37d47a; --err:#e0565c;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{min-height:100vh;background:
+  radial-gradient(1000px 500px at 80% -10%, rgba(212,175,55,.10), transparent 60%),
+  radial-gradient(800px 500px at 10% 110%, rgba(55,120,212,.12), transparent 60%),var(--bg);
+  color:var(--txt);font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;padding:20px;}
+.topbar{max-width:1180px;margin:0 auto 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.topbar .logo{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--gold),#8a6d1c);color:#14100a;}
+.topbar h1{font-size:21px;}
+.topbar .en{font-size:12px;color:var(--sub);letter-spacing:1.5px;}
+.topbar .sp{flex:1;}
+.btn{border:1px solid var(--line);background:var(--panel2);color:var(--txt);padding:9px 18px;border-radius:10px;
+  cursor:pointer;font-size:14px;transition:.2s;}
+.btn:hover{border-color:var(--gold);}
+.btn.gold{background:linear-gradient(135deg,var(--gold),#a9861f);color:#14100a;font-weight:700;border:none;}
+.wrap{max-width:1180px;margin:0 auto;display:grid;gap:16px;}
+.panel{background:linear-gradient(180deg,var(--panel),#131b2b);border:1px solid var(--line);border-radius:14px;padding:20px 22px;}
+.panel h2{font-size:17px;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+.panel .de{font-size:12.5px;color:var(--sub);margin-bottom:14px;}
+.addrow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+.addrow input{flex:1;min-width:220px;padding:10px 13px;border-radius:9px;border:1px solid var(--line);
+  background:#0e1524;color:var(--txt);font-size:15px;outline:none;}
+.addrow input:focus{border-color:var(--gold);}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+th,td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line);}
+th{color:var(--sub);font-weight:600;font-size:13px;white-space:nowrap;}
+td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-size:14px;color:var(--gold);letter-spacing:2px;}
+.tag{padding:3px 10px;border-radius:20px;font-size:12px;}
+.tag.on{background:rgba(55,212,122,.15);color:var(--ok);border:1px solid rgba(55,212,122,.4);}
+.tag.off{background:rgba(224,86,92,.12);color:var(--err);border:1px solid rgba(224,86,92,.4);}
+.mini{padding:5px 12px;font-size:13px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--txt);cursor:pointer;transition:.2s;}
+.mini:hover{border-color:var(--gold);}
+.mini.danger:hover{border-color:var(--err);color:var(--err);}
+.empty{color:var(--sub);text-align:center;padding:30px;font-size:14px;}
+.msg{display:none;margin:10px 0;padding:10px 14px;border-radius:9px;font-size:13.5px;}
+.msg.err{display:block;background:rgba(224,86,92,.12);border:1px solid rgba(224,86,92,.4);color:var(--err);}
+.msg.ok{display:block;background:rgba(55,212,122,.10);border:1px solid rgba(55,212,122,.4);color:var(--ok);}
+@media(max-width:720px){.panel{padding:16px 14px;}table{font-size:13px;}th,td{padding:8px;}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+  <div><h1>测试中心 · 管理员 <span style="color:var(--gold)">Admin</span></h1><div class="en">TEACHER ACCOUNT MANAGEMENT</div></div>
+  <div class="sp"></div>
+  <button class="btn" onclick="goQuiz()">考试页</button>
+  <button class="btn gold" onclick="logout()">退出登录</button>
+</div>
+
+<div class="wrap">
+  <div class="msg" id="msg"></div>
+  <div class="panel">
+    <h2><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6"/><path d="M23 11h-6"/></svg>
+      教师账号 <span style="color:var(--sub);font-size:13px;font-weight:400;">Teachers · 新增后复制邀请码发给教师</span></h2>
+    <div class="de">管理员创建教师账号，教师凭「姓名 + 6 位邀请码」登录教师工作台</div>
+    <div class="addrow">
+      <input id="newName" placeholder="教师姓名 Name">
+      <button class="btn gold" onclick="addTeacher()">新增教师 Add Teacher</button>
+    </div>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th>姓名</th><th>邀请码 Invite Code</th><th>班级</th><th>学生</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody id="tBody"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<script>
+const API_URL='https://1311686407-6z755znqlt.ap-guangzhou.tencentscf.com';
+const $=s=>document.querySelector(s);
+function token(){try{return localStorage.getItem('quiz_token')||'';}catch(e){return '';}}
+function role(){try{return localStorage.getItem('quiz_role')||'';}catch(e){return '';}}
+function msg(m,ok){const e=$('#msg');e.className='msg '+(ok?'ok':'err');e.textContent=m;setTimeout(()=>e.className='msg',4000);}
+async function api(action,body){
+  const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token()},
+    body:JSON.stringify(Object.assign({action},body||{}))});
+  const j=await r.json();
+  if(!j.ok){
+    if(j.code==='E_AUTH'){location.href='login.html';throw new Error('auth');}
+    msg(j.error||'操作失败');throw new Error(j.error||'fail');
+  }
+  return j.data;
+}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function copy(t){
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t);}
+  else{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
+  msg('已复制邀请码 '+t+' / Code copied','ok');
+}
+async function load(){
+  try{
+    const d=await api('list_teachers');
+    const tb=$('#tBody');tb.innerHTML='';
+    if(!d.teachers||!d.teachers.length){tb.innerHTML='<tr><td colspan="6" class="empty">暂无教师账号 / No teachers yet</td></tr>';return;}
+    d.teachers.forEach(t=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td><b>'+esc(t.name)+'</b></td>'+
+        '<td><code>'+esc(t.code)+'</code></td>'+
+        '<td>'+ (t.class_count||0) +'</td>'+
+        '<td>'+ (t.student_count||0) +'</td>'+
+        '<td><span class="tag '+(t.status==='active'?'on':'off')+'">'+(t.status==='active'?'启用 Active':'停用 Disabled')+'</span></td>'+
+        '<td style="white-space:nowrap">'+
+        '<button class="mini" onclick="copy(\''+esc(t.code)+'\')">复制邀请码</button> '+
+        '<button class="mini" onclick="resetCode(\''+t.id+'\')">重置</button> '+
+        '<button class="mini" onclick="toggle(\''+t.id+'\',\''+(t.status==='active'?'disabled':'active')+'\')">'+(t.status==='active'?'停用':'启用')+'</button>'+
+        '</td>';
+      tb.appendChild(tr);
+    });
+  }catch(e){}
+}
+async function addTeacher(){
+  const name=$('#newName').value.trim();
+  if(!name)return msg('请输入教师姓名');
+  try{
+    const d=await api('add_teacher',{name});
+    $('#newName').value='';
+    msg('已创建 '+d.name+'，邀请码 '+d.code,'ok');
+    load();
+    setTimeout(()=>copy(d.code),300);
+  }catch(e){}
+}
+async function resetCode(id){try{const d=await api('reset_code',{teacher_id:id});msg('新邀请码 '+d.code,'ok');load();setTimeout(()=>copy(d.code),300);}catch(e){}}
+async function toggle(id,status){try{await api('toggle_teacher',{teacher_id:id,status});load();}catch(e){}}
+function goQuiz(){location.href='quiz.html';}
+function logout(){try{localStorage.removeItem('quiz_token');localStorage.removeItem('quiz_role');localStorage.removeItem('quiz_user');}catch(e){}location.href='login.html';}
+
+/* 登录守卫 */
+if(role()!=='admin'){location.href='login.html';}
+else{load();}
+</script>
+</body>
+</html>
