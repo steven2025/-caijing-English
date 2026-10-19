@@ -226,6 +226,10 @@ main.full{height:100vh}
 .mini-card.locked-auth .st{background:rgba(212,175,55,.08);color:var(--dim);border-color:rgba(212,175,55,.22)}
 .mini-card.locked-auth:hover{transform:none;border-color:rgba(212,175,55,.38)}
 .mini-card.locked-auth::after{opacity:0}
+/* 身份卡片：测试中心 / 教师工作台 / 系统管理 */
+.mini-card.identity .no{font-size:22px;font-style:italic}
+.mini-card.identity .nm{white-space:normal;line-height:1.3;max-width:96%}
+.mini-card.identity .nm small{letter-spacing:.2px}
 .ch-btn.locked-auth{opacity:.5;cursor:not-allowed;filter:saturate(.45)}
 .ch-btn.locked-auth:hover{transform:none;box-shadow:none}
 .hero .cta{
@@ -312,7 +316,6 @@ main.full{height:100vh}
   </div>
   <nav class="ch-nav" id="chNav" aria-label="章节导航"></nav>
   <button class="install-btn" id="installBtn" onclick="openInstallGuide()"><span class="dot"></span>安装 App</button>
-  <button class="quiz-btn" id="quizBtn" onclick="openQuiz()">测试中心 Quiz</button>
   <button class="quiz-btn" id="authBtn" onclick="authAction()">登录 Login</button>
 </header>
 
@@ -325,6 +328,7 @@ main.full{height:100vh}
         <div class="mini-rows">
           <div class="mini-row" id="row1"></div>
           <div class="mini-row" id="row2"></div>
+          <div class="mini-row" id="row3"></div>
         </div>
         <button class="cta" onclick="enterFirstReady()">开始探索 · Start</button>
       </div>
@@ -462,6 +466,47 @@ function bindGlow(btn){
     btn.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
   });
 }
+/* ================= 身份卡片：测试中心 / 教师工作台 / 系统管理 ================= */
+function identityCard(id,no,cn,en,sub,cc){
+  const allowed = id==='quiz' ? loginState!=='guest'
+    : id==='teacher' ? (loginState==='teacher'||loginState==='admin')
+    : loginState==='admin';
+  const st=allowed?'':'<span class="st">'+(loginState==='guest'?'登录后开放':'无权限')+'</span>';
+  const cls=allowed?'ready':'locked-auth';
+  return `<div class="mini-card identity ${cls}" data-id="${id}" style="--cc:${cc}">
+    <div class="line1"><span class="no">${no}</span><span class="nm">${cn}<small style="display:block;font-size:10px;font-weight:600;color:var(--sub);margin-top:2px">${en}</small></span></div>
+    ${st}<div class="st-sub" style="display:none">${sub}</div>
+  </div>`;
+}
+function renderIdentity(){
+  const list=[
+    identityCard('quiz','Q','测试中心','Quiz Center','',COLORS[3]),
+    identityCard('teacher','T','教师工作台','Teacher Workbench','',COLORS[7])
+  ];
+  if(loginState==='admin')list.push(identityCard('admin','S','系统管理','System Admin','',COLORS[6]));
+  $('#row3').innerHTML=list.join('');
+  document.querySelectorAll('#row3 .mini-card').forEach(c=>{
+    bindGlow(c);
+    c.onclick=()=>{
+      const id=c.dataset.id;
+      if(id==='quiz')openQuiz();
+      else if(id==='teacher')openTeacher();
+      else openAdmin();
+    };
+  });
+}
+window.openQuiz=()=>{
+  if(loginState==='guest'){toast('请先登录 · Please sign in first');return;}
+  location.href='quiz/quiz.html';
+};
+window.openTeacher=()=>{
+  if(loginState!=='teacher'&&loginState!=='admin'){toast('教师身份可用 · Teachers only');return;}
+  location.href='quiz/teacher.html';
+};
+window.openAdmin=()=>{
+  if(loginState!=='admin'){toast('管理员专用');return;}
+  location.href='quiz/admin.html';
+};
 function renderNav(){
   nav1.innerHTML=CHAPTERS.map(chip).join('');
   nav2.innerHTML=CHAPTERS.map(chip).join('');
@@ -469,9 +514,10 @@ function renderNav(){
   $('#row2').innerHTML=CHAPTERS.slice(5).map(miniCard).join('');
   nav1.querySelectorAll('.ch-btn').forEach(b=>{bindGlow(b);b.onclick=()=>openChapter(+b.dataset.n)});
   nav2.querySelectorAll('.ch-btn').forEach(b=>{bindGlow(b);b.onclick=()=>openChapter(+b.dataset.n)});
-  document.querySelectorAll('.mini-card').forEach(c=>{bindGlow(c);c.onclick=()=>openChapter(+c.dataset.n)});
+  document.querySelectorAll('#row1 .mini-card,#row2 .mini-card').forEach(c=>{bindGlow(c);c.onclick=()=>openChapter(+c.dataset.n)});
+  renderIdentity();
   /* 发牌入场：第 1 行从左到右、第 2 行紧随其后，逐张翻入；播完还原静态态让 hover 生效 */
-  const cards=document.querySelectorAll('.mini-card');
+  const cards=document.querySelectorAll('#row1 .mini-card,#row2 .mini-card,#row3 .mini-card');
   cards.forEach((c,i)=>{
     c.classList.add('deal');c.style.animationDelay=(i*85)+'ms';
     c.addEventListener('animationend',()=>{c.classList.remove('deal');c.style.animationDelay='';},{once:true});
@@ -535,7 +581,6 @@ window.addEventListener('appinstalled',()=>{
   toast('安装成功，可在桌面打开本应用');
 });
 window.openInstallGuide=()=>$('#installModal').classList.add('show');
-window.openQuiz=()=>location.href='quiz/quiz.html';
 window.closeInstallGuide=()=>$('#installModal').classList.remove('show');
 $('#installModal').addEventListener('click',e=>{if(e.target.id==='installModal')closeInstallGuide()});
 $('#installNow').addEventListener('click',async()=>{
