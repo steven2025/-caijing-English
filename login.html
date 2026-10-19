@@ -154,18 +154,26 @@ $('#goBtn').onclick=async()=>{
       localStorage.setItem('quiz_role',role);
       localStorage.setItem('quiz_user',JSON.stringify(j.data.user||{}));
     }catch(e){}
-    location.href=NEXT[role];
+    /* file:// 本地打开时 localStorage 可能被拒绝：登录态随 URL 传递到主页 */
+    let next=NEXT[role];
+    if(location.protocol==='file:'&&j.data.token){next+='?t='+encodeURIComponent(j.data.token)+'&r='+encodeURIComponent(role);}
+    location.href=next;
   }catch(e){err('无法连接服务器 / Network error');}
   finally{$('#goBtn').disabled=false;$('#goBtn').textContent='登 录 · SIGN IN';}
 };
 renderFields();
 $('#f_student_no')&&$('#f_student_no').focus();
 
-/* 已登录则直接返回主页 */
+/* 已登录则直接返回主页（?out=1 为登出回跳：先清空本页登录态，不自动跳） */
 (function(){
   try{
-    const t=localStorage.getItem('quiz_token');
-    if(t){ location.replace('index.html'); }
+    const q=new URLSearchParams(location.search);
+    if(q.get('out')==='1'){
+      localStorage.removeItem('quiz_token');localStorage.removeItem('quiz_role');localStorage.removeItem('quiz_user');
+    }else{
+      const t=localStorage.getItem('quiz_token');
+      if(t){ location.replace('index.html'); }
+    }
   }catch(e){}
 })();
 </script>
