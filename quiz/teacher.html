@@ -50,6 +50,8 @@ th{color:var(--sub);font-weight:600;font-size:13px;white-space:nowrap;}
 td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-size:13.5px;color:var(--gold);letter-spacing:1.5px;}
 .mini{padding:4px 11px;font-size:13px;border-radius:7px;border:1px solid var(--line);background:transparent;color:var(--txt);cursor:pointer;transition:.2s;}
 .mini:hover{border-color:var(--gold);}
+.mini.gold{color:var(--gold);border-color:rgba(212,175,55,.55);}
+.mini.gold:hover{background:rgba(212,175,55,.12);}
 .mini.danger:hover{border-color:var(--err);color:var(--err);}
 .empty{color:var(--sub);text-align:center;padding:26px;font-size:13.5px;}
 .msg{display:none;margin:0 0 14px;padding:10px 14px;border-radius:9px;font-size:13.5px;}
@@ -76,6 +78,13 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
 .swbtn{padding:7px 15px;border-radius:9px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.2s;flex:none;border:1.5px solid var(--line);background:transparent;color:var(--sub);}
 .swbtn:hover{border-color:var(--gold);color:var(--gold);}
 .swbtn.on{background:linear-gradient(135deg,var(--gold),#a9861f);border-color:var(--gold);color:#14100a;box-shadow:0 0 10px rgba(212,175,55,.4);}
+/* 导入预览确认层 */
+#impMask{position:fixed;inset:0;background:rgba(4,8,16,.72);align-items:center;justify-content:center;z-index:99;padding:20px;}
+.impBox{background:linear-gradient(180deg,#1b2740,#131b2b);border:1px solid rgba(212,175,55,.6);border-radius:16px;padding:20px 22px;max-width:640px;width:100%;max-height:84vh;display:flex;flex-direction:column;box-shadow:0 16px 60px rgba(0,0,0,.5);}
+.impBox h3{color:var(--gold);font-size:16px;margin-bottom:6px;}
+.impMeta{font-size:13px;color:var(--sub);margin-bottom:12px;}
+.impMeta b{color:var(--gold);font-size:14.5px;}
+.impTblWrap{overflow:auto;flex:1;border:1px solid var(--line);border-radius:10px;padding:4px 8px;margin-bottom:14px;min-height:120px;}
 .swst{font-size:12.5px;color:var(--sub);flex:none;padding:7px 12px;border:1px solid var(--line);border-radius:9px;}
 .swcard.on .swst{color:var(--gold);border-color:rgba(212,175,55,.5);}
 .bar{height:16px;border-radius:8px;background:#2a3a5c;overflow:hidden;}
@@ -129,9 +138,16 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
       <div class="row" style="margin-bottom:10px">
         <button class="btn gold wbtn" onclick="downloadTemplate()">下载模板 Template</button>
         <button class="btn gold" onclick="exportStuXlsx()">下载名单 Excel</button>
-        <button class="btn wbtn" onclick="$('#fileImport').click()">选择文件 Choose File</button>
-        <input type="file" id="fileImport" accept=".xlsx,.xls" style="display:none" onchange="onFilePicked()">
+        <span id="importCtl">
+          <button class="btn wbtn" onclick="$('#fileImport').click()">选择文件 Choose File</button>
+          <input type="file" id="fileImport" accept=".xlsx,.xls" style="display:none" onchange="onFilePicked()">
+        </span>
         <span style="color:var(--sub);font-size:12.5px">下载模板 → 填写「姓名 / 班级 / 学号」→ 选择文件自动导入（每人自动生成 6 位邀请码）</span>
+      </div>
+      <div class="row" style="margin-bottom:10px" id="pasteCtl">
+        <input id="importTxt" placeholder="或直接粘贴名单：每行「姓名,学号」，如：张三,2023001">
+        <button class="btn wbtn" onclick="importStudents()">粘贴导入 Paste</button>
+        <span style="color:var(--sub);font-size:12.5px">导入完成自动生成邀请码，可直接在下方列表一键复制</span>
       </div>
       <div style="overflow-x:auto;max-height:340px;overflow-y:auto"><table><thead><tr><th>姓名</th><th>学号</th><th>邀请码</th><th>操作</th></tr></thead><tbody id="stuBody"></tbody></table></div>
     </div>
@@ -150,6 +166,21 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<!-- 导入预览确认层 -->
+<div id="impMask" style="display:none">
+  <div class="impBox">
+    <h3>导入预览 · 确认导入</h3>
+    <div class="impMeta">共 <b id="impCnt">0</b> 人 · 确认导入后每人自动生成 6 位邀请码（不含 0）</div>
+    <div class="impTblWrap">
+      <table><thead><tr><th style="width:9%">#</th><th>姓名</th><th style="width:44%">学号</th></tr></thead>
+      <tbody id="impBody"></tbody></table>
+    </div>
+    <div class="row" style="justify-content:flex-end;margin:0">
+      <button class="btn" onclick="closeImportPreview()">取消</button>
+      <button class="btn gold" onclick="doImport()">确认导入</button>
+    </div>
+  </div>
+</div>
 <script>
 /* file:// 本地打开：尝试把 URL 传递的登录态写入本地存储（失败无碍，token()/role() 会从 URL 回退读取） */
 (function(){
@@ -174,7 +205,7 @@ async function api(action,body){
   const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token()},
     body:JSON.stringify(Object.assign({action},b))});
   const j=await r.json();
-  if(!j.ok){if(j.code==='E_AUTH'){location.href='../login.html?out=1';throw new Error('auth');}msg(j.error||'操作失败');throw new Error(j.error||'fail');}
+  if(!j.ok){if(j.code==='E_AUTH'){if(IS_ADMIN){msg('该接口仅教师可用：管理员请先在左上角选择教师（只读）');}else{location.href='../login.html?out=1';}throw new Error('auth');}msg(j.error||'操作失败');throw new Error(j.error||'fail');}
   return j.data;
 }
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
@@ -203,6 +234,7 @@ async function loadClasses(){
       const tr=document.createElement('tr');
       tr.innerHTML='<td><b>'+esc(c.name)+'</b></td><td>'+c.student_count+'</td>'+
         '<td style="white-space:nowrap"><button class="mini" onclick="openClass(\''+c.id+'\',\''+esc(c.name).replace(/'/g,"\\'")+'\')">名单</button> '+
+        '<button class="mini gold" onclick="exportStuXlsx(\''+c.id+'\',\''+esc(c.name).replace(/'/g,"\\'")+'\')">下载</button> '+
         (IS_ADMIN?'':'<button class="mini" onclick="renameClass(\''+c.id+'\',\''+esc(c.name).replace(/'/g,"\\'")+'\')">改名</button> '+
         '<button class="mini danger" onclick="delClass(\''+c.id+'\')">删除</button>')+'</td>';
       tb.appendChild(tr);
@@ -212,7 +244,13 @@ async function loadClasses(){
 async function addClass(){
   const name=$('#clsName').value.trim();
   if(!name)return msg('请输入班级名称');
-  try{await api('add_class',{name});$('#clsName').value='';msg('班级已创建 / Class created','ok');loadClasses();}catch(e){}
+  try{
+    const d=await api('add_class',{name});
+    $('#clsName').value='';
+    msg('班级已创建 / Class created','ok');
+    await loadClasses();
+    if(d&&d.id){curClass=d.id;await openClass(d.id,name);}   /* 自动选中新班级，右侧立即进入导入态 */
+  }catch(e){}
 }
 async function renameClass(id,name){
   const n=prompt('新班级名称 / New name:',name);
@@ -223,7 +261,7 @@ async function delClass(id){
   if(!confirm('确定删除该班级及其全部学生？/ Delete class and all students?'))return;
   try{await api('delete_class',{class_id:id});if(curClass===id)curClass=null;loadClasses();clearStu();}catch(e){}
 }
-function clearStu(){const tb=$('#stuBody');tb.innerHTML='<tr><td colspan="4" class="empty">请选择班级查看学生</td></tr>';$('#curCls').textContent='';}
+function clearStu(){const tb=$('#stuBody');tb.innerHTML='<tr><td colspan="4" class="empty">点击左侧班级「名单」或新建班级后自动选中；导入后自动生成每人 6 位邀请码</td></tr>';$('#curCls').textContent='';}
 async function openClass(id,name){
   curClass=id;$('#curCls').textContent='· '+name;
   const d=await api('list_students',{class_id:id});
@@ -248,11 +286,7 @@ async function importStudents(){
     if(parts.length>=2){const name=parts[0].trim(),no=parts[1].trim();if(name&&no)students.push({name,student_no:no});}
   });
   if(!students.length)return msg('未识别到有效学生（格式：姓名,学号）');
-  try{
-    const d=await api('import_students',{class_id:curClass,students});
-    msg('成功导入 '+d.count+' 人（重复跳过）','ok');
-    $('#importTxt').value='';loadClasses();openClass(curClass,$('#curCls').textContent.replace('· ',''));
-  }catch(e){msg('导入失败：'+(e&&e.message?e.message:'请检查格式或网络连接'),false);}
+  showImportPreview(students);  /* 先预览确认再导入 */
 }
 /* ---------- Excel 模板：下载 + 上传导入 ---------- */
 function downloadTemplate(){
@@ -272,29 +306,50 @@ function downloadTemplate(){
     msg('模板已下载，请填写后上传导入','ok');
   }catch(e){msg('下载模板失败，请检查网络');}
 }
-/* 按当前班级导出学生名单 Excel：姓名 / 班级 / 学号 / 邀请码 */
-async function exportStuXlsx(){
-  if(!curClass)return msg('请先选择一个班级');
-  const clsName=$('#curCls').textContent.replace('· ','').trim();
+/* 按班级导出学生名单 Excel：姓名 / 班级 / 学号 / 邀请码（列表行「下载」按钮也可直接调用） */
+async function exportStuXlsx(cid,cname){
+  const id=cid||curClass;
+  if(!id)return msg('请先选择班级');
+  const name=cname||$('#curCls').textContent.replace('· ','').trim();
   try{
-    const d=await api('list_students',{class_id:curClass});
+    const d=await api('list_students',{class_id:id});
     const list=d.students||[];
     if(!list.length)return msg('该班级暂无学生');
     const rows=[['姓名','班级','学号','邀请码']];
-    list.forEach(s=>rows.push([s.name||'',clsName,s.student_no||'',s.code||'']));
+    list.forEach(s=>rows.push([s.name||'',name,s.student_no||'',s.code||'']));
     if(window.XLSX){
       const ws=XLSX.utils.aoa_to_sheet(rows);
       ws['!cols']=[{wch:12},{wch:16},{wch:12},{wch:12}];
       const wb=XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb,ws,'学生名单');
-      XLSX.writeFile(wb,(clsName||'班级')+'-学生名单.xlsx');
+      XLSX.writeFile(wb,(name||'班级')+'-学生名单.xlsx');
     }else{
       const csv='\ufeff'+rows.map(r=>r.join(',')).join('\r\n');
-      const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=(clsName||'班级')+'-学生名单.csv';a.click();
+      const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=(name||'班级')+'-学生名单.csv';a.click();
       msg('已下载 CSV 名单','ok');return;
     }
     msg('名单已下载（含邀请码，可直接分发）','ok');
   }catch(e){msg('下载名单失败，请检查网络');}
+}
+/* ---------- 导入预览确认：解析 → 预览 → 确认后写入 ---------- */
+let _previewStudents=[];
+function showImportPreview(students){
+  _previewStudents=students;
+  const tb=$('#impBody');tb.innerHTML='';
+  students.forEach((s,i)=>{const tr=document.createElement('tr');tr.innerHTML='<td>'+(i+1)+'</td><td>'+esc(s.name)+'</td><td>'+esc(s.student_no)+'</td>';tb.appendChild(tr);});
+  $('#impCnt').textContent=students.length;
+  $('#impMask').style.display='flex';
+}
+function closeImportPreview(){$('#impMask').style.display='none';_previewStudents=[];}
+async function doImport(){
+  if(!curClass){closeImportPreview();return msg('请先选择班级');}
+  try{
+    const d=await api('import_students',{class_id:curClass,students:_previewStudents});
+    closeImportPreview();
+    msg('成功导入 '+d.count+' 人（重复跳过）','ok');
+    $('#importTxt').value='';$('#fileImport')&&($('#fileImport').value='');
+    loadClasses();openClass(curClass,$('#curCls').textContent.replace('· ',''));
+  }catch(e){msg('导入失败：'+(e&&e.message?e.message:'请检查格式或网络连接'),false);}
 }
 async function onFilePicked(){
   const f=$('#fileImport').files[0];
@@ -323,11 +378,7 @@ async function onFilePicked(){
     }
   }catch(e){return msg('文件解析失败，请使用下载的模板填写');}
   if(!students.length)return msg('文件中没有有效学生数据（姓名 + 学号）');
-  try{
-    const d=await api('import_students',{class_id:curClass,students});
-    msg('成功导入 '+d.count+' 人（重复跳过）','ok');
-    $('#fileImport').value='';loadClasses();openClass(curClass,$('#curCls').textContent.replace('· ',''));
-  }catch(e){msg('导入失败：'+(e&&e.message?e.message:'请检查格式或网络连接'),false);}
+  showImportPreview(students);  /* 先预览确认再导入 */
 }
 async function resetStu(id){try{const d=await api('reset_student_code',{student_id:id});msg('新邀请码 '+d.code,'ok');openClass(curClass,'');}catch(e){}}
 async function removeStu(id){if(!confirm('移除该学生？'))return;try{await api('remove_student',{student_id:id});loadClasses();openClass(curClass,'');}catch(e){}}
@@ -400,16 +451,16 @@ async function initAdmin(){
 $('#admTid')&&$('#admTid').addEventListener('change',e=>{
   ADMIN_TID=e.target.value;
   curClass=null;clearStu();
-  if(!ADMIN_TID){loadClasses();$('#swCls').innerHTML='<option value="">请选择班级</option>';return;}
+  if(!ADMIN_TID){if(!IS_ADMIN)loadClasses();$('#swCls').innerHTML='<option value="">请选择班级</option>';return;}
   fillSelects().then(()=>loadClasses());
 });
 
 /* ---------- 启动 ---------- */
 if(!IS_ADMIN&&role()!=='teacher'){location.href='../login.html';}
 else{
-  if(IS_ADMIN){$('#tName').textContent='管理员';initAdmin();}
+  if(IS_ADMIN){$('#tName').textContent='管理员';initAdmin();const ic=$('#importCtl'),pc=$('#pasteCtl');if(ic)ic.style.display='none';if(pc)pc.style.display='none';}
   else{try{const u=JSON.parse(localStorage.getItem('quiz_user')||'{}');$('#tName').textContent=u.name||'教师';}catch(e){}}
-  fillSelects().then(()=>{loadClasses();clearStu();});
+  fillSelects().then(()=>{if(!IS_ADMIN){loadClasses();}clearStu();});
 }
 </script>
 </body>
