@@ -68,13 +68,16 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
 .lab.on{color:var(--gold);font-weight:700;}
 .lab+.switch{margin-left:8px;}
 .swrow.dirty{background:rgba(212,175,55,.05);border-radius:8px;}
-.swtable{display:grid;grid-template-columns:minmax(190px,1fr) 168px 168px;gap:0;align-items:center;}
-.swtable .hd{color:var(--sub);font-size:12px;font-weight:700;letter-spacing:1px;padding:8px 14px;border-bottom:1.5px solid var(--line);}
-.swtable .hd:first-child{padding-left:4px;}
-.swtable .swname{font-size:14px;padding:11px 4px;border-bottom:1px solid rgba(42,58,92,.55);display:flex;align-items:center;gap:10px;}
-.swtable .swname .ch{color:var(--gold);font-weight:700;font-size:12.5px;flex:none;}
-.swtable .swcell{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid rgba(42,58,92,.55);justify-content:flex-start;}
-.swtable .swcell .switch{margin-left:0;}
+.swgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:12px;max-width:1240px;}
+.swcard{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:rgba(10,16,28,.45);transition:.2s;}
+.swcard.on{border-color:rgba(212,175,55,.55);background:rgba(212,175,55,.07);}
+.swcard .swch{color:var(--gold);font-weight:800;font-size:13px;flex:none;letter-spacing:.5px;}
+.swcard .swname{font-size:14px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.swbtn{padding:7px 15px;border-radius:9px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.2s;flex:none;border:1.5px solid var(--line);background:transparent;color:var(--sub);}
+.swbtn:hover{border-color:var(--gold);color:var(--gold);}
+.swbtn.on{background:linear-gradient(135deg,var(--gold),#a9861f);border-color:var(--gold);color:#14100a;box-shadow:0 0 10px rgba(212,175,55,.4);}
+.swst{font-size:12.5px;color:var(--sub);flex:none;padding:7px 12px;border:1px solid var(--line);border-radius:9px;}
+.swcard.on .swst{color:var(--gold);border-color:rgba(212,175,55,.5);}
 .bar{height:16px;border-radius:8px;background:#2a3a5c;overflow:hidden;}
 .bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#a9861f);}
 .stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px;}
@@ -137,26 +140,31 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
 
 <!-- ============ 章节开关 ============ -->
 <div class="panel" id="p-switches">
-  <h2>章节开放 Chapters</h2><div class="de">按班级勾选开放「学习内容 / 章节测试」；第 1 章默认开放；学生端只显示本班已开放的章节</div>
+  <h2>章节开放 Chapters</h2><div class="de">按班级设置「学习内容」开放；章节测试的开放由测试中心「发起测试」控制。第 1 章默认开放。</div>
   <div class="row">
     <select id="swCls"></select>
-    <span style="color:var(--sub);font-size:13px">选择班级，逐章设置开放</span>
+    <span style="color:var(--sub);font-size:13px">选择班级，逐章点击「开放 / 关闭」立即生效</span>
   </div>
-  <div style="max-width:680px" id="swList"></div>
-  <div style="max-width:680px;margin-top:14px;display:flex;align-items:center;gap:12px">
-    <button class="btn gold wbtn" id="saveSw" onclick="saveSwitches()" disabled>保存本班设置 Save</button>
-    <span style="color:var(--sub);font-size:12.5px" id="swHint">勾选后点「保存」统一生效</span>
-  </div>
+  <div id="swList" class="swgrid"></div>
 </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
+/* file:// 本地打开：尝试把 URL 传递的登录态写入本地存储（失败无碍，token()/role() 会从 URL 回退读取） */
+(function(){
+  try{
+    const q=new URLSearchParams(location.search),t=q.get('t');
+    if(t){try{localStorage.setItem('quiz_token',t);localStorage.setItem('quiz_role',q.get('r')||'student');}catch(e){}}
+  }catch(e){}
+})();
 const API_URL='https://1311686407-6z755znqlt.ap-guangzhou.tencentscf.com';
 const CHS={1:'经济学是什么',2:'经济思想录',3:'需求与供给',4:'成本与利润',5:'市场竞争',6:'博弈论与策略',7:'通胀与购买力',8:'经济增长与经济周期',9:'宏观经济政策'};
 const $=s=>document.querySelector(s);
-function token(){try{return localStorage.getItem('quiz_token')||'';}catch(e){return '';}}
-function role(){try{return localStorage.getItem('quiz_role')||'';}catch(e){return '';}}
+/* file:// 本地打开时 localStorage 可能被浏览器拒绝：登录态优先从 URL 参数（?t=&r=）读取，localStorage 作为线上补充 */
+function urlParam(k){try{return new URLSearchParams(location.search).get(k)||'';}catch(e){return '';}}
+function token(){const t=urlParam('t');if(t)return t;try{return localStorage.getItem('quiz_token')||'';}catch(e){return '';}}
+function role(){const r=urlParam('r');if(r)return r;try{return localStorage.getItem('quiz_role')||'';}catch(e){return '';}}
 const IS_ADMIN=role()==='admin';
 let ADMIN_TID='';
 function msg(m,ok){const e=$('#msg');e.className='msg '+(ok?'ok':'err');e.textContent=m;setTimeout(()=>e.className='msg',4000);}
@@ -166,7 +174,7 @@ async function api(action,body){
   const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token()},
     body:JSON.stringify(Object.assign({action},b))});
   const j=await r.json();
-  if(!j.ok){if(j.code==='E_AUTH'){location.href='../login.html';throw new Error('auth');}msg(j.error||'操作失败');throw new Error(j.error||'fail');}
+  if(!j.ok){if(j.code==='E_AUTH'){location.href='../login.html?out=1';throw new Error('auth');}msg(j.error||'操作失败');throw new Error(j.error||'fail');}
   return j.data;
 }
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
@@ -324,8 +332,7 @@ async function onFilePicked(){
 async function resetStu(id){try{const d=await api('reset_student_code',{student_id:id});msg('新邀请码 '+d.code,'ok');openClass(curClass,'');}catch(e){}}
 async function removeStu(id){if(!confirm('移除该学生？'))return;try{await api('remove_student',{student_id:id});loadClasses();openClass(curClass,'');}catch(e){}}
 
-/* ---------- 章节开关（按班级，勾选暂存 + 保存确认） ---------- */
-let swDraft={};
+/* ---------- 章节开关（按班级，每章「开放/关闭」按钮直接生效） ---------- */
 async function loadSwitches(){
   const cid=$('#swCls').value;
   const box=$('#swList');
@@ -333,41 +340,33 @@ async function loadSwitches(){
   try{
     const d=await api('get_switches',{class_id:cid});
     const sw=d.switches||{};
-    swDraft={};
-    $('#saveSw').disabled=true;
-    box.innerHTML='<div class="hd">章节 Chapter</div><div class="hd">内容 Content</div><div class="hd">测试 Quiz</div>';
+    box.innerHTML='';
     Object.keys(CHS).forEach(n=>{
-      const st=sw[n]||{content:false,quiz:false};
-      const row=document.createElement('div');row.className='swrow';
-      row.style.cssText='display:contents;';
-      row.innerHTML='<div class="swname"><span class="ch">CH'+String(n).padStart(2,'0')+'</span>'+CHS[n]+'</div>'+
-        '<div class="swcell"><span class="lab'+(st.content?' on':'')+'" data-l="'+n+'-content">内容</span>'+
-        '<label class="switch"><input type="checkbox" id="sw-'+n+'-content" '+(st.content?'checked':'')+(IS_ADMIN?' disabled':'')+' onchange="markSw('+n+')"><span class="sl"></span></label></div>'+
-        '<div class="swcell"><span class="lab'+(st.quiz?' on':'')+'" data-l="'+n+'-quiz">测试</span>'+
-        '<label class="switch"><input type="checkbox" id="sw-'+n+'-quiz" '+(st.quiz?'checked':'')+(IS_ADMIN?' disabled':'')+' onchange="markSw('+n+')"><span class="sl"></span></label></div>';
-      box.appendChild(row);
+      const st=sw[n]||{content:false};
+      const on=!!st.content;
+      const el=document.createElement('div');el.className='swcard'+(on?' on':'');
+      el.setAttribute('data-ch',n);
+      el.innerHTML='<span class="swch">CH'+String(n).padStart(2,'0')+'</span>'+
+        '<span class="swname">'+CHS[n]+'</span>'+
+        (IS_ADMIN?'<span class="swst">'+(on?'开放':'关闭')+'</span>':
+         '<button class="swbtn'+(on?' on':'')+'" onclick="toggleSw('+n+')">'+(on?'开放':'关闭')+'</button>');
+      box.appendChild(el);
     });
-  }catch(e){}
+  }catch(e){box.innerHTML='<div class="empty">加载失败，请检查网络</div>';}
 }
-function markSw(ch){
-  const c=document.getElementById('sw-'+ch+'-content').checked;
-  const q=document.getElementById('sw-'+ch+'-quiz').checked;
-  swDraft[ch]={content:c,quiz:q};
-  document.querySelectorAll('[data-l="'+ch+'-content"]').forEach(x=>x.classList.toggle('on',c));
-  document.querySelectorAll('[data-l="'+ch+'-quiz"]').forEach(x=>x.classList.toggle('on',q));
-  $('#saveSw').disabled=false;
-}
-async function saveSwitches(){
+async function toggleSw(ch){
   const cid=$('#swCls').value;
-  const keys=Object.keys(swDraft);
-  if(!cid)return;
-  if(!keys.length)return msg('没有需要保存的修改');
+  if(!cid)return msg('请先选择班级',false);
+  const card=document.querySelector('.swcard[data-ch="'+ch+'"]');
+  if(!card)return;
+  const cur=card.classList.contains('on');
   try{
-    await Promise.all(keys.map(ch=>api('set_switch',{class_id:cid,ch:+ch,content:swDraft[ch].content,quiz:swDraft[ch].quiz})));
-    msg('已保存 '+keys.length+' 章的开放设置 / Saved','ok');
-    swDraft={};$('#saveSw').disabled=true;
-    loadSwitches();
-  }catch(e){}
+    await api('set_switch',{class_id:cid,ch:+ch,content:!cur});
+    card.classList.toggle('on',!cur);
+    const btn=card.querySelector('.swbtn');
+    if(btn){btn.textContent=!cur?'开放':'关闭';btn.classList.toggle('on',!cur);}
+    msg('第 '+ch+' 章已'+( !cur?'开放':'关闭')+' / Saved','ok');
+  }catch(e){msg('保存失败：'+(e&&e.message?e.message:'请检查网络'),false);}
 }
 
 /* ---------- 下拉填充：班级（教师 / 管理员只读） ---------- */
@@ -383,7 +382,7 @@ async function fillSelects(keep){
 }
 
 function goHome(){try{location.href='../index.html';}catch(e){}}
-function logout(){try{localStorage.removeItem('quiz_token');localStorage.removeItem('quiz_role');localStorage.removeItem('quiz_user');}catch(e){}location.href='../login.html';}
+function logout(){try{localStorage.removeItem('quiz_token');localStorage.removeItem('quiz_role');localStorage.removeItem('quiz_user');}catch(e){}location.href='../login.html?out=1';}
 
 /* ---------- 管理员只读模式 ---------- */
 async function initAdmin(){

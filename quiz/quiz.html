@@ -353,6 +353,13 @@ main{position:relative;z-index:1}
 </div>
 
 <script>
+/* file:// 本地打开：尝试把 URL 传递的登录态写入本地存储（失败无碍，token()/role() 会从 URL 回退读取） */
+(function(){
+  try{
+    const q=new URLSearchParams(location.search),t=q.get('t');
+    if(t){try{localStorage.setItem('quiz_token',t);localStorage.setItem('quiz_role',q.get('r')||'student');}catch(e){}}
+  }catch(e){}
+})();
 /* ================= 配置 ================= */
 const CONFIG = {
   API_URL: 'https://1311686407-6z755znqlt.ap-guangzhou.tencentscf.com'   /* 部署后填入：https://<你的域名>/api（URL 模式） */
@@ -481,8 +488,10 @@ function openModal(title,msg,btns){$('#mTitle').textContent=title;$('#mMsg').inn
 function closeModal(){$('#modal').classList.remove('show');}
 
 /* ================= 在线 API ================= */
-function token(){try{return localStorage.getItem('quiz_token')||'';}catch(e){return '';}}
-function role(){try{return localStorage.getItem('quiz_role')||'';}catch(e){return '';}}
+/* file:// 本地打开时 localStorage 可能被浏览器拒绝：登录态优先从 URL 参数（?t=&r=）读取，localStorage 作为线上补充 */
+function urlParam(k){try{return new URLSearchParams(location.search).get(k)||'';}catch(e){return '';}}
+function token(){const t=urlParam('t');if(t)return t;try{return localStorage.getItem('quiz_token')||'';}catch(e){return '';}}
+function role(){const r=urlParam('r');if(r)return r;try{return localStorage.getItem('quiz_role')||'';}catch(e){return '';}}
 const MY_ROLE=role();
 const IS_ADMIN=MY_ROLE==='admin';
 const IS_TEACH=MY_ROLE==='teacher'||IS_ADMIN;
@@ -706,30 +715,23 @@ function boardToggle(){$('#board').classList.toggle('full');}
   document.addEventListener('mouseup',()=>{drag=false;head.style.cursor='';});
 })();
 
-/* ================= 选章 ================= */
-let openChapters=null; /* 学生本班已开放测试章节 */
+/* ================= 选章（全部章节可进入，状态由 test_status 分流） ================= */
 function renderPick(){
   const g=$('#chGrid');g.innerHTML='';
   Object.keys(QUIZ).forEach(n=>{
     const c=QUIZ[n];
-    const open=!ONLINE || !openChapters || openChapters[n]===true;
-    const el=document.createElement('div');el.className='ch-card'+(open?'':' lock');
+    const el=document.createElement('div');el.className='ch-card';
     el.innerHTML='<div class="no">CHAPTER '+String(n).padStart(2,'0')+'</div>'+
       '<div class="cn">'+c.cn+'</div><div class="en">'+c.en+'</div>'+
-      (open?'<div class="meta">5 单选 + 5 翻译 · '+TIME_MIN+' 分钟</div>':'<div class="tag-lock">本章测试未开放 · Locked</div>');
-    if(open)el.onclick=()=>startQuiz(+n);
+      '<div class="meta">5 单选 + 5 翻译 · '+TIME_MIN+' 分钟</div>';
+    el.onclick=()=>startQuiz(+n);
     g.appendChild(el);
   });
-  $('#modeTip').textContent=ONLINE?(openChapters?'已开放章节由教师按班级统一管理，仅显示本班开放的测试':'每章 5 单选 + 5 翻译 · 30 分钟 · 教师统一收卷与公布'):'本地演示模式（未配置 API_URL）：答题后即时查看结果';
+  $('#modeTip').textContent=ONLINE?'点击章节查看当前测试状态：教师发起后开始答题，结束后查看成绩':'本地演示模式（未配置 API_URL）：答题后即时查看结果';
 }
 function loadChapters(){
   if(!ONLINE){renderPick();return;}
-  api('my_chapters').then(d=>{
-    if(d.ok&&d.data&&d.data.all){openChapters=null;}
-    else if(d.ok&&d.data){const m={};d.data.quiz.forEach(ch=>m[ch]=true);openChapters=m;}
-    else{openChapters={1:true};}
-    renderPick();
-  }).catch(()=>{openChapters={1:true};renderPick();});
+  renderPick();
 }
 
 /* ================= 进入试卷 ================= */

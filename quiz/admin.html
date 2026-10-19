@@ -112,17 +112,26 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
 </div>
 
 <script>
+/* file:// 本地打开：吸收 index.html 经 URL 传递的登录态（?t=&r=），并清除地址栏参数 */
+(function(){
+  try{
+    const q=new URLSearchParams(location.search),t=q.get('t');
+    if(t){try{localStorage.setItem('quiz_token',t);localStorage.setItem('quiz_role',q.get('r')||'student');}catch(e){}}
+  }catch(e){}
+})();
 const API_URL='https://1311686407-6z755znqlt.ap-guangzhou.tencentscf.com';
 const $=s=>document.querySelector(s);
-function token(){try{return localStorage.getItem('quiz_token')||'';}catch(e){return '';}}
-function role(){try{return localStorage.getItem('quiz_role')||'';}catch(e){return '';}}
+/* file:// 本地打开时 localStorage 可能被浏览器拒绝：登录态优先从 URL 参数（?t=&r=）读取，localStorage 作为线上补充 */
+function urlParam(k){try{return new URLSearchParams(location.search).get(k)||'';}catch(e){return '';}}
+function token(){const t=urlParam('t');if(t)return t;try{return localStorage.getItem('quiz_token')||'';}catch(e){return '';}}
+function role(){const r=urlParam('r');if(r)return r;try{return localStorage.getItem('quiz_role')||'';}catch(e){return '';}}
 function msg(m,ok){const e=$('#msg');e.className='msg '+(ok?'ok':'err');e.textContent=m;setTimeout(()=>e.className='msg',4000);}
 async function api(action,body){
   const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token()},
     body:JSON.stringify(Object.assign({action},body||{}))});
   const j=await r.json();
   if(!j.ok){
-    if(j.code==='E_AUTH'){location.href='../login.html';throw new Error('auth');}
+    if(j.code==='E_AUTH'){location.href='../login.html?out=1';throw new Error('auth');}
     msg(j.error||'操作失败');throw new Error(j.error||'fail');
   }
   return j.data;
@@ -168,7 +177,7 @@ async function addTeacher(){
 async function resetCode(id){try{const d=await api('reset_code',{teacher_id:id});msg('新邀请码 '+d.code,'ok');load();setTimeout(()=>copy(d.code),300);}catch(e){}}
 async function toggle(id,status){try{await api('toggle_teacher',{teacher_id:id,status});load();}catch(e){}}
 function goHome(){try{location.href='../index.html';}catch(e){}}
-function logout(){try{localStorage.removeItem('quiz_token');localStorage.removeItem('quiz_role');localStorage.removeItem('quiz_user');}catch(e){}location.href='../login.html';}
+function logout(){try{localStorage.removeItem('quiz_token');localStorage.removeItem('quiz_role');localStorage.removeItem('quiz_user');}catch(e){}location.href='../login.html?out=1';}
 
 /* ---------- 系统看板 ---------- */
 const CHS=['经济学是什么','经济思想录','需求与供给','成本与利润','市场竞争','生产要素','GDP 与经济周期','经济增长与经济周期','宏观政策'];
