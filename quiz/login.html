@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>测试中心 · 登录 | Quiz Center · Sign In</title>
+<title>财经英语学习平台 · 登录 | Sign In</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23d4af37'/%3E%3Cpath d='M12 5v14M5 12h14' stroke='%2314100a' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 :root{
   --bg:#0e1420; --panel:#161f30; --panel2:#1b2740; --line:#2a3a5c;
@@ -70,11 +71,11 @@ body{
       <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M9 21H5a2 2 0 0 1-2-2v-4"/><path d="M15 21h4a2 2 0 0 0 2-2v-4"/><path d="M12 7v10"/><path d="M7 12h10"/></svg>
     </div>
     <div>
-      <h1>测试中心 <span style="color:var(--gold)">Quiz Center</span></h1>
+      <h1>财经英语 <span style="color:var(--gold)">学习平台</span></h1>
       <div class="en">FINANCIAL ENGLISH · VISUAL LEARNING PLATFORM</div>
     </div>
   </div>
-  <div class="sub">章节测试 · 统一计时 · 教师收卷与公布｜Sign in to take chapter quizzes</div>
+  <div class="sub">登录后进入章节学习、章节测试与教学工作台｜Sign in to access your modules</div>
 
   <div class="roles" id="roles">
     <div class="role on" data-role="student">
@@ -118,7 +119,7 @@ const FIELDS = {
   ]
 };
 const ACTION = {student:'student_login',teacher:'teacher_login',admin:'admin_login'};
-const NEXT = {student:'quiz.html',teacher:'teacher.html',admin:'admin.html'};
+const NEXT = {student:'index.html',teacher:'index.html',admin:'index.html'};
 
 let role='student';
 const $=s=>document.querySelector(s);
@@ -160,15 +161,11 @@ $('#goBtn').onclick=async()=>{
 renderFields();
 $('#f_student_no')&&$('#f_student_no').focus();
 
-/* 已登录则直接进入对应页面 */
+/* 已登录则直接返回主页 */
 (function(){
   try{
     const t=localStorage.getItem('quiz_token');
-    if(t){
-      const r=localStorage.getItem('quiz_role');
-      const next=(r==='teacher'?'teacher.html':r==='admin'?'admin.html':'quiz.html');
-      location.replace(next);
-    }
+    if(t){ location.replace('index.html'); }
   }catch(e){}
 })();
 </script>

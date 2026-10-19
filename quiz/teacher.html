@@ -90,18 +90,16 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
 <body>
 <div class="topbar">
   <div class="logo"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-  <div><h1>测试中心 · 教师工作台 <span style="color:var(--gold)">Teacher</span></h1><div class="en">CLASS · QUIZ · RESULTS</div></div>
+  <div><h1>教师工作台 <span style="color:var(--gold)">Teacher Workbench</span></h1><div class="en">CLASSES · STUDENTS · CHAPTER SWITCHES</div></div>
   <div class="sp"></div>
-  <div class="who">欢迎 <b id="tName">教师</b></div>
-  <button class="btn" onclick="goPreview()">预览学生端</button>
+  <div class="who">欢迎 <b id="tName">教师</b><span id="roTag" style="display:none;margin-left:8px;padding:2px 9px;border:1px solid var(--gold);border-radius:8px;color:var(--gold);font-size:12px">管理员只读</span></div>
+  <button class="btn" onclick="goHome()">返回主程序</button>
   <button class="btn gold" onclick="logout()">退出</button>
 </div>
 
 <div class="tabs">
   <div class="tab on" data-t="classes" onclick="switchTab('classes')">班级与学生 Classes</div>
   <div class="tab" data-t="switches" onclick="switchTab('switches')">章节开关 Chapters</div>
-  <div class="tab" data-t="exam" onclick="switchTab('exam')">测试控制 Quiz Control</div>
-  <div class="tab" data-t="results" onclick="switchTab('results')">成绩与看板 Results</div>
 </div>
 
 <div class="wrap">
@@ -110,9 +108,13 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
 <!-- ============ 班级与学生 ============ -->
 <div class="panel on" id="p-classes">
   <h2>班级管理 Classes</h2><div class="de">新建班级 → 导入学生名单（自动生成每人 6 位邀请码，一键复制发给学生）</div>
+  <div class="row" id="admRow" style="display:none">
+    <select id="admTid" style="max-width:280px"><option value="">— 选择教师 —</option></select>
+    <span style="color:var(--sub);font-size:13px">管理员只读模式：先选择教师，再查看其班级</span>
+  </div>
   <div class="row">
     <input id="clsName" placeholder="新班级名称，如：25 经济学联合项目班">
-    <button class="btn gold" onclick="addClass()">新建班级 Add Class</button>
+    <button class="btn gold wbtn" onclick="addClass()">新建班级 Add Class</button>
   </div>
   <div class="grid2">
     <div class="box">
@@ -122,9 +124,9 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
     <div class="box" id="stuBox">
       <h3>学生名单 <span style="font-size:12px;color:var(--sub);font-weight:400;" id="curCls"></span></h3>
       <div class="row" style="margin-bottom:10px">
-        <button class="btn gold" onclick="downloadTemplate()">下载模板 Template</button>
+        <button class="btn gold wbtn" onclick="downloadTemplate()">下载模板 Template</button>
         <button class="btn gold" onclick="exportStuXlsx()">下载名单 Excel</button>
-        <button class="btn" onclick="$('#fileImport').click()">选择文件 Choose File</button>
+        <button class="btn wbtn" onclick="$('#fileImport').click()">选择文件 Choose File</button>
         <input type="file" id="fileImport" accept=".xlsx,.xls" style="display:none" onchange="onFilePicked()">
         <span style="color:var(--sub);font-size:12.5px">下载模板 → 填写「姓名 / 班级 / 学号」→ 选择文件自动导入（每人自动生成 6 位邀请码）</span>
       </div>
@@ -142,38 +144,9 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
   </div>
   <div style="max-width:680px" id="swList"></div>
   <div style="max-width:680px;margin-top:14px;display:flex;align-items:center;gap:12px">
-    <button class="btn gold" id="saveSw" onclick="saveSwitches()" disabled>保存本班设置 Save</button>
+    <button class="btn gold wbtn" id="saveSw" onclick="saveSwitches()" disabled>保存本班设置 Save</button>
     <span style="color:var(--sub);font-size:12.5px" id="swHint">勾选后点「保存」统一生效</span>
   </div>
-</div>
-
-<!-- ============ 测试控制 ============ -->
-<div class="panel" id="p-exam">
-  <h2>测试控制 Quiz Control</h2><div class="de">选择「班级 + 章节」开考，该班统一倒计时；到点自动收卷；「结束测试」后该班统一公布</div>
-  <div class="row">
-    <select id="exCls"></select>
-    <select id="exCh"></select>
-    <input id="exMin" type="number" value="30" min="1" max="120" style="max-width:110px">
-    <span style="color:var(--sub);font-size:13px">分钟 / minutes</span>
-    <button class="btn ok" onclick="startTest()">开始测试 Start</button>
-    <button class="btn" onclick="endTest()">结束测试 End &amp; Publish</button>
-  </div>
-  <div class="box">
-    <h3>当前状态</h3>
-    <div id="exStatus" style="font-size:14.5px;line-height:2;color:var(--sub)">—</div>
-  </div>
-</div>
-
-<!-- ============ 成绩与看板 ============ -->
-<div class="panel" id="p-results">
-  <h2>成绩与看板 Results &amp; Analytics</h2><div class="de">查看某班已提交答卷、下载成绩 CSV、每题得分率与分数分布、翻译问题 AI 总结</div>
-  <div class="row">
-    <select id="rsCls"></select>
-    <select id="rsCh"></select>
-    <button class="btn" onclick="loadResults()">加载成绩 Load</button>
-    <button class="btn gold" onclick="exportCsv()">下载 CSV Download</button>
-  </div>
-  <div id="rsArea" style="color:var(--sub);font-size:13.5px">选择班级与章节后点击「加载成绩」</div>
 </div>
 </div>
 
@@ -184,12 +157,16 @@ const CHS={1:'经济学是什么',2:'经济思想录',3:'需求与供给',4:'成
 const $=s=>document.querySelector(s);
 function token(){try{return localStorage.getItem('quiz_token')||'';}catch(e){return '';}}
 function role(){try{return localStorage.getItem('quiz_role')||'';}catch(e){return '';}}
+const IS_ADMIN=role()==='admin';
+let ADMIN_TID='';
 function msg(m,ok){const e=$('#msg');e.className='msg '+(ok?'ok':'err');e.textContent=m;setTimeout(()=>e.className='msg',4000);}
 async function api(action,body){
+  const b=Object.assign({},body||{});
+  if(IS_ADMIN&&ADMIN_TID)b.teacher_id=ADMIN_TID;
   const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token()},
-    body:JSON.stringify(Object.assign({action},body||{}))});
+    body:JSON.stringify(Object.assign({action},b))});
   const j=await r.json();
-  if(!j.ok){if(j.code==='E_AUTH'){location.href='login.html';throw new Error('auth');}msg(j.error||'操作失败');throw new Error(j.error||'fail');}
+  if(!j.ok){if(j.code==='E_AUTH'){location.href='../login.html';throw new Error('auth');}msg(j.error||'操作失败');throw new Error(j.error||'fail');}
   return j.data;
 }
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
@@ -204,13 +181,8 @@ function switchTab(t){
   $('#p-'+t).classList.add('on');
   if(t==='classes')loadClasses();
   if(t==='switches'){fillSelects().then(()=>loadSwitches());}
-  if(t==='exam'){fillSelects().then(()=>loadExamStatus());}
-  if(t==='results'){fillSelects();}
 }
 $('#swCls')&&$('#swCls').addEventListener('change',loadSwitches);
-$('#exCls')&&$('#exCls').addEventListener('change',loadExamStatus);
-$('#rsCls')&&$('#rsCls').addEventListener('change',()=>{});
-$('#exCh')&&$('#exCh').addEventListener('change',loadExamStatus);
 
 /* ---------- 班级与学生 ---------- */
 let curClass=null;
@@ -223,8 +195,8 @@ async function loadClasses(){
       const tr=document.createElement('tr');
       tr.innerHTML='<td><b>'+esc(c.name)+'</b></td><td>'+c.student_count+'</td>'+
         '<td style="white-space:nowrap"><button class="mini" onclick="openClass(\''+c.id+'\',\''+esc(c.name).replace(/'/g,"\\'")+'\')">名单</button> '+
-        '<button class="mini" onclick="renameClass(\''+c.id+'\',\''+esc(c.name).replace(/'/g,"\\'")+'\')">改名</button> '+
-        '<button class="mini danger" onclick="delClass(\''+c.id+'\')">删除</button></td>';
+        (IS_ADMIN?'':'<button class="mini" onclick="renameClass(\''+c.id+'\',\''+esc(c.name).replace(/'/g,"\\'")+'\')">改名</button> '+
+        '<button class="mini danger" onclick="delClass(\''+c.id+'\')">删除</button>')+'</td>';
       tb.appendChild(tr);
     });
   }catch(e){}
@@ -253,8 +225,8 @@ async function openClass(id,name){
     const tr=document.createElement('tr');
     tr.innerHTML='<td>'+esc(s.name)+'</td><td>'+esc(s.student_no)+'</td><td><code>'+esc(s.code)+'</code></td>'+
       '<td style="white-space:nowrap"><button class="mini" onclick="copy(\''+esc(s.code)+'\')">复制码</button> '+
-      '<button class="mini" onclick="resetStu(\''+s.id+'\')">重置</button> '+
-      '<button class="mini danger" onclick="removeStu(\''+s.id+'\')">移除</button></td>';
+      (IS_ADMIN?'':'<button class="mini" onclick="resetStu(\''+s.id+'\')">重置</button> '+
+      '<button class="mini danger" onclick="removeStu(\''+s.id+'\')">移除</button>')+'</td>';
     tb.appendChild(tr);
   });
 }
@@ -272,7 +244,7 @@ async function importStudents(){
     const d=await api('import_students',{class_id:curClass,students});
     msg('成功导入 '+d.count+' 人（重复跳过）','ok');
     $('#importTxt').value='';loadClasses();openClass(curClass,$('#curCls').textContent.replace('· ',''));
-  }catch(e){}
+  }catch(e){msg('导入失败：'+(e&&e.message?e.message:'请检查格式或网络连接'),false);}
 }
 /* ---------- Excel 模板：下载 + 上传导入 ---------- */
 function downloadTemplate(){
@@ -347,7 +319,7 @@ async function onFilePicked(){
     const d=await api('import_students',{class_id:curClass,students});
     msg('成功导入 '+d.count+' 人（重复跳过）','ok');
     $('#fileImport').value='';loadClasses();openClass(curClass,$('#curCls').textContent.replace('· ',''));
-  }catch(e){}
+  }catch(e){msg('导入失败：'+(e&&e.message?e.message:'请检查格式或网络连接'),false);}
 }
 async function resetStu(id){try{const d=await api('reset_student_code',{student_id:id});msg('新邀请码 '+d.code,'ok');openClass(curClass,'');}catch(e){}}
 async function removeStu(id){if(!confirm('移除该学生？'))return;try{await api('remove_student',{student_id:id});loadClasses();openClass(curClass,'');}catch(e){}}
@@ -370,9 +342,9 @@ async function loadSwitches(){
       row.style.cssText='display:contents;';
       row.innerHTML='<div class="swname"><span class="ch">CH'+String(n).padStart(2,'0')+'</span>'+CHS[n]+'</div>'+
         '<div class="swcell"><span class="lab'+(st.content?' on':'')+'" data-l="'+n+'-content">内容</span>'+
-        '<label class="switch"><input type="checkbox" id="sw-'+n+'-content" '+(st.content?'checked':'')+' onchange="markSw('+n+')"><span class="sl"></span></label></div>'+
+        '<label class="switch"><input type="checkbox" id="sw-'+n+'-content" '+(st.content?'checked':'')+(IS_ADMIN?' disabled':'')+' onchange="markSw('+n+')"><span class="sl"></span></label></div>'+
         '<div class="swcell"><span class="lab'+(st.quiz?' on':'')+'" data-l="'+n+'-quiz">测试</span>'+
-        '<label class="switch"><input type="checkbox" id="sw-'+n+'-quiz" '+(st.quiz?'checked':'')+' onchange="markSw('+n+')"><span class="sl"></span></label></div>';
+        '<label class="switch"><input type="checkbox" id="sw-'+n+'-quiz" '+(st.quiz?'checked':'')+(IS_ADMIN?' disabled':'')+' onchange="markSw('+n+')"><span class="sl"></span></label></div>';
       box.appendChild(row);
     });
   }catch(e){}
@@ -398,132 +370,47 @@ async function saveSwitches(){
   }catch(e){}
 }
 
-/* ---------- 测试控制 ---------- */
-/* ---------- 下拉填充：班级 + 章节 ---------- */
-function fillChSel(){}
+/* ---------- 下拉填充：班级（教师 / 管理员只读） ---------- */
 async function fillSelects(keep){
+  if(IS_ADMIN&&!ADMIN_TID)return;
   let cls=await api('list_classes');
   const clsList=cls.classes||[];
-  const mkOpt=(id,sel)=>{
-    const s=document.getElementById(id);if(!s)return;
-    const prev=s.value;
-    s.innerHTML='<option value="">'+ (id==='rsCls'?'全部班级 All':'请选择班级') +'</option>'+
-      clsList.map(c=>'<option value="'+c.id+'">'+esc(c.name)+'</option>').join('');
-    if(sel)s.value=sel;else if(prev&&[...s.options].some(o=>o.value===prev))s.value=prev;
-  };
-  mkOpt('swCls');mkOpt('exCls');mkOpt('rsCls');
-  ['exCh','rsCh'].forEach(id=>{
-    const s=document.getElementById(id);
-    if(!s.options.length){s.innerHTML=Object.keys(CHS).map(n=>'<option value="'+n+'">第 '+n+' 章 · '+CHS[n]+'</option>').join('');}
-  });
-}
-/* ---------- 测试控制（按班级） ---------- */
-async function loadExamStatus(){
-  const cid=$('#exCls').value,ch=$('#exCh').value;
-  if(!cid){$('#exStatus').innerHTML='请先选择班级';return;}
-  if(!ch){$('#exStatus').innerHTML='请选择章节';return;}
-  try{
-    const d=await api('test_status',{class_id:cid,ch:+ch});
-    const st=d.status;
-    if(st==='none'){$('#exStatus').innerHTML='第 '+ch+' 章 · 该班：<b style="color:var(--sub)">尚未开始</b> — 点击「开始测试」全班统一倒计时';}
-    else if(st==='running'){
-      const sec=Math.max(0,Math.floor((d.ends_at-Date.now())/1000));
-      $('#exStatus').innerHTML='第 '+ch+' 章 · 该班：<b style="color:var(--ok)">考试中 RUNNING</b> · 剩余 '+fmt(sec)+' · 开始于 '+new Date(d.started_at).toLocaleString('zh-CN')+'<br>到点自动收卷；点「结束测试」统一公布';
-    }else{
-      $('#exStatus').innerHTML='第 '+ch+' 章 · 该班：<b style="color:var(--gold)">已结束 ENDED</b>（'+new Date(d.ended_at).toLocaleString('zh-CN')+'）· 分数与答案已对学生公布';
-    }
-  }catch(e){}
-}
-function fmt(sec){const m=Math.max(0,Math.floor(sec/60)),s=Math.max(0,Math.floor(sec%60));return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
-async function startTest(){
-  const cid=$('#exCls').value,ch=+$('#exCh').value;
-  if(!cid)return msg('请先选择班级');
-  if(!ch)return msg('请选择章节');
-  const min=Math.max(1,Math.min(120,+$('#exMin').value||30));
-  if(!confirm('开始该班第 '+ch+' 章测试？全班 '+min+' 分钟统一倒计时，到点自动收卷。'))return;
-  try{await api('start_test',{class_id:cid,ch,minutes:min});msg('测试已开始 / Test started','ok');loadExamStatus();}catch(e){}
-}
-async function endTest(){
-  const cid=$('#exCls').value,ch=+$('#exCh').value;
-  if(!cid)return msg('请先选择班级');
-  if(!ch)return msg('请选择章节');
-  if(!confirm('结束该班第 '+ch+' 章测试并统一公布分数与答案？'))return;
-  try{await api('end_test',{class_id:cid,ch});msg('已结束并公布 / Published','ok');loadExamStatus();}catch(e){}
+  const s=$('#swCls');if(!s)return;
+  const prev=s.value;
+  s.innerHTML='<option value="">请选择班级</option>'+
+    clsList.map(c=>'<option value="'+c.id+'">'+esc(c.name)+'</option>').join('');
+  if(prev&&[...s.options].some(o=>o.value===prev))s.value=prev;
 }
 
-/* ---------- 成绩与看板（按班级） ---------- */
-async function loadResults(){
-  const cid=$('#rsCls').value,ch=+$('#rsCh').value;
-  if(!ch)return;
-  $('#rsArea').innerHTML='<span style="color:var(--sub)">加载中…</span>';
+function goHome(){try{location.href='../index.html';}catch(e){}}
+function logout(){try{localStorage.removeItem('quiz_token');localStorage.removeItem('quiz_role');localStorage.removeItem('quiz_user');}catch(e){}location.href='../login.html';}
+
+/* ---------- 管理员只读模式 ---------- */
+async function initAdmin(){
+  if(!IS_ADMIN)return;
+  $('#roTag').style.display='inline-block';
+  document.querySelectorAll('.wbtn').forEach(b=>{b.style.display='none';});
+  $('#admRow').style.display='flex';
   try{
-    const [r,o]=await Promise.all([
-      api('chapter_results',{ch,class_id:cid}),
-      api('chapter_overview',{ch,class_id:cid})
-    ]);
-    renderResults(ch,r.results||[],o);
-  }catch(e){$('#rsArea').innerHTML='<span style="color:var(--err)">加载失败</span>';}
-}
-function renderResults(ch,list,o){
-  let h='';
-  h+='<div class="stat">'+
-    '<div class="it"><div class="v">'+o.submitted+'/'+o.total_students+'</div><div class="l">已交/总人数</div></div>'+
-    '<div class="it"><div class="v">'+o.avg+'</div><div class="l">平均分</div></div>'+
-    '<div class="it"><div class="v">'+o.max+'</div><div class="l">最高</div></div>'+
-    '<div class="it"><div class="v">'+o.min+'</div><div class="l">最低</div></div>'+
-    '<div class="it"><div class="v">'+o.low_trans_count+'</div><div class="l">低分翻译(≤2.5)</div></div></div>';
-  h+='<div class="box" style="margin-bottom:14px"><h3>分数分布 Score Distribution</h3>';
-  for(let i=0;i<10;i++){
-    const cnt=o.dist[i]||0,ttl=o.submitted||1,p=Math.round(cnt/ttl*100);
-    h+='<div style="display:flex;align-items:center;gap:10px;margin:4px 0"><span style="width:88px;color:var(--sub);font-size:12.5px">'+i*10+'–'+(i*10+9)+' 分</span><div class="bar" style="flex:1"><i style="width:'+p+'%"></i></div><span style="width:70px;font-size:12.5px;color:var(--txt)">'+cnt+' 人 ('+p+'%)</span></div>';
-  }
-  h+='</div>';
-  h+='<div class="box" style="margin-bottom:14px"><h3>每题正确率 Accuracy per Question（单选，共 5 题）</h3>';
-  (o.mc_rate||[]).forEach((r2,i)=>{
-    h+='<div style="display:flex;align-items:center;gap:10px;margin:4px 0"><span style="width:40px;color:var(--sub);font-size:12.5px">Q'+(i+1)+'</span><div class="bar" style="flex:1"><i style="width:'+r2+'%"></i></div><span style="width:60px;font-size:12.5px">'+r2+'%</span></div>';
-  });
-  h+='</div>';
-  if(o.trans_avg&&o.trans_avg.length){
-    h+='<div class="box" style="margin-bottom:14px"><h3>翻译题平均分（满分 5）</h3>';
-    o.trans_avg.forEach((v,i)=>{
-      const p=Math.round(v/5*100);
-      h+='<div style="display:flex;align-items:center;gap:10px;margin:4px 0"><span style="width:40px;color:var(--sub);font-size:12.5px">T'+(i+1)+'</span><div class="bar" style="flex:1"><i style="width:'+p+'%"></i></div><span style="width:60px;font-size:12.5px">'+v+'</span></div>';
-    });
-    h+='</div>';
-  }
-  if(o.trans_summary){
-    h+='<div class="sum"><b>翻译主要问题（AI 总结）</b><ul class="issues">'+(o.trans_summary.issues||[]).map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>'+(o.trans_summary.advice?'<b>教学建议：</b>'+esc(o.trans_summary.advice):'')+'</div>';
-  }
-  h+='<div class="box" style="margin-top:16px"><h3>答卷明细</h3><div style="overflow-x:auto;max-height:360px;overflow-y:auto"><table><thead><tr><th>姓名</th><th>学号</th><th>单选(50)</th><th>翻译(50)</th><th>总分</th><th>提交时间</th></tr></thead><tbody>';
-  if(!list.length)h+='<tr><td colspan="6" class="empty">暂无已交答卷</td></tr>';
-  list.forEach(x=>{h+='<tr><td>'+esc(x.name)+'</td><td>'+esc(x.student_no)+'</td><td>'+x.mc_score+'</td><td>'+x.trans_score+'</td><td><b style="color:var(--gold)">'+x.total+'</b></td><td>'+new Date(x.submitted_at).toLocaleString('zh-CN')+'</td></tr>';});
-  h+='</tbody></table></div></div>';
-  $('#rsArea').innerHTML=h;
-}
-async function exportCsv(){
-  const cid=$('#rsCls').value,ch=+$('#rsCh').value;
-  if(!ch)return msg('请选择章节');
-  try{
-    const d=await api('export_scores',{ch,class_id:cid});
-    const bin=atob(d.csv);
-    const arr=new Uint8Array(bin.length);
-    for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
-    const blob=new Blob([arr],{type:'text/csv;charset=utf-8'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=d.filename;a.click();
-    msg('CSV 已下载 / Downloaded','ok');
+    const d=await api('list_teachers');
+    const tb=$('#admTid');
+    tb.innerHTML='<option value="">— 选择教师 —</option>'+
+      (d.teachers||[]).filter(t=>t.status!=='disabled').map(t=>'<option value="'+t.id+'">'+esc(t.name)+'</option>').join('');
   }catch(e){}
 }
-
-function goQuiz(){location.href='quiz.html';}
-function goPreview(){location.href='quiz.html?preview=1';}
-function logout(){try{localStorage.removeItem('quiz_token');localStorage.removeItem('quiz_role');localStorage.removeItem('quiz_user');}catch(e){}location.href='login.html';}
+$('#admTid')&&$('#admTid').addEventListener('change',e=>{
+  ADMIN_TID=e.target.value;
+  curClass=null;clearStu();
+  if(!ADMIN_TID){loadClasses();$('#swCls').innerHTML='<option value="">请选择班级</option>';return;}
+  fillSelects().then(()=>loadClasses());
+});
 
 /* ---------- 启动 ---------- */
-if(role()!=='teacher'){location.href='login.html';}
+if(!IS_ADMIN&&role()!=='teacher'){location.href='../login.html';}
 else{
-  try{const u=JSON.parse(localStorage.getItem('quiz_user')||'{}');$('#tName').textContent=u.name||'教师';}catch(e){}
+  if(IS_ADMIN){$('#tName').textContent='管理员';initAdmin();}
+  else{try{const u=JSON.parse(localStorage.getItem('quiz_user')||'{}');$('#tName').textContent=u.name||'教师';}catch(e){}}
   fillSelects().then(()=>{loadClasses();clearStu();});
-  setInterval(()=>{const t=document.querySelector('.tab[data-t="exam"]');if(t&&t.classList.contains('on'))loadExamStatus();},15000);
 }
 </script>
 </body>
