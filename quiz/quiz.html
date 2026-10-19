@@ -834,7 +834,7 @@ function renderIdx(){
 function jump(i){curIdx=i;renderIdx();renderQ();}
 function nav(d){
   const n=curIdx+d;
-  if(n<0||n>9)return;
+  if(n<0||n>10)return;
   if(n===10){confirmSubmit();return;}
   curIdx=n;renderIdx();renderQ();
 }
