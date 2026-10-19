@@ -501,7 +501,15 @@ function api(action,body){
   const b=Object.assign({},body||{});
   if(IS_ADMIN&&TEACH_TID)b.teacher_id=TEACH_TID;
   return fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token()},
-    body:JSON.stringify(Object.assign({action},b))}).then(r=>r.json());
+    body:JSON.stringify(Object.assign({action},b))})
+    .then(r=>r.json())
+    .then(j=>{
+      if(!j.ok){
+        if(j.code==='E_AUTH'){if(IS_ADMIN){throw new Error('该接口仅教师可用：管理员请先选择教师（只读）');}location.href='../login.html?out=1';throw new Error('auth');}
+        throw new Error(j.error||'操作失败');
+      }
+      return j.data;
+    });
 }
 function apiT(action,body,ms){
   if(!ONLINE)return Promise.reject(new Error('offline'));
@@ -512,6 +520,13 @@ function apiT(action,body,ms){
   return fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token()},
     body:JSON.stringify(Object.assign({action},b)),signal:ctl.signal})
     .then(r=>{clearTimeout(tm);return r.json();})
+    .then(j=>{
+      if(!j.ok){
+        if(j.code==='E_AUTH'){if(IS_ADMIN){throw new Error('该接口仅教师可用：管理员请先选择教师（只读）');}location.href='../login.html?out=1';throw new Error('auth');}
+        throw new Error(j.error||'操作失败');
+      }
+      return j.data;
+    })
     .catch(e=>{clearTimeout(tm);throw e;});
 }
 
@@ -752,16 +767,15 @@ function startDemo(){
 /* ---------- 在线：查状态并分流 ---------- */
 function checkStatusAndRoute(){
   api('test_status',{ch:cur}).then(d=>{
-    if(!d.ok)return failApi(d);
-    exam=d.data;
-    if(d.data.status==='none'){enterWait('本章节测试尚未开始','本章节测试尚未开始，由任课教师统一开启后即可进入。请稍候…');pollWait();}
-    else if(d.data.status==='running'){
+    exam=d;
+    if(d.status==='none'){enterWait('本章节测试尚未开始','本章节测试尚未开始，由任课教师统一开启后即可进入。请稍候…');pollWait();}
+    else if(d.status==='running'){
       loadDraft();enterQuiz();startClock();
       pollRunning();
     }else{ /* ended：已交过卷 → 先弹提示再进成绩页；未交 → 提示 */
       api('my_result',{ch:cur}).then(m=>{
-        if(m.ok&&m.data&&m.data.result){
-          const rr=m.data.result;
+        if(m&&m.result){
+          const rr=m.result;
           openModal('本章测试已结束','你的成绩已公布：总分 <b style="color:var(--gold2)">'+rr.total+'</b> / 100。<br>点击查看详细得分、参考答案与 AI 评语。',
             '<button class="btn" onclick="closeModal();renderResult(rr)">查看成绩详情</button>'+
             '<button class="btn ghost" onclick="closeModal()">稍后查看</button>');
@@ -776,7 +790,7 @@ function enterWait(title,msg,poll){
   show('viewWait');
   if(poll!==false){clearPolls();pollTimer=setInterval(()=>{
     api('test_status',{ch:cur}).then(d=>{
-      if(d.ok&&d.data&&d.data.status==='running'){clearPolls();loadDraft();enterQuiz();startClock();pollRunning();}
+      if(d.status==='running'){clearPolls();loadDraft();enterQuiz();startClock();pollRunning();}
     }).catch(()=>{});
   },POLL_MS);}
 }
@@ -871,10 +885,10 @@ function pollRunning(){
   if(pollTimer)clearInterval(pollTimer);
   pollTimer=setInterval(()=>{
     api('test_status',{ch:cur}).then(d=>{
-      if(d.ok&&d.data&&d.data.status==='ended'){
+      if(d.status==='ended'){
         clearPolls();
         if(!submitted)autoSubmit('教师已结束测试，正在收卷…');
-        else{api('my_result',{ch:cur}).then(m=>{if(m.ok&&m.data&&m.data.result)renderResult(m.data.result);}).catch(()=>{});}
+        else{api('my_result',{ch:cur}).then(m=>{if(m&&m.result)renderResult(m.result);}).catch(()=>{});}
       }
     }).catch(()=>{});
   },POLL_MS);
@@ -898,8 +912,7 @@ function autoSubmit(tip){
   openModal('正在交卷','答卷正在提交并评分，请稍候…','');
   apiT('submit',{ch:cur,mc:answers.mc.map(i=>i===null?null:KEYS[i]),trans:answers.tr},25000).then(d=>{
     closeModal();
-    if(d.ok){enterSubmitted();}
-    else{failApi(d);submitted=false;}
+    enterSubmitted();
   }).catch(()=>{
     closeModal();submitted=false;
     openModal('提交未确认','网络超时，暂时无法确认是否提交成功。<br><b style="color:var(--gold2)">请勿重复交卷</b>，先查询提交状态。',
@@ -909,10 +922,8 @@ function autoSubmit(tip){
 }
 function checkSubmitted(){
   api('my_result',{ch:cur}).then(d=>{
-    if(!d.ok){failApi(d);return;}
-    const data=d.data||{};
-    if(data.result){renderResult(data.result);}
-    else if(data.locked===true){enterSubmitted();}
+    if(d&&d.result){renderResult(d.result);}
+    else if(d&&d.locked===true){enterSubmitted();}
     else{openModal('未检测到提交','没有找到本章的提交记录，可以重新作答提交。',
       '<button class="btn" onclick="closeModal();loadDraft();enterQuiz();startClock();pollRunning()">重新作答</button>'+
       '<button class="btn ghost" onclick="closeModal()">关闭</button>');}
@@ -924,7 +935,7 @@ function enterSubmitted(){
   clearPolls();
   pollTimer=setInterval(()=>{
     api('my_result',{ch:cur}).then(m=>{
-      if(m.ok&&m.data&&m.data.result){clearPolls();renderResult(m.data.result);}
+      if(m&&m.result){clearPolls();renderResult(m.result);}
     }).catch(()=>{});
   },POLL_MS);
 }
