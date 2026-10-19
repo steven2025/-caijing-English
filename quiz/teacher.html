@@ -123,6 +123,7 @@ td code{background:#0e1524;border:1px solid var(--line);border-radius:6px;paddin
       <h3>学生名单 <span style="font-size:12px;color:var(--sub);font-weight:400;" id="curCls"></span></h3>
       <div class="row" style="margin-bottom:10px">
         <button class="btn gold" onclick="downloadTemplate()">下载模板 Template</button>
+        <button class="btn gold" onclick="exportStuXlsx()">下载名单 Excel</button>
         <button class="btn" onclick="$('#fileImport').click()">选择文件 Choose File</button>
         <input type="file" id="fileImport" accept=".xlsx,.xls" style="display:none" onchange="onFilePicked()">
         <span style="color:var(--sub);font-size:12.5px">下载模板 → 填写「姓名 / 班级 / 学号」→ 选择文件自动导入（每人自动生成 6 位邀请码）</span>
@@ -290,6 +291,30 @@ function downloadTemplate(){
     }
     msg('模板已下载，请填写后上传导入','ok');
   }catch(e){msg('下载模板失败，请检查网络');}
+}
+/* 按当前班级导出学生名单 Excel：姓名 / 班级 / 学号 / 邀请码 */
+async function exportStuXlsx(){
+  if(!curClass)return msg('请先选择一个班级');
+  const clsName=$('#curCls').textContent.replace('· ','').trim();
+  try{
+    const d=await api('list_students',{class_id:curClass});
+    const list=d.students||[];
+    if(!list.length)return msg('该班级暂无学生');
+    const rows=[['姓名','班级','学号','邀请码']];
+    list.forEach(s=>rows.push([s.name||'',clsName,s.student_no||'',s.code||'']));
+    if(window.XLSX){
+      const ws=XLSX.utils.aoa_to_sheet(rows);
+      ws['!cols']=[{wch:12},{wch:16},{wch:12},{wch:12}];
+      const wb=XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb,ws,'学生名单');
+      XLSX.writeFile(wb,(clsName||'班级')+'-学生名单.xlsx');
+    }else{
+      const csv='\ufeff'+rows.map(r=>r.join(',')).join('\r\n');
+      const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=(clsName||'班级')+'-学生名单.csv';a.click();
+      msg('已下载 CSV 名单','ok');return;
+    }
+    msg('名单已下载（含邀请码，可直接分发）','ok');
+  }catch(e){msg('下载名单失败，请检查网络');}
 }
 async function onFilePicked(){
   const f=$('#fileImport').files[0];
