@@ -909,13 +909,12 @@ function doSubmit(){autoSubmit('交卷成功');}
 function autoSubmit(tip){
   submitted=true;clearPolls();clearDraft();
   if(!ONLINE){localJudge();return;}
-  openModal('正在交卷','答卷正在提交并评分，请稍候…','');
-  apiT('submit',{ch:cur,mc:answers.mc.map(i=>i===null?null:KEYS[i]),trans:answers.tr},25000).then(d=>{
-    closeModal();
-    enterSubmitted();
+  /* 立即进入"已提交"页给出反馈；提交+评分在后台继续（最长 120s） */
+  enterSubmitted();
+  apiT('submit',{ch:cur,mc:answers.mc.map(i=>i===null?null:KEYS[i]),trans:answers.tr},120000).then(d=>{
+    /* 已写入：保持已提交页，等待教师结束公布后轮询成绩 */
   }).catch(()=>{
-    closeModal();submitted=false;
-    openModal('提交未确认','网络超时，暂时无法确认是否提交成功。<br><b style="color:var(--gold2)">请勿重复交卷</b>，先查询提交状态。',
+    openModal('提交处理中','提交请求超时，答卷可能已锁定。请稍后在成绩页查看，或点击查询提交状态。',
       '<button class="btn" onclick="closeModal();checkSubmitted()">查询提交状态</button>'+
       '<button class="btn ghost" onclick="closeModal()">关闭</button>');
   });
