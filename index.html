@@ -407,8 +407,8 @@ const QUIZ_API='https://1311686407-6z755znqlt.ap-guangzhou.tencentscf.com';
 let loginState='guest';      /* guest | student | teacher | admin */
 let loginName='';
 let accessMap=null;          /* student：{ch:true}；teacher/admin：null=全开 */
-function getTok(){try{return localStorage.getItem('quiz_token')||'';}catch(e){return '';}}
-function getRole(){try{return localStorage.getItem('quiz_role')||'';}catch(e){return '';}}
+function getTok(){try{const q=new URLSearchParams(location.search);if(q.get('t'))return q.get('t');}catch(e){}try{return localStorage.getItem('quiz_token')||'';}catch(e){return '';}}
+function getRole(){try{const q=new URLSearchParams(location.search);if(q.get('r'))return q.get('r');}catch(e){}try{return localStorage.getItem('quiz_role')||'';}catch(e){return '';}}
 function initAuth(){
   const tok=getTok(),role=getRole();
   if(!tok||!role){loginState='guest';loginName='';accessMap=null;renderAuth();return;}
@@ -440,10 +440,10 @@ function renderAuth(){
   else{b.textContent='退出 · '+(loginName||(loginState==='teacher'?'教师':'学生'));}
 }
 window.authAction=()=>{
-  if(loginState==='guest'){location.href='quiz/login.html';return;}
+  if(loginState==='guest'){location.href='login.html';return;}
   if(!confirm('确定退出登录？/ Sign out?'))return;
   try{localStorage.removeItem('quiz_token');localStorage.removeItem('quiz_role');localStorage.removeItem('quiz_user');}catch(e){}
-  location.reload();
+  location.href='login.html?out=1';
 };
 
 function chip(c){
@@ -466,7 +466,7 @@ function bindGlow(btn){
     btn.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
   });
 }
-/* ================= 身份卡片：测试中心 / 教师工作台 / 系统管理 ================= */
+/* ================= 身份卡片：测试中心 / 教师工作台 / 管理员工作台 ================= */
 function identityCard(id,no,cn,en,sub,cc){
   const allowed = id==='quiz' ? loginState!=='guest'
     : id==='teacher' ? (loginState==='teacher'||loginState==='admin')
@@ -481,9 +481,9 @@ function identityCard(id,no,cn,en,sub,cc){
 function renderIdentity(){
   const list=[
     identityCard('quiz','Q','测试中心','Quiz Center','',COLORS[3]),
-    identityCard('teacher','T','教师工作台','Teacher Workbench','',COLORS[7])
+    identityCard('teacher','T','教师工作台','Teacher Workbench','',COLORS[7]),
+    identityCard('admin','S','管理员工作台','Admin Workbench','',COLORS[6])
   ];
-  if(loginState==='admin')list.push(identityCard('admin','S','系统管理','System Admin','',COLORS[6]));
   $('#row3').innerHTML=list.join('');
   document.querySelectorAll('#row3 .mini-card').forEach(c=>{
     bindGlow(c);
@@ -497,16 +497,22 @@ function renderIdentity(){
 }
 window.openQuiz=()=>{
   if(loginState==='guest'){toast('请先登录 · Please sign in first');return;}
-  location.href='quiz/quiz.html';
+  location.href='quiz/quiz.html'+authQS();
 };
 window.openTeacher=()=>{
   if(loginState!=='teacher'&&loginState!=='admin'){toast('教师身份可用 · Teachers only');return;}
-  location.href='quiz/teacher.html';
+  location.href='quiz/teacher.html'+authQS();
 };
 window.openAdmin=()=>{
   if(loginState!=='admin'){toast('管理员专用');return;}
-  location.href='quiz/admin.html';
+  location.href='quiz/admin.html'+authQS();
 };
+/* file:// 本地打开时跨页 localStorage 读取不可靠：登录态随 URL 传递；线上 https 同域不附加 */
+function authQS(){
+  if(location.protocol!=='file:')return '';
+  const t=getTok(),r=getRole();
+  return (t?'?t='+encodeURIComponent(t)+'&r='+encodeURIComponent(r||'student'):'');
+}
 function renderNav(){
   nav1.innerHTML=CHAPTERS.map(chip).join('');
   nav2.innerHTML=CHAPTERS.map(chip).join('');

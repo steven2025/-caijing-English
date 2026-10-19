@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财经英语学习平台 · 登录 | Sign In</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23d4af37'/%3E%3Cpath d='M12 5v14M5 12h14' stroke='%2314100a' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#0e1420; --panel:#161f30; --panel2:#1b2740; --line:#2a3a5c;
+  --gold:#d4af37; --gold-soft:rgba(212,175,55,.14);
+  --txt:#e8eef7; --sub:#93a5c0; --ok:#37d47a; --err:#e0565c;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  min-height:100vh;background:
+    radial-gradient(1000px 500px at 80% -10%, rgba(212,175,55,.10), transparent 60%),
+    radial-gradient(800px 500px at 10% 110%, rgba(55,120,212,.12), transparent 60%),
+    var(--bg);
+  color:var(--txt);font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.card{
+  width:100%;max-width:880px;background:linear-gradient(180deg,var(--panel),#131b2b);
+  border:1px solid var(--line);border-radius:18px;padding:36px 40px 40px;
+  box-shadow:0 24px 60px rgba(0,0,0,.45);
+}
+.head{display:flex;align-items:center;gap:14px;margin-bottom:6px;}
+.head .logo{
+  width:52px;height:52px;flex:none;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--gold),#8a6d1c);color:#14100a;box-shadow:0 8px 22px rgba(212,175,55,.35);
+}
+.head h1{font-size:26px;letter-spacing:1px;}
+.head .en{font-size:13px;color:var(--sub);letter-spacing:2px;}
+.sub{color:var(--sub);font-size:14px;margin-bottom:22px;}
+.roles{display:flex;gap:10px;margin:20px 0 22px;}
+.role{
+  flex:1;padding:14px 10px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);
+  cursor:pointer;text-align:center;transition:.2s;user-select:none;
+}
+.role .ic{display:flex;justify-content:center;margin-bottom:6px;}
+.role .nm{font-size:16px;font-weight:600;}
+.role .de{font-size:12px;color:var(--sub);margin-top:2px;}
+.role:hover{border-color:var(--gold);transform:translateY(-2px);}
+.role.on{border-color:var(--gold);background:var(--gold-soft);box-shadow:0 0 0 1px var(--gold) inset;}
+.fields{display:grid;gap:14px;}
+.field label{display:block;font-size:13px;color:var(--sub);margin-bottom:6px;}
+.field input{
+  width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);
+  background:#0e1524;color:var(--txt);font-size:16px;outline:none;transition:.2s;
+}
+.field input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft);}
+.hint{font-size:12.5px;color:var(--sub);line-height:1.7;margin-top:6px;}
+.go{
+  margin-top:22px;width:100%;padding:14px;border:none;border-radius:12px;cursor:pointer;
+  background:linear-gradient(135deg,var(--gold),#a9861f);color:#14100a;font-size:17px;font-weight:700;
+  letter-spacing:2px;box-shadow:0 10px 26px rgba(212,175,55,.30);transition:.2s;
+}
+.go:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.msg{display:none;margin-top:14px;padding:11px 14px;border-radius:10px;font-size:14px;}
+.msg.err{display:block;background:rgba(224,86,92,.12);border:1px solid rgba(224,86,92,.4);color:var(--err);}
+.foot{margin-top:18px;text-align:center;font-size:12.5px;color:var(--sub);}
+.foot b{color:var(--gold);}
+@media(max-width:640px){.roles{flex-direction:column;}.card{padding:24px 18px;}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="head">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M9 21H5a2 2 0 0 1-2-2v-4"/><path d="M15 21h4a2 2 0 0 0 2-2v-4"/><path d="M12 7v10"/><path d="M7 12h10"/></svg>
+    </div>
+    <div>
+      <h1>财经英语 <span style="color:var(--gold)">学习平台</span></h1>
+      <div class="en">FINANCIAL ENGLISH · VISUAL LEARNING PLATFORM</div>
+    </div>
+  </div>
+  <div class="sub">登录后进入章节学习、章节测试与教学工作台｜Sign in to access your modules</div>
+
+  <div class="roles" id="roles">
+    <div class="role on" data-role="student">
+      <div class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></div>
+      <div class="nm">学生 Student</div>
+      <div class="de">学号 + 邀请码登录</div>
+    </div>
+    <div class="role" data-role="teacher">
+      <div class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="nm">教师 Teacher</div>
+      <div class="de">姓名 + 邀请码登录</div>
+    </div>
+    <div class="role" data-role="admin">
+      <div class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <div class="nm">管理员 Admin</div>
+      <div class="de">平台管理入口</div>
+    </div>
+  </div>
+
+  <div class="fields" id="fields"></div>
+  <button class="go" id="goBtn">登 录 · SIGN IN</button>
+  <div class="msg" id="msg"></div>
+  <div class="foot">尚未登录？由任课教师提供 <b>学号 + 邀请码</b>（6 位数字）</div>
+</div>
+
+<script>
+/* ================= 配置 ================= */
+const API_URL = 'https://1311686407-6z755znqlt.ap-guangzhou.tencentscf.com';
+const FIELDS = {
+  student:[
+    {k:'student_no',l:'学号 Student No.',p:'输入学号',t:'text'},
+    {k:'code',l:'邀请码 Invite Code',p:'6 位数字邀请码',t:'text'}
+  ],
+  teacher:[
+    {k:'name',l:'姓名 Name',p:'输入姓名',t:'text'},
+    {k:'code',l:'邀请码 Invite Code',p:'6 位数字邀请码',t:'text'}
+  ],
+  admin:[
+    {k:'username',l:'用户名 Username',p:'管理员用户名',t:'text'},
+    {k:'password',l:'密码 Password',p:'输入密码',t:'password'}
+  ]
+};
+const ACTION = {student:'student_login',teacher:'teacher_login',admin:'admin_login'};
+const NEXT = {student:'index.html',teacher:'index.html',admin:'index.html'};
+
+let role='student';
+const $=s=>document.querySelector(s);
+
+function renderFields(){
+  const g=$('#fields');g.innerHTML='';
+  FIELDS[role].forEach(f=>{
+    const d=document.createElement('div');d.className='field';
+    d.innerHTML='<label>'+f.l+'</label><input type="'+f.t+'" placeholder="'+f.p+'" id="f_'+f.k+'">';
+    g.appendChild(d);
+  });
+  document.querySelectorAll('#roles .role').forEach(el=>el.classList.toggle('on',el.dataset.role===role));
+}
+document.querySelectorAll('#roles .role').forEach(el=>{
+  el.onclick=()=>{role=el.dataset.role;$('#msg').style.display='none';renderFields();};
+});
+
+function err(m){const e=$('#msg');e.className='msg err';e.textContent=m;}
+
+$('#goBtn').onclick=async()=>{
+  const body={};
+  FIELDS[role].forEach(f=>body[f.k]=$('#f_'+f.k).value.trim());
+  if(FIELDS[role].some(f=>!body[f.k]))return err('请填写完整信息 / Please fill in all fields');
+  $('#goBtn').disabled=true;$('#goBtn').textContent='登录中…';
+  try{
+    const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(Object.assign({action:ACTION[role]},body))});
+    const j=await r.json();
+    if(!j.ok)return err(j.error||'登录失败');
+    try{
+      localStorage.setItem('quiz_token',j.data.token);
+      localStorage.setItem('quiz_role',role);
+      localStorage.setItem('quiz_user',JSON.stringify(j.data.user||{}));
+    }catch(e){}
+    location.href=NEXT[role];
+  }catch(e){err('无法连接服务器 / Network error');}
+  finally{$('#goBtn').disabled=false;$('#goBtn').textContent='登 录 · SIGN IN';}
+};
+renderFields();
+$('#f_student_no')&&$('#f_student_no').focus();
+
+/* 已登录则直接返回主页 */
+(function(){
+  try{
+    const t=localStorage.getItem('quiz_token');
+    if(t){ location.replace('index.html'); }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
