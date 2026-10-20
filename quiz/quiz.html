@@ -654,8 +654,8 @@ async function loadClassScores(cid,cname){
   let h='<div class="td-box"><h3>'+esc(cname)+' · 成绩明细</h3>'+
     '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">'+
     '<button class="tbtn min" onclick="openBoard()">查看成绩看板</button>'+
-    '<button class="tbtn min" onclick="exportScoresCsv()">下载 CSV</button></div>'+
-    '<div style="overflow-x:auto"><table><thead><tr><th>姓名</th><th>学号</th><th>单选(50)</th><th>翻译(50)</th><th>总分</th><th>提交时间</th></tr></thead><tbody>';
+    '<button class="tbtn min" onclick="exportScoresXlsx()">下载全班成绩表</button></div>'+
+    '<div style="overflow-x:auto"><table><thead><tr><th>姓名</th><th>学号</th><th>单选(25)</th><th>翻译(25)</th><th>总分(50)</th><th>提交时间</th></tr></thead><tbody>';
   if(!list.length)h+='<tr><td colspan="6" class="empty">暂无已交答卷</td></tr>';
   list.forEach(x=>{
     h+='<tr><td>'+esc(x.name)+'</td><td>'+esc(x.student_no)+'</td><td>'+x.mc_score+'</td><td>'+x.trans_score+'</td>'+
@@ -665,16 +665,16 @@ async function loadClassScores(cid,cname){
   box.innerHTML=h;
   window.__ov=o;
 }
-async function exportScoresCsv(){
+async function exportScoresXlsx(){
   const cs=window.__cs;if(!cs)return;
   try{
     const d=await api('export_scores',{ch:cs.ch,class_id:cs.cid});
-    const bin=atob(d.csv);
+    const bin=atob(d.xlsx);
     const arr=new Uint8Array(bin.length);
     for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
-    const blob=new Blob([arr],{type:'text/csv;charset=utf-8'});
+    const blob=new Blob([arr],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=d.filename;a.click();
-    msgT('CSV 已下载','ok');
+    msgT('全班成绩表已下载','ok');
   }catch(e){msgT('下载失败：'+(e.message||''),'');}
 }
 /* ---------- 成绩看板弹框（拖动 / 全屏） ---------- */
@@ -689,7 +689,7 @@ function openBoard(){
   h+='<div class="b-sec"><h4>分数分布 Score Distribution</h4>';
   for(let i=0;i<10;i++){
     const cnt=o.dist[i]||0,ttl=o.submitted||1,p=Math.round(cnt/ttl*100);
-    h+='<div class="brow"><span class="lb">'+i*10+'–'+(i*10+9)+' 分</span><div class="bar"><div class="bar-bg" style="width:'+p+'%"></div></div><span class="vl">'+cnt+' 人 ('+p+'%)</span></div>';
+    h+='<div class="brow"><span class="lb">'+i*5+'–'+(i===9?'50':(i*5+4))+' 分</span><div class="bar"><div class="bar-bg" style="width:'+p+'%"></div></div><span class="vl">'+cnt+' 人 ('+p+'%)</span></div>';
   }
   h+='</div>';
   h+='<div class="b-sec"><h4>每题正确率（单选，共 5 题）</h4>';
@@ -781,7 +781,7 @@ function checkStatusAndRoute(){
         if(m&&m.result){
           const rr=m.result;
           window.__rr=rr;
-          openModal('本章测试已结束','你的成绩已公布：总分 <b style="color:var(--gold2)">'+rr.total+'</b> / 100。<br>点击查看详细得分、参考答案与 AI 评语。',
+          openModal('本章测试已结束','你的成绩已公布：总分 <b style="color:var(--gold2)">'+rr.total+'</b> / 50。<br>点击查看详细得分、参考答案与 AI 评语。',
             '<button class="btn" onclick="closeModal();renderResult(window.__rr)">查看成绩详情</button>'+
             '<button class="btn ghost" onclick="closeModal()">稍后查看</button>');
         }
@@ -848,7 +848,7 @@ function renderQ(){
   const qCard=$('#qCard');
   if(curIdx<5){
     const i=curIdx;
-    qCard.innerHTML='<div class="q-no">MULTIPLE CHOICE · 每题 10 分</div><div class="q-type mc">单选 Multiple Choice</div>'+
+    qCard.innerHTML='<div class="q-no">MULTIPLE CHOICE · 每题 5 分</div><div class="q-type mc">单选 Multiple Choice</div>'+
       '<div class="stem"><b style="color:var(--gold2)">'+String(i+1)+'.</b> '+esc(c.q[i])+'</div>'+
       '<div class="opts">'+c.o[i].map((op,j)=>
         '<button class="opt'+(answers.mc[i]===j?' sel':'')+'" onclick="pickMc('+j+')">'+
@@ -955,7 +955,7 @@ function localJudge(){
   let mcScore=0;
   const mcDetail=c.mc.map((ans,i)=>{
     const picked=answers.mc[i]===null?null:KEYS[answers.mc[i]];
-    const right=picked===ans;if(right)mcScore+=10;
+    const right=picked===ans;if(right)mcScore+=5;
     return {q:i+1,stem:c.q[i],ans,picked,right};
   });
   const trDetail=c.tr.map((t,i)=>({q:i+1,dir:t[0],src:t[1],ref:t[2],answer:answers.tr[i]||'',score:0,comment:''}));
@@ -972,9 +972,9 @@ function renderResult(r){
   '<div class="score-hero"><div class="score-ring"><svg viewBox="0 0 132 132">'+
     '<circle class="bg" cx="66" cy="66" r="'+ringR+'" fill="none" stroke-width="11"/>'+
     '<circle class="fg" id="ringFg" cx="66" cy="66" r="'+ringR+'" fill="none" stroke-width="11" stroke-dasharray="'+window.__circ+'" stroke-dashoffset="'+window.__circ+'"/>'+
-  '</svg><div class="num"><b id="scoreNum">0</b><span>/ 100</span></div></div>'+
+  '</svg><div class="num"><b id="scoreNum">0</b><span>/ 50</span></div></div>'+
   '<div class="score-info"><div class="lvl" id="lvl">评分中…</div>'+
-  '<div class="line">单选：<b>'+r.mc_score+'</b> / 50 分</div>'+
+  '<div class="line">单选：<b>'+r.mc_score+'</b> / 25 分</div>'+
   '<div class="line">翻译：<b>'+transScore+'</b> / 25 分</div>'+
   '<div class="line" style="color:var(--dim)">第 '+cur+' 章 · '+QUIZ[cur].cn+'</div></div></div>'+
   '<div class="r-block"><div class="r-title">I · 多项选择 Multiple Choice</div>'+
@@ -985,7 +985,7 @@ function renderResult(r){
     return '<div class="r-item '+(m.right?'ok':'bad')+'"><div class="q-line">'+
     '<span class="mark">'+(m.right?'✓':'✕')+'</span>'+
     '<span style="flex:1">'+(m.q)+'. '+stem+'</span>'+
-    '<span class="s2">'+(m.right?'+10':'0')+'</span></div>'+
+    '<span class="s2">'+(m.right?'+5':'0')+'</span></div>'+
     '<div class="your'+(m.right?' good':'')+'">你的答案：'+esc(m.picked||m.selected||'未作答')+'</div>'+
     '<div class="ans">正确答案：<b>'+esc(m.ans||m.answer)+'</b></div>'+
     (exTxt?'<div class="explain"><b>解析：</b>'+esc(exTxt)+'</div>':'')+'</div>';
@@ -1003,12 +1003,12 @@ function renderResult(r){
   show('viewResult');
   let t=0;
   const step=()=>{t=Math.min(r.total,t+5);$('#scoreNum').textContent=t;
-    $('#ringFg').style.strokeDashoffset=window.__circ*(1-t/100);
+    $('#ringFg').style.strokeDashoffset=window.__circ*(1-t/50);
     $('#lvl').textContent=level(t);
     if(t<r.total)requestAnimationFrame(step);};
   setTimeout(step,80);window.scrollTo(0,0);
 }
-function level(t){if(t>=90)return '优秀 Excellent';if(t>=75)return '良好 Good';if(t>=60)return '及格 Pass';return '需加油 Keep Practicing';}
+function level(t){if(t>=45)return '优秀 Excellent';if(t>=37.5)return '良好 Good';if(t>=30)return '及格 Pass';return '需加油 Keep Practicing';}
 
 /* ---------- 启动分流 ---------- */
 function initTeach(){
