@@ -26,9 +26,6 @@
   .bar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 8px;}
   .brand{font-weight:800;font-size:17px;color:var(--brand);letter-spacing:-.2px;}
   .brand small{font-weight:600;color:var(--muted);font-size:12px;margin-left:6px;}
-  .header-credits{flex:1 1 auto;text-align:right;font-size:11px;line-height:1.4;color:#7B8799;white-space:nowrap;padding-right:10px;letter-spacing:.3px;}
-  .header-credits b{color:#1E5AA8;font-weight:700;}
-  @media(max-width:820px){.header-credits{display:none;}}
   .ctl{display:flex;gap:8px;}
   .ctrl{background:var(--soft);color:var(--brand);border:1px solid var(--line);padding:6px 14px;
     border-radius:999px;cursor:pointer;font-size:12px;font-weight:700;}
@@ -116,25 +113,14 @@
   .msg.bad{background:#FFEBEE;border:1px solid var(--brand-3);color:var(--brand-3);}
   .progress{font-size:13px;color:var(--muted);margin-top:10px;font-weight:600;}
   .right{flex:1;display:flex;flex-direction:column;min-width:0;}
-  /* 图表容器：大屏自适应 + 锁最小尺寸（教室投影也不变小） */
-  /* 改为 flex 纵向布局：SVG 占据图表区域，图例与提示固定在框内底部，不会跑到框外 */
-  .chart-wrap{background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px;
-    display:flex;flex-direction:column;gap:4px;
-    flex:1;min-height:0;overflow:hidden;
-    min-height:46vh; min-height:340px;
-    min-width:0; position:relative;}
-  .chart-svg{flex:1;min-height:0;position:relative;}
-  .chart-svg svg{width:100%;height:100%;display:block;
-    max-width:100%; max-height:100%;
-    margin:0 auto;
-    object-fit:contain;}
-  .chart-footer{border-top:1px solid var(--line);padding-top:4px;}
-  .legend{font-size:12px;font-weight:600;line-height:1.5;}
+  .chart-wrap{background:#fff;border:1px solid var(--line);border-radius:10px;padding:3px;flex:1;min-height:0;overflow:hidden;}
+  .chart-wrap svg{width:100%;height:100%;display:block;}
+  .legend{margin-top:4px;font-size:12px;font-weight:600;line-height:1.5;}
   .legend div{display:flex;align-items:flex-start;gap:6px;margin:2px 0;}
   .dot{width:11px;height:11px;border-radius:50%;display:inline-block;flex:none;margin-top:3px;}
   .dot.g{background:var(--brand-2);}
   .dot.r{background:var(--brand-3);}
-  .hint-tip{color:var(--muted);font-size:12px;margin-top:3px;line-height:1.5;}
+  .hint-tip{color:var(--muted);font-size:12px;margin-top:4px;line-height:1.5;}
 
   /* ===== Table ===== */
   .data-table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px;}
@@ -149,8 +135,10 @@
   .think-q{font-size:17px;font-weight:700;line-height:1.6;}
   .hint-toggle{background:var(--soft);border:1px dashed var(--brand);color:var(--brand);padding:8px 16px;
     border-radius:999px;cursor:pointer;font-size:14px;font-weight:700;margin-top:14px;align-self:flex-start;}
-  .hint-content{display:none;background:#E8F5E9;padding:12px;border-radius:10px;margin-top:12px;font-size:14.5px;}
+  .hint-content{display:none;background:#E8F5E9;padding:14px 16px;border-radius:10px;margin-top:12px;font-size:14.5px;line-height:1.7;}
   .hint-content.show{display:block;}
+  .hint-content p{margin:0 0 6px;}
+  .hint-content .sub{margin-left:18px;}
 
 </style>
 </head>
@@ -159,7 +147,6 @@
 <header class="topbar">
   <div class="bar">
     <div class="brand">Unit 4<span class="cn"> 第四单元</span><small>Accounting vs Economic Cost · 成本与利润</small></div>
-    <div class="header-credits">课程设计：<b>陈静</b> 重庆工商大学 · 程序开发：<b>高筱涵</b> 25工商管理联合项目班</div>
     <div class="ctl">
       <button class="ctrl" id="cnBtn" onclick="toggleCN()">中文 OFF</button>
     </div>
@@ -240,16 +227,12 @@
             <div class="progress">Groups done: <b id="groupCount">0</b> / 5<span class="cn"> 已完成组数</span></div>
           </div>
           <div class="right">
-            <div class="chart-wrap">
-              <div class="chart-svg" id="chartWrap"></div>
-              <div class="chart-footer">
-                <div class="legend">
-                  <div><span class="dot g"></span><b>Green</b> = Accounting Profit (Revenue − Explicit)<span class="cn"> 绿点=会计利润（总收益−显性成本）</span></div>
-                  <div><span class="dot r"></span><b>Red</b> = Economic Profit (Revenue − Explicit − Implicit)<span class="cn"> 红点=经济利润（总收益−显性−隐性）</span></div>
-                </div>
-                <div class="hint-tip">Use the slider to pick Total Revenue, then click on the chart at the correct profit level to place a point.<span class="cn">先用滑块选总收益，再在图上对应利润位置点击放点。</span></div>
-              </div>
+            <div class="chart-wrap" id="chartWrap"></div>
+            <div class="legend">
+              <div><span class="dot g"></span><b>Green</b> = Accounting Profit (Revenue − Explicit)<span class="cn"> 绿点=会计利润（总收益−显性成本）</span></div>
+              <div><span class="dot r"></span><b>Red</b> = Economic Profit (Revenue − Explicit − Implicit)<span class="cn"> 红点=经济利润（总收益−显性−隐性）</span></div>
             </div>
+            <div class="hint-tip">Use the slider to pick Total Revenue, then click on the chart at the correct profit level to place a point.<span class="cn">先用滑块选总收益，再在图上对应利润位置点击放点。</span></div>
           </div>
         </div>
       </div>
@@ -282,8 +265,13 @@
       <p class="cn-block" style="margin-top:8px;color:#22304A;">"会计利润高估了企业的真实盈利能力。"评价这个说法。</p>
       <button class="hint-toggle" onclick="toggleHint()">Show Hint<span class="cn"> 显示提示</span></button>
       <div class="hint-content" id="hintContent">
-        <p>Accounting profit only deducts explicit cost. It ignores implicit cost (opportunity cost). Economic profit = Revenue − Explicit − Implicit, so it is always lower than accounting profit. Thus accounting profit overstates true profitability.</p>
-        <p class="cn-block">会计利润只扣显性成本，忽略了隐性成本（机会成本）。经济利润=总收益−显性−隐性，所以一定比会计利润低。因此会计利润确实高估了真实盈利能力。</p>
+        <p><strong>Key idea:</strong> Distinguish accounting profit and economic profit.<span class="cn"> 关键要点：区分会计利润与经济利润。</span></p>
+        <p><b>Accounting profit</b> = TR − explicit costs (cash costs recorded in accounts)<span class="cn"> 会计利润 = 总收入 − 显性成本（账本上记录的现金成本）</span></p>
+        <p><b>Economic profit</b> = TR − explicit costs − implicit costs (opportunity costs of owner's time, capital, premises)<span class="cn"> 经济利润 = 总收入 − 显性成本 − 隐性成本（老板的时间、资本、场所的机会成本）</span></p>
+        <p style="margin-top:8px;"><strong>Why the statement is often true:</strong> Implicit costs are usually positive. So accounting profit &gt; economic profit. It overstates economic profitability.<span class="cn"> 为什么这个说法通常成立：隐性成本通常为正，所以会计利润 &gt; 经济利润，会计利润高估了经济盈利能力。</span></p>
+        <p style="margin-top:8px;"><strong>Think about exceptions:</strong><span class="cn"> 想一想例外情况：</span></p>
+        <p class="sub">1. Almost no implicit costs: all labor, capital and premises are hired/rented.<span class="cn"> 几乎没有隐性成本：所有劳动、资本和场所都是雇佣/租来的。</span></p>
+        <p class="sub">2. Accounting rules (conservatism, expensing R&amp;D) may make accounting profit lower than true economic returns.<span class="cn"> 会计准则（稳健性、研发费用化）可能使会计利润低于真实经济回报。</span></p>
       </div>
     </div>
   </div>
@@ -324,8 +312,6 @@ function drawStore(){const idx=Math.floor(Math.random()*scenarios.length);curren
   const ls=document.getElementById('labStage');ls.style.display='flex';
   resetLab();}
 
-/* 图表布局：底部边距从 56 加大到 88，给横轴数字和标题留出足够空间，
-   避免最底部的红绿圆点（r=12）遮挡横轴刻度标注 */
 const CHART={w:640,h:480,L:70,R:30,T:40,B:88};
 function px(x){return CHART.L+(x/15000)*(CHART.w-CHART.L-CHART.R);}
 function getYRange(){const minP=-(current.explicit+current.implicit),maxP=15000-current.explicit;
@@ -333,7 +319,7 @@ function getYRange(){const minP=-(current.explicit+current.implicit),maxP=15000-
 function py(p){const r=getYRange();return CHART.T+(r.yMax-p)/(r.yMax-r.yMin)*(CHART.h-CHART.T-CHART.B);}
 
 function drawChart(){
-  const c=document.getElementById('chartWrap');let s='<svg viewBox="0 0 '+CHART.w+' '+CHART.h+'" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" style="display:block;user-select:none;max-width:100%;max-height:100%;margin:0 auto;">';
+  const c=document.getElementById('chartWrap');let s='<svg viewBox="0 0 '+CHART.w+' '+CHART.h+'" width="100%" height="100%" style="display:block;user-select:none;">';
   for(let x=0;x<=15000;x+=1000){const gx=px(x);
     s+='<line x1="'+gx+'" y1="'+CHART.T+'" x2="'+gx+'" y2="'+(CHART.h-CHART.B)+'" stroke="#E4E9F2" stroke-width="1"/>';
     s+='<text x="'+gx+'" y="'+(CHART.h-CHART.B+24)+'" font-size="12" text-anchor="middle" fill="#5A6B80">'+x+'</text>';}
@@ -435,13 +421,6 @@ function checkQuiz(el,ans){
     fb.innerHTML='❌ Not quite. The given-up salary is an implicit cost.<span class="cn"> 不对哦。放弃的工资属于隐性成本。</span>';opts[1].classList.add('correct');}}
 
 function toggleHint(){document.getElementById('hintContent').classList.toggle('show');}
-
-/* 窗口/大屏缩放时，图表自动重绘以适应新尺寸 */
-let resizeTimer;
-window.addEventListener('resize',function(){
-  clearTimeout(resizeTimer);
-  resizeTimer=setTimeout(function(){ if(document.getElementById('labStage').style.display==='flex'){drawChart();} },120);
-});
 </script>
 </body>
 </html>
